@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.nio.file.Path;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 @Service
@@ -23,6 +24,9 @@ public class EdinetDataOutputService {
 
     @Value("${download.userDir:}")
     private String userDir;
+
+    @Value("${download.targetFilePrefix:}")
+    private String targetFilePrefix;
 
     RestTemplate restTemplate = new RestTemplate();
 
@@ -60,22 +64,27 @@ public class EdinetDataOutputService {
 
         // zip形式のバイナリデータ
         var zipData = response.getBody();
-
+        byte[] fileContent = null;
         try (
                 var in = new ByteArrayInputStream(zipData);
                 var zipIn = new ZipInputStream(in)) {
-            var bytes = zipIn.readAllBytes();
-//            outputFile(bytes, "result/" + );
+            ZipEntry entry;
+            while ((entry = zipIn.getNextEntry()) != null) {
+                // TODO 調査：第５【経理の状況】を取得できる想定
+                if (entry.getName().startsWith(targetFilePrefix)) {
+                    fileContent = zipIn.readAllBytes();
+                }
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        // TODO zipの解凍
-        // データ構成（パス）取得
-        // 目的のxbrlデータ位置の特定
-        // 一旦は、目的のxbrlをそのままダウンロードするか
-
-        return "test page";
+        if (fileContent != null) {
+            // TODO resultディレクトリ用意しないとエラーになる
+            outputFile(fileContent, "result/" + "test_ixbrl.htm");
+            return "file is saved in your download dir.";
+        } else {
+            return "file not found.";
+        }
     }
 
     private void outputFile(byte[] body, String fileName) {
