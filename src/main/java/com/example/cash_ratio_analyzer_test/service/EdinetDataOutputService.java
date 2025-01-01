@@ -15,12 +15,7 @@ import java.util.zip.ZipInputStream;
 @Service
 public class EdinetDataOutputService {
 
-    // 書類取得API
-    private static final String EDINET_FETCH_URL
-            = "https://api.edinet-fsa.go.jp/api/v2/documents/{docNumber}?type={type}&Subscription-Key={key}";
-
-    @Value("${edinet.api.subscriptionKey:}")
-    private String subscriptionKey;
+    private final EdinetDataFetchService edinetDataFetchService;
 
     @Value("${download.userDir:}")
     private String userDir;
@@ -28,15 +23,15 @@ public class EdinetDataOutputService {
     @Value("${download.targetFilePrefix:}")
     private String targetFilePrefix;
 
+    public EdinetDataOutputService(EdinetDataFetchService edinetDataFetchService) {
+        this.edinetDataFetchService = edinetDataFetchService;
+    }
+
     RestTemplate restTemplate = new RestTemplate();
 
     public String testFetchEdinetZipData(DocumentType type, String docNumber) {
-        // TODO この辺は共通化したい
-        ResponseEntity<byte[]> response = restTemplate.exchange(
-                EDINET_FETCH_URL, HttpMethod.GET, null,
-                byte[].class, docNumber, type.code(), subscriptionKey);
+        var response = edinetDataFetchService.getEdinetApiResponse(type, docNumber);
 
-        // TODO レスポンス: 200以外のハンドリング
         var extension = ".zip";
         var fileName = String.format(
                 "%s_%s%s",docNumber, type.name(), extension);
@@ -46,11 +41,8 @@ public class EdinetDataOutputService {
     }
 
     public String testFetchEdinetPdfData(String docNumber) {
-        var response = restTemplate.exchange(
-                EDINET_FETCH_URL, HttpMethod.GET, null,
-                byte[].class, docNumber, DocumentType.PDF.code(), subscriptionKey);
+        var response = edinetDataFetchService.getEdinetApiResponse(DocumentType.PDF, docNumber);
 
-        // TODO レスポンス: 200以外のハンドリング
         var extension = ".pdf";
         outputFile(response.getBody(), docNumber + extension);
 
@@ -58,9 +50,7 @@ public class EdinetDataOutputService {
     }
 
     public String testFetchEdinetXbrlData(String docNumber) {
-        var response = restTemplate.exchange(
-                EDINET_FETCH_URL, HttpMethod.GET, null,
-                byte[].class, docNumber, DocumentType.XBRL.code(), subscriptionKey);
+        var response = edinetDataFetchService.getEdinetApiResponse(DocumentType.XBRL, docNumber);
 
         // zip形式のバイナリデータ
         var zipData = response.getBody();
