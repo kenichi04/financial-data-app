@@ -18,13 +18,15 @@ public class EdinetScenarioService {
 
     public String executeEdinetScenario(String docNumber) {
         var fetchData = edinetDataFetchService.fetchData(DocumentType.XBRL, docNumber);
-        var targetData = edinetDataParsingService.extractTargetFile(fetchData);
+        // zipファイルからターゲットファイルのみ抽出
+        // Mapで返すようにしても良いかも
+        // 一時ファイル作成した方が良いか？
+        var targetData = edinetDataParsingService.extractTargetFileAsString(fetchData);
 
-        // TODO 実装途中. 一旦、対象ファイルの内容をそのまま出力しているだけ
-        try {
-            return new String(targetData, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        // TODO 必要なデータ抽出する
+        // TODO DBに保存
+
+        // FIXME 実装途中. 一旦、対象ファイルの内容をそのまま出力しているだけ
+        return targetData;
     }
 }
