@@ -6,6 +6,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.UnsupportedEncodingException;
+
 @Service
 public class EdinetDataFetchService {
 
@@ -17,13 +19,13 @@ public class EdinetDataFetchService {
     private String subscriptionKey;
 
     /**
-     * Edinet APIからのレスポンスを取得します。
+     * EDINET APIからデータを取得します。
      *
-     * @param type ドキュメントの種類
-     * @param docNumber ドキュメント番号
-     * @return Edinet APIからのレスポンス
+     * @param type     取得する書類の種類
+     * @param docNumber 取得する書類の書類番号
+     * @return 取得したデータ
      */
-    public ResponseEntity<byte[]> getEdinetApiResponse(DocumentType type, String docNumber) {
+    public byte[] fetchData(DocumentType type, String docNumber) {
         var restTemplate = new RestTemplate();
         var response = restTemplate.exchange(
                 edinetApiUrl, HttpMethod.GET, null,
@@ -31,7 +33,15 @@ public class EdinetDataFetchService {
 
         validateStatusCode(response.getStatusCode());
         validateContentType(response.getHeaders().getContentType());
-        return response;
+        validateResponseBody(response.getBody());
+
+        return response.getBody();
+    }
+
+    // TODO データをString型に変換するメソッド
+    public String fetchDataAsString(DocumentType type, String docNumber) throws UnsupportedEncodingException {
+        var data = fetchData(type, docNumber);
+        return new String(data, "UTF-8");
     }
 
     /**
@@ -66,5 +76,17 @@ public class EdinetDataFetchService {
      */
     private boolean isValidContentType(String contentType) {
         return contentType.contains("application/octet-stream") || contentType.contains("application/pdf");
+    }
+
+    /**
+     * レスポンスボディを検証します。
+     *
+     * @param responseBody 検証するレスポンスボディ
+     * @throws RuntimeException レスポンスボディが無効な場合
+     */
+    private void validateResponseBody(byte[] responseBody) {
+        if (responseBody == null || responseBody.length == 0) {
+            throw new RuntimeException("Response body is empty or null");
+        }
     }
 }

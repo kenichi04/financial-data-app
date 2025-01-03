@@ -2,8 +2,6 @@ package com.example.cash_ratio_analyzer_test.service;
 
 import com.example.cash_ratio_analyzer_test.DocumentType;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,30 +28,29 @@ public class EdinetDataOutputService {
     RestTemplate restTemplate = new RestTemplate();
 
     public String testFetchEdinetZipData(DocumentType type, String docNumber) {
-        var response = edinetDataFetchService.getEdinetApiResponse(type, docNumber);
+        var fetchData = edinetDataFetchService.fetchData(type, docNumber);
 
         var extension = ".zip";
         var fileName = String.format(
                 "%s_%s%s",docNumber, type.name(), extension);
-        outputFile(response.getBody(), fileName);
+        outputFile(fetchData, fileName);
 
         return "zip file is saved in your download dir.";
     }
 
     public String testFetchEdinetPdfData(String docNumber) {
-        var response = edinetDataFetchService.getEdinetApiResponse(DocumentType.PDF, docNumber);
+        var fetchData = edinetDataFetchService.fetchData(DocumentType.PDF, docNumber);
 
         var extension = ".pdf";
-        outputFile(response.getBody(), docNumber + extension);
+        outputFile(fetchData, docNumber + extension);
 
         return "pdf file is saved in your download dir.";
     }
 
     public String testFetchEdinetXbrlData(String docNumber) {
-        var response = edinetDataFetchService.getEdinetApiResponse(DocumentType.XBRL, docNumber);
-
         // zip形式のバイナリデータ
-        var zipData = response.getBody();
+        var zipData = edinetDataFetchService.fetchData(DocumentType.XBRL, docNumber);
+
         byte[] fileContent = null;
         try (
                 var in = new ByteArrayInputStream(zipData);
