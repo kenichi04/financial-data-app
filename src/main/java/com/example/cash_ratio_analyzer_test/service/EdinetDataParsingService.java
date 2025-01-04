@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+// TODO クラス名が適切か検討する
 @Service
 public class EdinetDataParsingService {
 
@@ -34,6 +35,11 @@ public class EdinetDataParsingService {
                 // TODO 調査：第５【経理の状況】を取得できる想定
                 // EDINETからはXBRLとインスタンスXBRLが取得できるが、データ容量等を考慮してインスタンスXBRLを取得する
                 if (entry.getName().startsWith(targetFilePrefix)) {
+                    // TODO ここでXMLパースも行うか検討（以下のような感じ）
+//                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//                    DocumentBuilder builder = factory.newDocumentBuilder();
+//                    Document document = builder.parse(zipInputStream);
+
                     var out = new ByteArrayOutputStream();
                     var buffer = new byte[1024];
                     int len;

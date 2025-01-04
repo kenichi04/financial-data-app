@@ -6,8 +6,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.UnsupportedEncodingException;
-
 @Service
 public class EdinetDataFetchService {
 
@@ -36,12 +34,6 @@ public class EdinetDataFetchService {
         validateResponseBody(response.getBody());
 
         return response.getBody();
-    }
-
-    // TODO データをString型に変換するメソッド
-    public String fetchDataAsString(DocumentType type, String docNumber) throws UnsupportedEncodingException {
-        var data = fetchData(type, docNumber);
-        return new String(data, "UTF-8");
     }
 
     /**
