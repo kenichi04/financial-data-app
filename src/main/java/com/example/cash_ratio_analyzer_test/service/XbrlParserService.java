@@ -1,5 +1,6 @@
 package com.example.cash_ratio_analyzer_test.service;
 
+import com.example.cash_ratio_analyzer_test.entity.XbrlData;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -74,37 +75,6 @@ public class XbrlParserService {
             return documentBuilder.parse(new ByteArrayInputStream(xbrlContent));
         } catch (SAXException | IOException e) {
             throw new RuntimeException("Failed to parse XBRL content: " + e.getMessage());
-        }
-    }
-
-    // TODO 別クラスへ移動（別途ドメインオブジェクトを作成するか検討）
-    public static class XbrlData {
-        private String name;
-        private String contextRef;
-        private String unitRef;
-        private String value;
-
-        public XbrlData(String name, String contextRef, String unitRef, String value) {
-            this.name = name;
-            this.contextRef = contextRef;
-            this.unitRef = unitRef;
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getContextRef() {
-            return contextRef;
-        }
-
-        public String getUnitRef() {
-            return unitRef;
-        }
-
-        public String getValue() {
-            return value;
         }
     }
 }
