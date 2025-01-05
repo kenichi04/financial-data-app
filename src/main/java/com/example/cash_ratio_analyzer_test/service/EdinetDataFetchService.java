@@ -20,14 +20,14 @@ public class EdinetDataFetchService {
      * EDINET APIからデータを取得します。
      *
      * @param type     取得する書類の種類
-     * @param docNumber 取得する書類の書類番号
+     * @param documentNumber 取得する書類の書類番号
      * @return 取得したデータ
      */
-    public byte[] fetchData(DocumentType type, String docNumber) {
+    public byte[] fetchData(DocumentType type, String documentNumber) {
         var restTemplate = new RestTemplate();
         var response = restTemplate.exchange(
                 edinetApiUrl, HttpMethod.GET, null,
-                byte[].class, docNumber, type.code(), subscriptionKey);
+                byte[].class, documentNumber, type.code(), subscriptionKey);
 
         validateStatusCode(response.getStatusCode());
         validateContentType(response.getHeaders().getContentType());

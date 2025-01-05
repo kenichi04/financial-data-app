@@ -20,30 +20,30 @@ public class EdinetController {
         this.edinetDataOutputService = edinetDataOutputService;
     }
 
-    @GetMapping("/fetchAndAnalyze/{docNumber}")
-    public String fetchAndAnalyzeData(@PathVariable String docNumber) {
+    @GetMapping("/fetchAndAnalyze/{documentNumber}")
+    public String fetchAndAnalyzeData(@PathVariable String documentNumber) {
         // シナリオサービスを呼び出す
-        return edinetScenarioService.executeEdinetScenario(docNumber);
+        return edinetScenarioService.executeEdinetScenario(documentNumber);
     }
 
-    @GetMapping("/xbrl/zip/{docNumber}")
-    public String getXbrlZipData(@PathVariable String docNumber) {
-//        String testDocNumber = "S100TGZR";
-        return edinetDataOutputService.testFetchEdinetZipData(DocumentType.XBRL, docNumber);
+    @GetMapping("/xbrl/zip/{documentNumber}")
+    public String getXbrlZipData(@PathVariable String documentNumber) {
+//        String testDocumentNumber = "S100TGZR";
+        return edinetDataOutputService.testFetchEdinetZipData(DocumentType.XBRL, documentNumber);
     }
 
-    @GetMapping("/csv/zip/{docNumber}")
-    public String getCsvZipData(@PathVariable String docNumber) {
-        return edinetDataOutputService.testFetchEdinetZipData(DocumentType.CSV, docNumber);
+    @GetMapping("/csv/zip/{documentNumber}")
+    public String getCsvZipData(@PathVariable String documentNumber) {
+        return edinetDataOutputService.testFetchEdinetZipData(DocumentType.CSV, documentNumber);
     }
 
-    @GetMapping("/xbrl/{docNumber}")
-    public String getXbrlData(@PathVariable String docNumber) {
-        return edinetDataOutputService.testFetchEdinetXbrlData(docNumber);
+    @GetMapping("/xbrl/{documentNumber}")
+    public String getXbrlData(@PathVariable String documentNumber) {
+        return edinetDataOutputService.testFetchEdinetXbrlData(documentNumber);
     }
 
-    @GetMapping("/pdf/{docNumber}")
-    public String getPdfData(@PathVariable String docNumber) {
-        return edinetDataOutputService.testFetchEdinetPdfData(docNumber);
+    @GetMapping("/pdf/{documentNumber}")
+    public String getPdfData(@PathVariable String documentNumber) {
+        return edinetDataOutputService.testFetchEdinetPdfData(documentNumber);
     }
 }

@@ -19,8 +19,8 @@ public class EdinetScenarioService {
         this.edinetDataRepository = edinetDataRepository;
     }
 
-    public String executeEdinetScenario(String docNumber) {
-        var fetchData = edinetDataFetchService.fetchData(DocumentType.XBRL, docNumber);
+    public String executeEdinetScenario(String documentNumber) {
+        var fetchData = edinetDataFetchService.fetchData(DocumentType.XBRL, documentNumber);
         // zip形式のデータからターゲットファイルを取得
         // MapかListで返すようにしても良いかも（対象が複数ある場合）
         // 一時ファイル作成も検討する（将来的に）

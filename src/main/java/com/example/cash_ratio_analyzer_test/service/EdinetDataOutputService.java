@@ -27,29 +27,29 @@ public class EdinetDataOutputService {
 
     RestTemplate restTemplate = new RestTemplate();
 
-    public String testFetchEdinetZipData(DocumentType type, String docNumber) {
-        var fetchData = edinetDataFetchService.fetchData(type, docNumber);
+    public String testFetchEdinetZipData(DocumentType type, String documentNumber) {
+        var fetchData = edinetDataFetchService.fetchData(type, documentNumber);
 
         var extension = ".zip";
         var fileName = String.format(
-                "%s_%s%s",docNumber, type.name(), extension);
+                "%s_%s%s",documentNumber, type.name(), extension);
         outputFile(fetchData, fileName);
 
         return "zip file is saved in your download dir.";
     }
 
-    public String testFetchEdinetPdfData(String docNumber) {
-        var fetchData = edinetDataFetchService.fetchData(DocumentType.PDF, docNumber);
+    public String testFetchEdinetPdfData(String documentNumber) {
+        var fetchData = edinetDataFetchService.fetchData(DocumentType.PDF, documentNumber);
 
         var extension = ".pdf";
-        outputFile(fetchData, docNumber + extension);
+        outputFile(fetchData, documentNumber + extension);
 
         return "pdf file is saved in your download dir.";
     }
 
-    public String testFetchEdinetXbrlData(String docNumber) {
+    public String testFetchEdinetXbrlData(String documentNumber) {
         // zip形式のバイナリデータ
-        var zipData = edinetDataFetchService.fetchData(DocumentType.XBRL, docNumber);
+        var zipData = edinetDataFetchService.fetchData(DocumentType.XBRL, documentNumber);
 
         byte[] fileContent = null;
         try (
