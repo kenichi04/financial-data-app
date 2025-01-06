@@ -4,6 +4,11 @@ public class Account {
     private String accountCode;
     private String name;
 
+    public Account(String accountCode, String name) {
+        this.accountCode = accountCode;
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

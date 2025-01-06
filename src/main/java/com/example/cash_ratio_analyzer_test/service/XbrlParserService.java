@@ -1,6 +1,6 @@
 package com.example.cash_ratio_analyzer_test.service;
 
-import com.example.cash_ratio_analyzer_test.entity.XbrlData;
+import com.example.cash_ratio_analyzer_test.entity.FinancialData;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +29,12 @@ public class XbrlParserService {
     }
 
     // TODO SAXパーサーで逐次解析の方がメモリ効率が良い
-    public List<XbrlData> parseXbrl(byte[] xbrlContent) {
-        var result = new ArrayList<XbrlData>();
+    public List<FinancialData> parseXbrl(byte[] xbrlContent) {
+        var result = new ArrayList<FinancialData>();
 
         var document = parseDocumentToDom(xbrlContent);
         var elements = document.getDocumentElement();
-        // TODO タグについては要検討
+        // TODO タグについては要検討, enumで管理するかも
         var nodeList = elements.getElementsByTagName("ix:nonFraction");
 
         if (nodeList.getLength() == 0) {
@@ -50,25 +51,28 @@ public class XbrlParserService {
             if (xbrlData == null) {
                 continue;
             }
+            // TODO 今期と前期が別のElementになるため、1つのFinancialDataとしてマージする？
             result.add(xbrlData);
         }
 
         return result;
     }
 
-    private XbrlData extractXbrlData(Element element) {
+    private FinancialData extractXbrlData(Element element) {
         var targetAccounts = accountService.getAccountNames();
+        // TODO `jppfs_cor:CashAndDeposits`のような形式のため、`jppfs_cor:`は除去する
         var name = element.getAttribute("name");
         if (name.isEmpty() || !targetAccounts.contains(name)) {
+            // TODO Optionalで返す
             return null;
         }
         // 今期か前期は判断できる
         var contextRef = element.getAttribute("contextRef");
         var unitRef = element.getAttribute("unitRef");
-        var value = element.getTextContent();
+        var value = new BigDecimal(element.getTextContent());
 
         // TODO FinancialDataクラスへ差し替え
-        return new XbrlData(name, contextRef, unitRef, value);
+        return new FinancialData(name, contextRef, unitRef, value);
     }
 
     /**
