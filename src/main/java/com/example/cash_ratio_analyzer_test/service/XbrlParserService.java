@@ -17,9 +17,12 @@ import java.util.List;
 @Service
 public class XbrlParserService {
 
+    private final AccountService accountService;
+
     private DocumentBuilder documentBuilder;
 
-    public XbrlParserService() throws ParserConfigurationException {
+    public XbrlParserService(AccountService accountService) throws ParserConfigurationException {
+        this.accountService = accountService;
         var factory = DocumentBuilderFactory.newInstance();
         this.documentBuilder = factory.newDocumentBuilder();
     }
@@ -37,7 +40,9 @@ public class XbrlParserService {
             return result;
         }
 
-        // TODO ここで取得する情報を選別する
+        // TODO ここで取得する情報（科目）を選別する > accountsテーブルに取得する科目をマスタデータとして登録しておく想定
+        // 企業データは登録済の想定, 企業に紐づく文書データは別APIで事前登録済の想定
+        // ここで保存する科目は、登録済の文書データに紐づく必要がある
         for (int i = 0; i < nodeList.getLength(); i++) {
             var element = (Element) nodeList.item(i);
             var xbrlData = extractXbrlData(element);
@@ -52,14 +57,17 @@ public class XbrlParserService {
     }
 
     private XbrlData extractXbrlData(Element element) {
+        var targetAccounts = accountService.getAccountNames();
         var name = element.getAttribute("name");
-        if (name.isEmpty() || !name.contains("CashAndDeposits")) {
+        if (name.isEmpty() || !targetAccounts.contains(name)) {
             return null;
         }
+        // 今期か前期は判断できる
         var contextRef = element.getAttribute("contextRef");
         var unitRef = element.getAttribute("unitRef");
         var value = element.getTextContent();
 
+        // TODO FinancialDataクラスへ差し替え
         return new XbrlData(name, contextRef, unitRef, value);
     }
 
