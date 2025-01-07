@@ -1,8 +1,12 @@
 package com.example.cash_ratio_analyzer_test.service;
 
 import com.example.cash_ratio_analyzer_test.DocumentType;
+import com.example.cash_ratio_analyzer_test.entity.FinancialData;
 import com.example.cash_ratio_analyzer_test.repository.IEdinetDataRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EdinetScenarioService {
@@ -19,7 +23,8 @@ public class EdinetScenarioService {
         this.edinetDataRepository = edinetDataRepository;
     }
 
-    public String executeEdinetScenario(String documentNumber) {
+    // transactionalアノテーションを付与する
+    public ResponseEntity<List<FinancialData>> executeEdinetScenario(String documentNumber) {
         var fetchData = edinetDataFetchService.fetchData(DocumentType.XBRL, documentNumber);
         // zip形式のデータからターゲットファイルを取得
         // MapかListで返すようにしても良いかも（対象が複数ある場合）
@@ -27,11 +32,10 @@ public class EdinetScenarioService {
         var targetData = edinetDataParsingService.extractTargetFile(fetchData);
         // XBRLから必要なデータを抽出
         var extractedData = xbrlParserService.parseXbrl(targetData);
-
-        // TODO DBに保存（一旦インタフェース実装してインメモリに保存する）
+        // TODO DBに保存
         edinetDataRepository.save(extractedData);
 
-        // FIXME 実装途中. 一旦、対象ファイルの内容をそのまま出力しているだけ（レスポンスエンティティ返すよう変更）
-        return new String(targetData);
+        // FIXME 実装途中. 一旦、抽出した内容をそのまま出力しているだけ
+        return ResponseEntity.ok(extractedData);
     }
 }

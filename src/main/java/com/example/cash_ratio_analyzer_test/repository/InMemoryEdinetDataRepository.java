@@ -10,12 +10,14 @@ import java.util.Map;
 @Repository
 public class InMemoryEdinetDataRepository implements IEdinetDataRepository {
 
-    private Map<String, FinancialData> financialDataStore = new HashMap<>();
+    private Map<Long, FinancialData> financialDataStore = new HashMap<>();
+    private Long id = 1L;
 
     @Override
     public void save(List<FinancialData> financialDataList) {
-        for (var xbrlData : financialDataList) {
-            financialDataStore.put(xbrlData.getContextRef(), xbrlData);
+        for (var financialData : financialDataList) {
+            financialDataStore.put(id, financialData);
+            id++;
         }
     }
 }
