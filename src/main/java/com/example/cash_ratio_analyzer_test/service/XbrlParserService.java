@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+// TODO インターフェース作成して、切替可能にする
 @Service
 public class XbrlParserService {
 
@@ -34,7 +36,9 @@ public class XbrlParserService {
 
         var document = parseDocumentToDom(xbrlContent);
         var elements = document.getDocumentElement();
-        // TODO タグについては要検討, enumで管理するかも
+        // TODO タグについては要検討 > 一旦ix:nonFractionでよさそう （enum、定数で管理？）
+        // ix:nonFraction: 金額又は数値を表現する場合
+        // 参考: https://www.fsa.go.jp/search/20151228/2b_1.pdf
         var nodeList = elements.getElementsByTagName("ix:nonFraction");
 
         if (nodeList.getLength() == 0) {
@@ -46,33 +50,56 @@ public class XbrlParserService {
         // ここで保存する科目は、登録済の文書データに紐づく必要がある
         for (int i = 0; i < nodeList.getLength(); i++) {
             var element = (Element) nodeList.item(i);
-            var xbrlData = extractXbrlData(element);
+            var financialData = extractFinancialDataFromElement(element);
 
-            if (xbrlData == null) {
+            if (financialData.isEmpty()) {
                 continue;
             }
-            // TODO 今期と前期が別のElementになるため、1つのFinancialDataとしてマージする？
-            result.add(xbrlData);
+            result.add(financialData.get());
         }
 
         return result;
     }
 
-    private FinancialData extractXbrlData(Element element) {
+    /**
+     * 指定されたXML要素からFinancialDataを抽出します。
+     *
+     * @param element XML要素
+     * @return 抽出されたFinancialData、該当するデータが無い場合はOptional.empty()
+     */
+    private Optional<FinancialData> extractFinancialDataFromElement(Element element) {
         var targetAccounts = accountService.getAccountNames();
-        // TODO `jppfs_cor:CashAndDeposits`のような形式のため、`jppfs_cor:`は除去する
-        var name = element.getAttribute("name");
+
+        // `jppfs_cor:`は名前空間プレフィックスのため不要
+        var name = element.getAttribute("name").replace("jppfs_cor:", "");
         if (name.isEmpty() || !targetAccounts.contains(name)) {
-            // TODO Optionalで返す
-            return null;
+            return Optional.empty();
         }
-        // 今期か前期は判断できる
+
         var contextRef = element.getAttribute("contextRef");
         var unitRef = element.getAttribute("unitRef");
-        var value = new BigDecimal(element.getTextContent());
+        var value = extractValueFromElement(element);
+        // 金額が0の場合は登録しない
+        if (value.equals(BigDecimal.ZERO)) {
+            return Optional.empty();
+        }
 
-        // TODO FinancialDataクラスへ差し替え
-        return new FinancialData(name, contextRef, unitRef, value);
+        return Optional.of(new FinancialData(name, contextRef, unitRef, value));
+    }
+
+    /**
+     * 指定されたXML要素から数値を抽出します。
+     *
+     * @param element XML要素
+     * @return 抽出された数値、数値が無い場合はBigDecimal.ZERO
+     */
+    private BigDecimal extractValueFromElement(Element element) {
+        try {
+            // 金額はカンマ区切り
+            return new BigDecimal(element.getTextContent().trim().replace(",", ""));
+        } catch (NumberFormatException e) {
+            return BigDecimal.ZERO;
+        }
     }
 
     /**
