@@ -8,10 +8,15 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class InMemoryEdinetDataRepository implements IEdinetDataRepository {
+public class InMemoryFinancialDataRepository implements IFinancialDataRepository {
 
     private Map<Long, FinancialData> financialDataStore = new HashMap<>();
     private Long id = 1L;
+
+    @Override
+    public List<FinancialData> findAll() {
+        return List.copyOf(financialDataStore.values());
+    }
 
     @Override
     public void save(List<FinancialData> financialDataList) {

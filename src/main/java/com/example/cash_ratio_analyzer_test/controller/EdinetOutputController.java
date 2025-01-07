@@ -19,7 +19,6 @@ public class EdinetOutputController {
 
     @GetMapping("/xbrl/zip/{documentNumber}")
     public String getXbrlZipData(@PathVariable String documentNumber) {
-//        String testDocumentNumber = "S100TGZR";
         return edinetDataOutputService.testFetchEdinetZipData(DocumentType.XBRL, documentNumber);
     }
 
