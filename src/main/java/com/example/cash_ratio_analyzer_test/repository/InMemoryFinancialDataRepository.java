@@ -14,11 +14,6 @@ public class InMemoryFinancialDataRepository implements IFinancialDataRepository
     private Long id = 1L;
 
     @Override
-    public List<FinancialData> findAll() {
-        return List.copyOf(financialDataStore.values());
-    }
-
-    @Override
     public void save(List<FinancialData> financialDataList) {
         for (var financialData : financialDataList) {
             financialDataStore.put(id, financialData);
