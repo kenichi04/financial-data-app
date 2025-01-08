@@ -19,13 +19,9 @@ public class FinancialDocumentService {
         return financialDocumentRepository.findByDocumentId(documentId);
     }
 
-    public void saveFinancialDocument(FinancialDocument financialDocument) {
-        financialDocumentRepository.save(financialDocument);
-    }
-
+    // TODO transactionalアノテーションを付与する
     public void saveFinancialData(String documentId, List<FinancialData> financialDataList) {
-        // TODO そもそもFinancialDocument自体が新規に作成されるべきでは？
-        FinancialDocument financialDocument = financialDocumentRepository.findByDocumentId(documentId);
+        var financialDocument = new FinancialDocument(documentId);
         financialDocument.getData().addAll(financialDataList);
         financialDocumentRepository.save(financialDocument);
     }
