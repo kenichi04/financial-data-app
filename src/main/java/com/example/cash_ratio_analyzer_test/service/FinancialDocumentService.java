@@ -2,6 +2,7 @@ package com.example.cash_ratio_analyzer_test.service;
 
 import com.example.cash_ratio_analyzer_test.entity.FinancialData;
 import com.example.cash_ratio_analyzer_test.entity.FinancialDocument;
+import com.example.cash_ratio_analyzer_test.repository.ICompanyRepository;
 import com.example.cash_ratio_analyzer_test.repository.IFinancialDocumentRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +12,11 @@ import java.util.List;
 public class FinancialDocumentService {
     private final IFinancialDocumentRepository financialDocumentRepository;
 
-    public FinancialDocumentService(IFinancialDocumentRepository financialDocumentRepository, IFinancialDocumentRepository financialDocumentRepository1) {
+    private final ICompanyRepository companyRepository;
+
+    public FinancialDocumentService(IFinancialDocumentRepository financialDocumentRepository, IFinancialDocumentRepository financialDocumentRepository1, ICompanyRepository companyRepository) {
         this.financialDocumentRepository = financialDocumentRepository1;
+        this.companyRepository = companyRepository;
     }
 
     public FinancialDocument getFinancialDocument(String documentId) {
@@ -22,9 +26,10 @@ public class FinancialDocumentService {
     // TODO transactionalアノテーションを付与する
     // 書類一覧APIレスポンスからdocument作成する場合は、dataが取得できないため、documentIdのみで作成する
     public void create(String companyId, String documentId) {
-        // TODO 本来はcompanyIdを使って企業情報を取得し、それを使ってFinancialDocumentを作成する
+        // TODO 直接companyRepository使うか？companyServiceでラップするか？
+        var company = companyRepository.findByCompanyId(companyId);
         // 仮実装, ここでcompanyIdを使用してcompanyの存在チェック
-        if (companyId == null) {
+        if (company == null) {
             throw new RuntimeException("company is not found");
         }
         // companyとdocumentは一対多の関係
