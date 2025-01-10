@@ -1,6 +1,6 @@
-package com.example.cash_ratio_analyzer_test.repository;
+package com.example.cash_ratio_analyzer_test.domain.repository;
 
-import com.example.cash_ratio_analyzer_test.entity.Company;
+import com.example.cash_ratio_analyzer_test.domain.model.Company;
 
 import java.util.List;
 

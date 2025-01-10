@@ -1,6 +1,6 @@
-package com.example.cash_ratio_analyzer_test.service;
+package com.example.cash_ratio_analyzer_test.application.service;
 
-import com.example.cash_ratio_analyzer_test.entity.FinancialData;
+import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

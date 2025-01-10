@@ -1,6 +1,6 @@
-package com.example.cash_ratio_analyzer_test.repository;
+package com.example.cash_ratio_analyzer_test.domain.repository;
 
-import com.example.cash_ratio_analyzer_test.entity.FinancialDocument;
+import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
 
 public interface IFinancialDocumentRepository {
     FinancialDocument findByDocumentId(String documentId);

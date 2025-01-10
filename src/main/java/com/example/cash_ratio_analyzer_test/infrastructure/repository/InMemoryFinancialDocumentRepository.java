@@ -1,6 +1,7 @@
-package com.example.cash_ratio_analyzer_test.repository;
+package com.example.cash_ratio_analyzer_test.infrastructure.repository;
 
-import com.example.cash_ratio_analyzer_test.entity.FinancialDocument;
+import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
+import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;

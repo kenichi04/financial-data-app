@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.entity;
+package com.example.cash_ratio_analyzer_test.domain.model;
 
 import java.math.BigDecimal;
 

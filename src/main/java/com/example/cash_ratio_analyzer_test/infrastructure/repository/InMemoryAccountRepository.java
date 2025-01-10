@@ -1,6 +1,7 @@
-package com.example.cash_ratio_analyzer_test.repository;
+package com.example.cash_ratio_analyzer_test.infrastructure.repository;
 
-import com.example.cash_ratio_analyzer_test.entity.Account;
+import com.example.cash_ratio_analyzer_test.domain.model.Account;
+import com.example.cash_ratio_analyzer_test.domain.repository.IAccountRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

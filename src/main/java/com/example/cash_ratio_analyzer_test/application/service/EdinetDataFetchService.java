@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.service;
+package com.example.cash_ratio_analyzer_test.application.service;
 
 import com.example.cash_ratio_analyzer_test.DocumentType;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,7 +1,7 @@
 package com.example.cash_ratio_analyzer_test.controller;
 
 import com.example.cash_ratio_analyzer_test.DocumentType;
-import com.example.cash_ratio_analyzer_test.service.EdinetDataOutputService;
+import com.example.cash_ratio_analyzer_test.application.service.EdinetDataOutputService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

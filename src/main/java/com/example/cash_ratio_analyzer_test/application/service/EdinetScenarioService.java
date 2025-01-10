@@ -1,7 +1,7 @@
-package com.example.cash_ratio_analyzer_test.service;
+package com.example.cash_ratio_analyzer_test.application.service;
 
+import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import com.example.cash_ratio_analyzer_test.DocumentType;
-import com.example.cash_ratio_analyzer_test.entity.FinancialData;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 

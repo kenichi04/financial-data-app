@@ -1,9 +1,9 @@
-package com.example.cash_ratio_analyzer_test.service;
+package com.example.cash_ratio_analyzer_test.application.service;
 
-import com.example.cash_ratio_analyzer_test.entity.FinancialData;
-import com.example.cash_ratio_analyzer_test.entity.FinancialDocument;
-import com.example.cash_ratio_analyzer_test.repository.ICompanyRepository;
-import com.example.cash_ratio_analyzer_test.repository.IFinancialDocumentRepository;
+import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
+import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
+import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
+import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

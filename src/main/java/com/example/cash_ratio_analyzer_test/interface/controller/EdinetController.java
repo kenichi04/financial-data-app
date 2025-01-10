@@ -1,9 +1,9 @@
 package com.example.cash_ratio_analyzer_test.controller;
 
-import com.example.cash_ratio_analyzer_test.entity.FinancialData;
-import com.example.cash_ratio_analyzer_test.entity.FinancialDocument;
-import com.example.cash_ratio_analyzer_test.service.EdinetScenarioService;
-import com.example.cash_ratio_analyzer_test.service.FinancialDocumentService;
+import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
+import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
+import com.example.cash_ratio_analyzer_test.application.service.EdinetScenarioService;
+import com.example.cash_ratio_analyzer_test.application.service.FinancialDocumentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
