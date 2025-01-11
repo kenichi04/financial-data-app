@@ -26,7 +26,7 @@ public class EdinetController {
     }
 
     @GetMapping("/fetchAndAnalyze/{documentId}")
-    public ResponseEntity<List<FinancialData>> fetchAndAnalyzeData(@PathVariable String documentId) {
+    public ResponseEntity<List<FinancialData>> fetchAndAnalyze(@PathVariable String documentId) {
         // String testDocumentNumber = "S100TGZR";
         // シナリオサービスを呼び出す
         return edinetScenarioService.executeEdinetScenario(documentId);

@@ -18,7 +18,7 @@ public class FinancialDocument {
         return documentId;
     }
 
-    public List<FinancialData> getData() {
-        return data;
+    public void createData(List<FinancialData> data) {
+        this.data = data;
     }
 }

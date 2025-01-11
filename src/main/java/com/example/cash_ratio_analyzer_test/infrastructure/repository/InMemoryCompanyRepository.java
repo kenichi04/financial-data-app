@@ -17,4 +17,9 @@ public class InMemoryCompanyRepository implements ICompanyRepository {
     public Company findByCompanyId(String companyId) {
         return null;
     }
+
+    @Override
+    public void save(Company company) {
+
+    }
 }

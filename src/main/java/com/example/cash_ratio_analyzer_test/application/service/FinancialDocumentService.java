@@ -35,7 +35,8 @@ public class FinancialDocumentService {
         // companyとdocumentは一対多の関係
         // ここの処理は検討
         var financialDocument = new FinancialDocument(documentId);
-        financialDocumentRepository.save(financialDocument);
+        company.addDocument(financialDocument);
+        companyRepository.save(company);
     }
 
     // TODO transactionalアノテーションを付与する
@@ -46,7 +47,7 @@ public class FinancialDocumentService {
         if (financialDocument == null) {
             financialDocument = new FinancialDocument(documentId);
         }
-        financialDocument.getData().addAll(financialDataList);
+        financialDocument.createData(financialDataList);
         financialDocumentRepository.save(financialDocument);
     }
 }

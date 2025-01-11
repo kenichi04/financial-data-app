@@ -31,7 +31,7 @@ public class EdinetScenarioService {
         var targetData = edinetDataParsingService.extractTargetFile(fetchData);
         // XBRLから必要なデータを抽出
         var extractedData = xbrlParserService.parseXbrl(targetData);
-        // TODO DBに保存（FinancialDataService経由が良いかも）
+        // TODO DBに保存
         financialDocumentService.saveFinancialData(documentId, extractedData);
 
         // FIXME 実装途中. 一旦、抽出した内容をそのまま出力しているだけ
