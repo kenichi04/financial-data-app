@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/edinet/documents")
+@RequestMapping("/api/documents")
 public class EdinetController {
 
     private final EdinetScenarioService edinetScenarioService;
@@ -29,7 +29,7 @@ public class EdinetController {
     }
 
     @PostMapping("/financial-data/{documentId}/fetch")
-    public ResponseEntity<List<FinancialData>> fetchAndSave(@PathVariable String documentId) {
+    public ResponseEntity<List<FinancialData>> fetchAndSaveFinancialData    (@PathVariable String documentId) {
         // String testDocumentNumber = "S100TGZR";
         // シナリオサービスを呼び出す
         return edinetScenarioService.fetchAndSaveFinancialData(documentId);

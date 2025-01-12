@@ -1,6 +1,6 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
-import com.example.cash_ratio_analyzer_test.DocumentType;
+import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -9,24 +9,40 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class EdinetDataFetchService {
 
-    // 書類取得API
-    @Value("${edinet.api.url:}")
-    private String edinetApiUrl;
+    /** 書類一覧API */
+    @Value("${edinet.api.document.list.url:}")
+    private String edinetDocumentListUrl;
+    // https://api.edinet-fsa.go.jp/api/v2/documents.json?date={date}&type=2&Subscription-Key={key}
+
+    /** 書類取得API */
+    @Value("${edinet.api.document.retrieval.url:}")
+    private String edinetDocumentRetrievalApiUrl;
 
     @Value("${edinet.api.subscriptionKey:}")
     private String subscriptionKey;
 
+    private void fetchDocumentList() {
+        var restTemplate = new RestTemplate();
+        var response = restTemplate.exchange(
+                edinetDocumentListUrl, HttpMethod.GET, null,
+                byte[].class, "2025-01-01", subscriptionKey);
+
+        validateStatusCode(response.getStatusCode());
+        validateContentType(response.getHeaders().getContentType());
+        validateResponseBody(response.getBody());
+    }
+
     /**
      * EDINET APIからデータを取得します。
      *
-     * @param type     取得する書類の種類
+     * @param type 取得する書類の種類
      * @param documentNumber 取得する書類の書類番号
      * @return 取得したデータ
      */
-    public byte[] fetchData(DocumentType type, String documentNumber) {
+    public byte[] fetchFinancialData(FetchDocumentType type, String documentNumber) {
         var restTemplate = new RestTemplate();
         var response = restTemplate.exchange(
-                edinetApiUrl, HttpMethod.GET, null,
+                edinetDocumentRetrievalApiUrl, HttpMethod.GET, null,
                 byte[].class, documentNumber, type.code(), subscriptionKey);
 
         validateStatusCode(response.getStatusCode());

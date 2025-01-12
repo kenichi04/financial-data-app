@@ -1,6 +1,6 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
-import com.example.cash_ratio_analyzer_test.DocumentType;
+import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -27,8 +27,8 @@ public class EdinetDataOutputService {
 
     RestTemplate restTemplate = new RestTemplate();
 
-    public String testFetchEdinetZipData(DocumentType type, String documentNumber) {
-        var fetchData = edinetDataFetchService.fetchData(type, documentNumber);
+    public String testFetchEdinetZipData(FetchDocumentType type, String documentNumber) {
+        var fetchData = edinetDataFetchService.fetchFinancialData(type, documentNumber);
 
         var extension = ".zip";
         var fileName = String.format(
@@ -39,7 +39,7 @@ public class EdinetDataOutputService {
     }
 
     public String testFetchEdinetPdfData(String documentNumber) {
-        var fetchData = edinetDataFetchService.fetchData(DocumentType.PDF, documentNumber);
+        var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.PDF, documentNumber);
 
         var extension = ".pdf";
         outputFile(fetchData, documentNumber + extension);
@@ -49,7 +49,7 @@ public class EdinetDataOutputService {
 
     public String testFetchEdinetXbrlData(String documentNumber) {
         // zip形式のバイナリデータ
-        var zipData = edinetDataFetchService.fetchData(DocumentType.XBRL, documentNumber);
+        var zipData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentNumber);
 
         byte[] fileContent = null;
         try (

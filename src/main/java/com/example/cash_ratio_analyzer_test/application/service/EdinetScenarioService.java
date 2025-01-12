@@ -1,7 +1,7 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
-import com.example.cash_ratio_analyzer_test.DocumentType;
+import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class EdinetScenarioService {
     // TODO transactionalアノテーションを付与する
     // 書類取得APIから財務データ取得、分析して登録する処理を管理する
     public ResponseEntity<List<FinancialData>> fetchAndSaveFinancialData(String documentId) {
-        var fetchData = edinetDataFetchService.fetchData(DocumentType.XBRL, documentId);
+        var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentId);
         // zip形式のデータからターゲットファイルを取得
         // MapかListで返すようにしても良いかも（対象が複数ある場合）
         // 一時ファイル作成も検討する（将来的に）

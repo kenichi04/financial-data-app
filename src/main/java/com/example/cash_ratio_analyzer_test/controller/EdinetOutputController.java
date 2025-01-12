@@ -1,6 +1,6 @@
 package com.example.cash_ratio_analyzer_test.controller;
 
-import com.example.cash_ratio_analyzer_test.DocumentType;
+import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
 import com.example.cash_ratio_analyzer_test.application.service.EdinetDataOutputService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +19,12 @@ public class EdinetOutputController {
 
     @GetMapping("/xbrl/zip/{documentNumber}")
     public String getXbrlZipData(@PathVariable String documentNumber) {
-        return edinetDataOutputService.testFetchEdinetZipData(DocumentType.XBRL, documentNumber);
+        return edinetDataOutputService.testFetchEdinetZipData(FetchDocumentType.XBRL, documentNumber);
     }
 
     @GetMapping("/csv/zip/{documentNumber}")
     public String getCsvZipData(@PathVariable String documentNumber) {
-        return edinetDataOutputService.testFetchEdinetZipData(DocumentType.CSV, documentNumber);
+        return edinetDataOutputService.testFetchEdinetZipData(FetchDocumentType.CSV, documentNumber);
     }
 
     @GetMapping("/xbrl/{documentNumber}")

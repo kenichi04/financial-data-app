@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 // ドメインモデルとしての財務データ
 // TODO 別途データ永続用のエンティティクラス（FinancialDataEntity）を作成して、データとロジックを分離する
 public class FinancialData {
+    private String documentId;
     private String name;
     // 前期、今期の判定
     private String contextRef;
