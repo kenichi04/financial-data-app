@@ -1,5 +1,6 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
+import com.example.cash_ratio_analyzer_test.application.service.enums.FetchMode;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
 import org.springframework.http.ResponseEntity;
@@ -10,12 +11,14 @@ import java.util.List;
 @Service
 public class EdinetScenarioService {
 
+    private final EdinetDocumentListService edinetDocumentListService;
     private final EdinetDataFetchService edinetDataFetchService;
     private final EdinetDataParsingService edinetDataParsingService;
     private final XbrlParserService xbrlParserService;
     private final FinancialDocumentService financialDocumentService;
 
-    public EdinetScenarioService(EdinetDataFetchService edinetDataFetchService, EdinetDataParsingService edinetDataParsingService, XbrlParserService xbrlParserService, FinancialDocumentService financialDocumentService) {
+    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetDataParsingService edinetDataParsingService, XbrlParserService xbrlParserService, FinancialDocumentService financialDocumentService) {
+        this.edinetDocumentListService = edinetDocumentListService;
         this.edinetDataFetchService = edinetDataFetchService;
         this.edinetDataParsingService = edinetDataParsingService;
         this.xbrlParserService = xbrlParserService;
@@ -25,8 +28,9 @@ public class EdinetScenarioService {
     // TODO transactionalアノテーションを付与する
     // 書類一覧APIから書類メタデータ取得、登録する処理を管理する
     public ResponseEntity<String> fetchAndSaveDocumentMetadata() {
-        // FIXME 実装途中. 一旦、成功した旨を返すだけ
-        return ResponseEntity.ok("success");
+        // FIXME 実装途中. 一旦、取得したデータを返すだけ
+        var data = edinetDocumentListService.fetchDocumentList(FetchMode.METADATA_AND_LIST);
+        return ResponseEntity.ok(data);
     }
 
     // TODO transactionalアノテーションを付与する

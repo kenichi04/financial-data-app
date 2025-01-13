@@ -1,37 +1,36 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
-import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
+import com.example.cash_ratio_analyzer_test.application.service.enums.FetchMode;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class EdinetDataFetchService {
+public class EdinetDocumentListService {
 
-    /** 書類取得API */
-    @Value("${edinet.api.document.retrieval.url:}")
-    private String edinetDocumentRetrievalApiUrl;
+    /** 書類一覧API */
+    @Value("${edinet.api.document.list.url:}")
+    private String edinetDocumentListUrl;
 
     @Value("${edinet.api.subscriptionKey:}")
     private String subscriptionKey;
 
-    /**
-     * 書類取得APIからデータを取得します。
-     *
-     * @param type 取得する書類の種類
-     * @param documentId 取得する書類の書類番号
-     * @return 取得したデータ
-     */
-    public byte[] fetchFinancialData(FetchDocumentType type, String documentId) {
+    public String fetchDocumentList(FetchMode mode) {
         var restTemplate = new RestTemplate();
+        // TODO JSON形式の文字列
+        // TODO dateは必須パラメータ > 引数で受け取る
+
         var response = restTemplate.exchange(
-                edinetDocumentRetrievalApiUrl, HttpMethod.GET, null,
-                byte[].class, documentId, type.code(), subscriptionKey);
+                edinetDocumentListUrl, HttpMethod.GET, null,
+                String.class, "2023-04-03", mode.code(), subscriptionKey);
 
         validateStatusCode(response.getStatusCode());
         validateContentType(response.getHeaders().getContentType());
         validateResponseBody(response.getBody());
+        // TODO JSONパース
 
         return response.getBody();
     }
@@ -67,7 +66,7 @@ public class EdinetDataFetchService {
      * @return コンテンツタイプが有効な場合はtrue、そうでない場合はfalse
      */
     private boolean isValidContentType(String contentType) {
-        return contentType.contains("application/octet-stream") || contentType.contains("application/pdf");
+        return contentType.contains("application/json");
     }
 
     /**
@@ -76,8 +75,8 @@ public class EdinetDataFetchService {
      * @param responseBody 検証するレスポンスボディ
      * @throws RuntimeException レスポンスボディが無効な場合
      */
-    private void validateResponseBody(byte[] responseBody) {
-        if (responseBody == null || responseBody.length == 0) {
+    private void validateResponseBody(String responseBody) {
+        if (responseBody == null || responseBody.length() == 0) {
             throw new RuntimeException("Response body is empty or null");
         }
     }
