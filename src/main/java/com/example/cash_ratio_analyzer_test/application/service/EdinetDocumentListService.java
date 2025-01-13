@@ -4,6 +4,7 @@ import com.example.cash_ratio_analyzer_test.application.service.enums.FetchMode;
 import com.example.cash_ratio_analyzer_test.application.service.validation.ApiResponseValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,7 +35,7 @@ public class EdinetDocumentListService {
 
         apiResponseValidator.validateStatusCode(response.getStatusCode());
         apiResponseValidator.validateContentType(response.getHeaders().getContentType(),
-                "application/json");
+                MediaType.APPLICATION_JSON);
         apiResponseValidator.validateResponseBody(response.getBody());
         // TODO JSONパース
 

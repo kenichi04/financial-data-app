@@ -38,7 +38,7 @@ public class EdinetDataFetchService {
 
         apiResponseValidator.validateStatusCode(response.getStatusCode());
         apiResponseValidator.validateContentType(response.getHeaders().getContentType(),
-                "application/octet-stream", "application/pdf");
+                MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_PDF);
         apiResponseValidator.validateResponseBody(response.getBody());
 
         return response.getBody();

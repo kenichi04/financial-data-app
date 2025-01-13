@@ -26,22 +26,22 @@ public class ApiResponseValidator {
      * @param expectedContentType 期待されるコンテンツタイプの可変長引数
      * @throws RuntimeException コンテンツタイプが期待されるものと一致しない場合
      */
-    public void validateContentType(MediaType contentType, String... expectedContentType) {
-        if (contentType == null || !isValidContentType(contentType.toString(), expectedContentType)) {
+    public void validateContentType(MediaType contentType, MediaType... expectedContentType) {
+        if (contentType == null || !isValidContentType(contentType, expectedContentType)) {
             throw new RuntimeException("Invalid content type: " + contentType);
         }
     }
 
     /**
-     * 実際のコンテンツタイプが期待されるコンテンツタイプのいずれかを含むかどうかを検証します。
+     * 実際のコンテンツタイプが期待されるコンテンツタイプのいずれかと互換性があるかどうかを検証します。
      *
      * @param actualContentType 実際のコンテンツタイプ
      * @param expectedContentType 期待されるコンテンツタイプの可変長引数
-     * @return 実際のコンテンツタイプが期待されるコンテンツタイプのいずれかを含む場合はtrue、それ以外の場合はfalse
+     * @return 実際のコンテンツタイプが期待されるコンテンツタイプのいずれかと互換性がある場合はtrue、それ以外の場合はfalse
      */
-    private boolean isValidContentType(String actualContentType, String... expectedContentType) {
+    private boolean isValidContentType(MediaType actualContentType, MediaType... expectedContentType) {
         for (var expected : expectedContentType) {
-            if (actualContentType.contains(expected)) {
+            if (expected.isCompatibleWith(actualContentType)) {
                 return true;
             }
         }
