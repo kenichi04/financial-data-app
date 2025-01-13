@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.controller;
+package com.example.cash_ratio_analyzer_test.presentation.controller;
 
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;

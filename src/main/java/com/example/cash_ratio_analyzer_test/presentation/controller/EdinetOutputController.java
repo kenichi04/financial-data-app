@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.controller;
+package com.example.cash_ratio_analyzer_test.presentation.controller;
 
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
 import com.example.cash_ratio_analyzer_test.application.service.EdinetDataOutputService;

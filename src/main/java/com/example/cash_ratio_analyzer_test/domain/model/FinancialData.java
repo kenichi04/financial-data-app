@@ -13,6 +13,7 @@ public class FinancialData {
     private BigDecimal value;
     // TODO 通貨はFinancialDocumentクラスで持つ方が良さそう
     private String currency;
+    // TODO 貸方、借方の判定は？属する種類（貸借対照表、損益計算書）は？
 
     public FinancialData(String name, String contextRef, String unitRef, BigDecimal value) {
         this.name = name;
