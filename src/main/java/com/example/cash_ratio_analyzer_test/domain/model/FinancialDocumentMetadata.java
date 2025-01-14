@@ -22,7 +22,7 @@ public class FinancialDocumentMetadata {
     private LocalDate submissionDate;
 
     /** 書類取得APIで取得済か */
-    private boolean isFetched = false;
+    private boolean processed = false;
 
     public FinancialDocumentMetadata(String documentId, String description, String edinetCode, String filerName, EdinetDocumentType documentType, LocalDate submissionDate) {
         this.documentId = documentId;
@@ -31,7 +31,14 @@ public class FinancialDocumentMetadata {
         this.filerName = filerName;
         this.documentType = documentType;
         this.submissionDate = submissionDate;
-        this.isFetched = false;
+        this.processed = false;
     }
 
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void updateProcessedStatus() {
+        this.processed = true;
+    }
 }
