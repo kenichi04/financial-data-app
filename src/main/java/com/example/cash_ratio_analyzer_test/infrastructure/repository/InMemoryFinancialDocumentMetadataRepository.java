@@ -2,20 +2,22 @@ package com.example.cash_ratio_analyzer_test.infrastructure.repository;
 
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
 import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentMetadataRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class InMemoryFinancialDocumentMetadataRepository implements IFinancialDocumentMetadataRepository {
-    private Map<String, FinancialDocumentMetadata> financialDocumentMetadataStore = new HashMap<>();
+    private Map<String, FinancialDocumentMetadata> metadataStore = new HashMap<>();
 
     @Override
     public FinancialDocumentMetadata findByDocumentId(String documentId) {
-        return null;
+        return metadataStore.getOrDefault(documentId, null);
     }
 
     @Override
     public void save(FinancialDocumentMetadata financialDocumentMetadata) {
-        financialDocumentMetadataStore.put(financialDocumentMetadata.getDocumentId(), financialDocumentMetadata);
+        metadataStore.put(financialDocumentMetadata.getDocumentId(), financialDocumentMetadata);
     }
 }
