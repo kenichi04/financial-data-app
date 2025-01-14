@@ -15,15 +15,15 @@ public class EdinetScenarioService {
     private final EdinetDocumentListService edinetDocumentListService;
     private final EdinetDataFetchService edinetDataFetchService;
     private final EdinetDataParsingService edinetDataParsingService;
-    private final JsonPerserService jsonPerserService;
+    private final JsonParserService jsonParserService;
     private final XbrlParserService xbrlParserService;
     private final FinancialDocumentService financialDocumentService;
 
-    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetDataParsingService edinetDataParsingService, JsonPerserService jsonPerserService, XbrlParserService xbrlParserService, FinancialDocumentService financialDocumentService) {
+    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetDataParsingService edinetDataParsingService, JsonParserService jsonParserService, XbrlParserService xbrlParserService, FinancialDocumentService financialDocumentService) {
         this.edinetDocumentListService = edinetDocumentListService;
         this.edinetDataFetchService = edinetDataFetchService;
         this.edinetDataParsingService = edinetDataParsingService;
-        this.jsonPerserService = jsonPerserService;
+        this.jsonParserService = jsonParserService;
         this.xbrlParserService = xbrlParserService;
         this.financialDocumentService = financialDocumentService;
     }
@@ -34,7 +34,7 @@ public class EdinetScenarioService {
         // FIXME 実装途中. 一旦、取得したデータを返すだけ
         var data = edinetDocumentListService.fetchDocumentList(FetchMode.METADATA_AND_LIST);
         // TODO companyもここで登録するか？もしくは事前登録しておくか？
-        var metadataList = jsonPerserService.parseDocumentList(data);
+        var metadataList = jsonParserService.parseDocumentList(data);
 
         // TODO DBに保存
 

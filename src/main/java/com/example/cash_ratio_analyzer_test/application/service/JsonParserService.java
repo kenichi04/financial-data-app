@@ -15,9 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
-public class JsonPerserService {
+public class JsonParserService {
     public List<FinancialDocumentMetadata> parseDocumentList(String jsonData) {
-        List<FinancialDocumentMetadata> metadataList = List.of();
         var response = parseJsonData(jsonData);
 
         validateResponseStatus(response.getStatus());
@@ -25,7 +24,7 @@ public class JsonPerserService {
             return List.of();
         }
 
-        metadataList = response.getResults().stream()
+        var metadataList = response.getResults().stream()
                 .filter(result -> isPermittedDocumentType(result.getDocTypeCode()))
                 .map(result -> {
                     var documentType = EdinetDocumentType.fromCode(
