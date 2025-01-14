@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// TODO 2つのメソッドのユースケース違うので、クラス分けても良いかも
 @Service
 public class EdinetScenarioService {
 
@@ -32,11 +33,11 @@ public class EdinetScenarioService {
     public ResponseEntity<String> fetchAndSaveDocumentMetadata() {
         // FIXME 実装途中. 一旦、取得したデータを返すだけ
         var data = edinetDocumentListService.fetchDocumentList(FetchMode.METADATA_AND_LIST);
-        // TODO JSONパース
-        // TODO 必要なデータを抽出
-        jsonPerserService.parseDocumentList(data);
+        // TODO companyもここで登録するか？もしくは事前登録しておくか？
+        var metadataList = jsonPerserService.parseDocumentList(data);
 
         // TODO DBに保存
+
         return ResponseEntity.ok(data);
     }
 

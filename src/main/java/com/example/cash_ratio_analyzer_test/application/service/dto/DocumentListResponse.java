@@ -8,4 +8,12 @@ import java.util.List;
 public class DocumentListResponse {
     private Metadata metadata;
     private List<Result> results;
+
+    public int getCount() {
+        return metadata.getResultSet().getCount();
+    }
+
+    public String getStatus() {
+        return metadata.getStatus();
+    }
 }

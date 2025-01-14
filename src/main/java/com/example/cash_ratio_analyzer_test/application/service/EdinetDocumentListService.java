@@ -26,18 +26,17 @@ public class EdinetDocumentListService {
 
     public String fetchDocumentList(FetchMode mode) {
         var restTemplate = new RestTemplate();
-        // TODO JSON形式の文字列
         // TODO dateは必須パラメータ > 引数で受け取る
+        var date = "2023-04-03";
 
         var response = restTemplate.exchange(
                 edinetDocumentListUrl, HttpMethod.GET, null,
-                String.class, "2023-04-03", mode.code(), subscriptionKey);
+                String.class, date, mode.code(), subscriptionKey);
 
         apiResponseValidator.validateStatusCode(response.getStatusCode());
         apiResponseValidator.validateContentType(response.getHeaders().getContentType(),
                 MediaType.APPLICATION_JSON);
         apiResponseValidator.validateResponseBody(response.getBody());
-        // TODO JSONパース
 
         return response.getBody();
     }

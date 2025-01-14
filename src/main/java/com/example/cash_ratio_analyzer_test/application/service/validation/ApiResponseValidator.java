@@ -22,13 +22,13 @@ public class ApiResponseValidator {
     /**
      * コンテンツタイプを検証します。
      *
-     * @param contentType 実際のコンテンツタイプ
+     * @param actualContentType 実際のコンテンツタイプ
      * @param expectedContentType 期待されるコンテンツタイプの可変長引数
      * @throws RuntimeException コンテンツタイプが期待されるものと一致しない場合
      */
-    public void validateContentType(MediaType contentType, MediaType... expectedContentType) {
-        if (contentType == null || !isValidContentType(contentType, expectedContentType)) {
-            throw new RuntimeException("Invalid content type: " + contentType);
+    public void validateContentType(MediaType actualContentType, MediaType... expectedContentType) {
+        if (actualContentType == null || !isValidContentType(actualContentType, expectedContentType)) {
+            throw new RuntimeException("Invalid content type: " + actualContentType);
         }
     }
 
