@@ -3,6 +3,7 @@ package com.example.cash_ratio_analyzer_test.application.service;
 import com.example.cash_ratio_analyzer_test.application.service.dto.DocumentListResponse;
 import com.example.cash_ratio_analyzer_test.domain.enums.EdinetDocumentType;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
+import com.example.cash_ratio_analyzer_test.domain.service.DocumentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +17,13 @@ import java.util.List;
 
 @Service
 public class JsonParserService {
+
+    private final DocumentService documentService;
+
+    public JsonParserService(DocumentService documentService) {
+        this.documentService = documentService;
+    }
+
     public List<FinancialDocumentMetadata> parseDocumentList(String jsonData) {
         var response = parseJsonData(jsonData);
 
@@ -25,7 +33,7 @@ public class JsonParserService {
         }
 
         var metadataList = response.getResults().stream()
-                .filter(result -> isPermittedDocumentType(result.getDocTypeCode()))
+                .filter(result -> documentService.isPermittedDocumentType(result.getDocTypeCode()))
                 .map(result -> {
                     var documentType = EdinetDocumentType.fromCode(
                             Integer.parseInt(result.getDocTypeCode()));
@@ -72,20 +80,5 @@ public class JsonParserService {
         if (status == null || !status.equals(String.valueOf(HttpStatus.OK.value()))) {
             throw new RuntimeException("Failed to fetch data from Edinet API. status code: " + status);
         }
-    }
-
-    // TODO ビジネスルールのため、ドメイン層に定義すべき
-    private boolean isPermittedDocumentType(String documentTypeCode) {
-        if (StringUtils.isEmpty(documentTypeCode)) {
-            return false;
-        }
-
-        var code = Integer.parseInt(documentTypeCode);
-        // 一旦、有価証券報告書のみ対象とする
-        // TODO 他の書類も対象にする場合は、リストに追加する
-        var permittedTypeCodes = List.of(
-                EdinetDocumentType.YUKASHOKEN_HOKOKUSHO.code()
-        );
-        return permittedTypeCodes.contains(code);
     }
 }
