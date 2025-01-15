@@ -1,12 +1,13 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchMode;
-import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
+import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDate;
 
 // TODO 2つのメソッドのユースケース違うので、クラス分けても良いかも
 @Service
@@ -32,23 +33,22 @@ public class EdinetScenarioService {
 
     // TODO transactionalアノテーションを付与する
     // 書類一覧APIから書類メタデータ取得、登録する処理を管理する
-    public ResponseEntity<String> fetchAndSaveDocumentMetadata() {
-        // FIXME 実装途中. 一旦、取得したデータを返すだけ
-        var data = edinetDocumentListService.fetchDocumentList(FetchMode.METADATA_AND_LIST);
+    public ResponseEntity<String> fetchAndSaveDocumentMetadata(LocalDate fromDate) {
+        var data = edinetDocumentListService.fetchDocumentList(FetchMode.METADATA_AND_LIST, fromDate);
         // TODO companyもここで登録するか？もしくは事前登録しておくか？
         var metadataList = jsonParserService.parseDocumentList(data);
 
         // TODO DBに保存
         financialDocumentMetadataService.createMetadata(metadataList);
 
-        return ResponseEntity.ok(data);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Document metadata processed successfully.");
     }
 
     // TODO transactionalアノテーションを付与する
     // 書類取得APIから財務データ取得、分析して登録する処理を管理する
-    public ResponseEntity<List<FinancialData>> fetchAndSaveFinancialData(String documentId) {
+    public ResponseEntity<FinancialDocument> fetchAndSaveFinancialData(String documentId) {
         var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentId);
-        // zip形式のデータからターゲットファイルを取得
         // MapかListで返すようにしても良いかも（対象が複数ある場合）
         // 一時ファイル作成も検討する（将来的に）
         var targetData = edinetDataParsingService.extractTargetFile(fetchData);
@@ -57,7 +57,7 @@ public class EdinetScenarioService {
         // TODO DBに保存
         financialDocumentService.saveFinancialData(documentId, extractedData);
 
-        // FIXME 実装途中. 一旦、抽出した内容をそのまま出力しているだけ
-        return ResponseEntity.ok(extractedData);
+        var storedData = financialDocumentService.getFinancialDocument(documentId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(storedData);
     }
 }

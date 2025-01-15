@@ -1,13 +1,12 @@
 package com.example.cash_ratio_analyzer_test.presentation.controller;
 
-import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
 import com.example.cash_ratio_analyzer_test.application.service.EdinetScenarioService;
 import com.example.cash_ratio_analyzer_test.application.service.FinancialDocumentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -23,13 +22,13 @@ public class EdinetController {
     }
 
     @PostMapping("/metadata/fetch")
-    public ResponseEntity<String> fetchAndSaveDocumentMetadata() {
+    public ResponseEntity<String> fetchAndSaveDocumentMetadata(@RequestParam LocalDate fromDate) {
         // シナリオサービスを呼び出す
-        return edinetScenarioService.fetchAndSaveDocumentMetadata();
+        return edinetScenarioService.fetchAndSaveDocumentMetadata(fromDate);
     }
 
     @PostMapping("/financial-data/{documentId}/fetch")
-    public ResponseEntity<List<FinancialData>> fetchAndSaveFinancialData    (@PathVariable String documentId) {
+    public ResponseEntity<FinancialDocument> fetchAndSaveFinancialData(@PathVariable String documentId) {
         // String testDocumentNumber = "S100TGZR";
         // シナリオサービスを呼び出す
         return edinetScenarioService.fetchAndSaveFinancialData(documentId);

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// Edinetデータ出力テスト用
 @RestController
 @RequestMapping("/edinet/output")
 public class EdinetOutputController {

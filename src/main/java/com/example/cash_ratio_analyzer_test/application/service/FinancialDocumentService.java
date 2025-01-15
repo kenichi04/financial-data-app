@@ -58,6 +58,8 @@ public class FinancialDocumentService {
     }
 
     private void updateMetadataProcessedStatus(String documentId) {
-        financialDocumentMetadataService.updateMetadataProcessedStatus(documentId);
+        // TODO 一旦コメントアウト（nullが返るため）
+        // 実運用ではmetadataテーブルから取得後にここを通るため、nullはない
+//        financialDocumentMetadataService.updateMetadataProcessedStatus(documentId);
     }
 }

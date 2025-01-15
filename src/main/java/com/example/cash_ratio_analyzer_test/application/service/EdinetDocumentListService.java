@@ -8,6 +8,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 @Service
 public class EdinetDocumentListService {
 
@@ -24,14 +27,13 @@ public class EdinetDocumentListService {
         this.apiResponseValidator = apiResponseValidator;
     }
 
-    public String fetchDocumentList(FetchMode mode) {
+    public String fetchDocumentList(FetchMode mode, LocalDate fromDate) {
         var restTemplate = new RestTemplate();
-        // TODO dateは必須パラメータ > 引数で受け取る
-        var date = "2023-04-03";
+        var formattedDate = fromDate.format(DateTimeFormatter.ofPattern("uuuu-MM-dd"));
 
         var response = restTemplate.exchange(
                 edinetDocumentListUrl, HttpMethod.GET, null,
-                String.class, date, mode.code(), subscriptionKey);
+                String.class, formattedDate, mode.code(), subscriptionKey);
 
         apiResponseValidator.validateStatusCode(response.getStatusCode());
         apiResponseValidator.validateContentType(response.getHeaders().getContentType(),
