@@ -17,9 +17,11 @@ public class EdinetScenarioService {
     private final EdinetDataParsingService edinetDataParsingService;
     private final JsonParserService jsonParserService;
     private final XbrlParserService xbrlParserService;
+    private final FinancialDocumentMetadataService financialDocumentMetadataService;
     private final FinancialDocumentService financialDocumentService;
 
-    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetDataParsingService edinetDataParsingService, JsonParserService jsonParserService, XbrlParserService xbrlParserService, FinancialDocumentService financialDocumentService) {
+    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetDataParsingService edinetDataParsingService, JsonParserService jsonParserService, XbrlParserService xbrlParserService, FinancialDocumentMetadataService financialDocumentMetadataService, FinancialDocumentService financialDocumentService) {
+        this.financialDocumentMetadataService = financialDocumentMetadataService;
         this.edinetDocumentListService = edinetDocumentListService;
         this.edinetDataFetchService = edinetDataFetchService;
         this.edinetDataParsingService = edinetDataParsingService;
@@ -37,6 +39,7 @@ public class EdinetScenarioService {
         var metadataList = jsonParserService.parseDocumentList(data);
 
         // TODO DBに保存
+        financialDocumentMetadataService.createMetadata(metadataList);
 
         return ResponseEntity.ok(data);
     }

@@ -12,14 +12,14 @@ import java.util.List;
 @Service
 public class FinancialDocumentService {
 
-    private final IFinancialDocumentMetadataRepository financialDocumentMetadataRepository;
+    private final FinancialDocumentMetadataService financialDocumentMetadataService;
 
     private final IFinancialDocumentRepository financialDocumentRepository;
 
     private final ICompanyRepository companyRepository;
 
-    public FinancialDocumentService(IFinancialDocumentRepository financialDocumentRepository, IFinancialDocumentMetadataRepository financialDocumentMetadataRepository, IFinancialDocumentRepository financialDocumentRepository1, ICompanyRepository companyRepository) {
-        this.financialDocumentMetadataRepository = financialDocumentMetadataRepository;
+    public FinancialDocumentService(IFinancialDocumentMetadataRepository financialDocumentMetadataRepository, FinancialDocumentMetadataService financialDocumentMetadataService, IFinancialDocumentRepository financialDocumentRepository1, ICompanyRepository companyRepository) {
+        this.financialDocumentMetadataService = financialDocumentMetadataService;
         this.financialDocumentRepository = financialDocumentRepository1;
         this.companyRepository = companyRepository;
     }
@@ -58,8 +58,6 @@ public class FinancialDocumentService {
     }
 
     private void updateMetadataProcessedStatus(String documentId) {
-        var metadata = financialDocumentMetadataRepository.findByDocumentId(documentId);
-        metadata.updateProcessedStatus();
-        financialDocumentMetadataRepository.save(metadata);
+        financialDocumentMetadataService.updateMetadataProcessedStatus(documentId);
     }
 }
