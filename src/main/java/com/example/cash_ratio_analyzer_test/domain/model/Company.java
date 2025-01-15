@@ -20,6 +20,10 @@ public class Company {
         this.name = name;
     }
 
+    public long getCompanyId() {
+        return companyId;
+    }
+
     public void addDocument(FinancialDocument document) {
         documents.add(document);
     }

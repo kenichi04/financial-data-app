@@ -17,6 +17,7 @@ public class FinancialDocumentMetadataService {
 
     // TODO transactionalアノテーションを付与する
     public void createMetadata(List<FinancialDocumentMetadata> metadataList) {
+        // TODO companyも保存するか？
         financialDocumentMetadataRepository.save(metadataList);
     }
 
