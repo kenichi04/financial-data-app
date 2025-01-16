@@ -3,9 +3,8 @@ package com.example.cash_ratio_analyzer_test.domain.model;
 import java.util.List;
 
 public class Company {
-    private long companyId;
-    private String name;
     private String edinetCode;
+    private String name;
     // TODO 値オブジェクトに変更する
     /** 証券コード */
     private String securityCode;
@@ -14,14 +13,13 @@ public class Company {
     // TODO Entityでは遅延ロードを使うべき
     private List<FinancialDocument> documents;
 
-    public Company(long companyId, String edinetCode, String name) {
-        this.companyId = companyId;
+    public Company(String edinetCode, String name) {
         this.edinetCode = edinetCode;
         this.name = name;
     }
 
-    public long getCompanyId() {
-        return companyId;
+    public String getEdinetCode() {
+        return edinetCode;
     }
 
     public void addDocument(FinancialDocument document) {

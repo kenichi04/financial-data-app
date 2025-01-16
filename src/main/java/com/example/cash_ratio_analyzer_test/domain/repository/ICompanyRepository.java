@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ICompanyRepository {
     List<Company> findAll();
-    Company findByCompanyId(long companyId);
+    Company findByCompanyEdinetCode(String edinetCode);
     void save(Company company);
 }

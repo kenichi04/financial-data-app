@@ -24,6 +24,7 @@ public class EdinetController {
     @PostMapping("/metadata/fetch")
     public ResponseEntity<String> fetchAndSaveDocumentMetadata(@RequestParam LocalDate fromDate) {
         // シナリオサービスを呼び出す
+        // TODO POSTレスポンス用のクラスを作成する
         return edinetScenarioService.fetchAndSaveDocumentMetadata(fromDate);
     }
 
@@ -31,6 +32,7 @@ public class EdinetController {
     public ResponseEntity<FinancialDocument> fetchAndSaveFinancialData(@PathVariable String documentId) {
         // String testDocumentNumber = "S100TGZR";
         // シナリオサービスを呼び出す
+        // TODO POSTレスポンス用のクラスを作成する
         return edinetScenarioService.fetchAndSaveFinancialData(documentId);
     }
 

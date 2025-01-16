@@ -11,7 +11,7 @@ import java.util.Map;
 @Repository
 public class InMemoryCompanyRepository implements ICompanyRepository {
 
-    private Map<Long, Company> companyStore = new HashMap<>();
+    private Map<String, Company> companyStore = new HashMap<>();
 
     @Override
     public List<Company> findAll() {
@@ -19,12 +19,12 @@ public class InMemoryCompanyRepository implements ICompanyRepository {
     }
 
     @Override
-    public Company findByCompanyId(long companyId) {
-        return companyStore.getOrDefault(companyId, null);
+    public Company findByCompanyEdinetCode(String edinetCode) {
+        return companyStore.getOrDefault(edinetCode, null);
     }
 
     @Override
     public void save(Company company) {
-        companyStore.put(company.getCompanyId(), company);
+        companyStore.put(company.getEdinetCode(), company);
     }
 }

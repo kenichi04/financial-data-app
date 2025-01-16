@@ -31,9 +31,9 @@ public class FinancialDocumentService {
     // TODO transactionalアノテーションを付与する
     // 書類一覧APIレスポンスからdocument作成する場合は、dataが取得できないため、documentIdのみで作成する
     // TODO 処理見直し. 書類一覧APIではdocumentではなく、documentMetadataを作成する方針に変更
-    public void create(long companyId, String documentId) {
+    public void create(String edinetCode, String documentId) {
         // TODO 直接companyRepository使うか？companyServiceでラップするか？
-        var company = companyRepository.findByCompanyId(companyId);
+        var company = companyRepository.findByCompanyEdinetCode(edinetCode);
         // 仮実装, ここでcompanyIdを使用してcompanyの存在チェック
         if (company == null) {
             throw new RuntimeException("company is not found");
