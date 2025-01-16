@@ -5,16 +5,16 @@ import java.util.List;
 public class FinancialDocument {
 
     /** 書類管理番号 */
-    private String documentId;
+    private DocumentId documentId;
 //    private String documentType;
 //    private String fiscalYear;
     private List<FinancialData> data;
 
-    public FinancialDocument(String documentId) {
+    public FinancialDocument(DocumentId documentId) {
         this.documentId = documentId;
     }
 
-    public String getDocumentId() {
+    public DocumentId getDocumentId() {
         return documentId;
     }
 

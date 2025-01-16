@@ -1,5 +1,6 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
+import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
 import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
@@ -36,7 +37,7 @@ public class FinancialDocumentService {
         }
         // companyとdocumentは一対多の関係
         // ここの処理は検討
-        var financialDocument = new FinancialDocument(documentId);
+        var financialDocument = new FinancialDocument(new DocumentId(documentId));
         company.addDocument(financialDocument);
         companyRepository.save(company);
     }
@@ -45,7 +46,7 @@ public class FinancialDocumentService {
     // 書類取得APIレスポンスからの処理を想定。documentは上で作成済にするか、新規作成するかは要検討（dataなしのdocument作成してもよいのか）
     public void saveFinancialData(String documentId, List<FinancialData> financialDataList) {
         // financialDataは新規作成のみ、更新は不要の想定
-        var financialDocument = new FinancialDocument(documentId);
+        var financialDocument = new FinancialDocument(new DocumentId(documentId));
         financialDocument.createData(financialDataList);
         financialDocumentRepository.save(financialDocument);
 
