@@ -27,7 +27,7 @@ public class FinancialDocumentService {
 
     // TODO transactionalアノテーションを付与する
     // 書類一覧APIレスポンスからdocument作成する場合は、dataが取得できないため、documentIdのみで作成する
-    // TODO 処理見直し. 書類一覧APIではdocumentではなく、documentMetadataを作成する方針に変更
+    // TODO 処理見直し（たぶん不要になる）. 書類一覧APIではdocumentではなく、documentMetadataを作成する方針に変更
     public void create(String edinetCode, String documentId) {
         // TODO 直接companyRepository使うか？companyServiceでラップするか？
         var company = companyRepository.findByCompanyEdinetCode(edinetCode);
@@ -42,6 +42,12 @@ public class FinancialDocumentService {
         companyRepository.save(company);
     }
 
+    /**
+     * 指定されたドキュメントIDに対応する財務データを保存します。
+     *
+     * @param documentId 保存するドキュメントのID
+     * @param financialDataList 保存する財務データのリスト
+     */
     // TODO transactionalアノテーションを付与する
     // 書類取得APIレスポンスからの処理を想定。documentは上で作成済にするか、新規作成するかは要検討（dataなしのdocument作成してもよいのか）
     public void saveFinancialData(String documentId, List<FinancialData> financialDataList) {
@@ -54,6 +60,11 @@ public class FinancialDocumentService {
         updateMetadataProcessedStatus(documentId);
     }
 
+    /**
+     * 指定されたドキュメントIDのメタデータの処理ステータスを更新します。
+     *
+     * @param documentId 更新するドキュメントのID
+     */
     private void updateMetadataProcessedStatus(String documentId) {
         // TODO 一旦コメントアウト（nullが返るため）
         // 実運用ではmetadataテーブルから取得後にここを通るため、nullはない

@@ -7,6 +7,10 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * EDINETデータ取得サービスクラス。
+ * EDINETのAPIを使用して文書データを取得します。
+ */
 @Service
 public class EdinetDataFetchService {
 

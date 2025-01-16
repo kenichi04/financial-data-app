@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Optional;
 
 // TODO インターフェース作成して、切替可能にする
+/**
+ * EDINET書類取得APIレスポンスから抽出したXBRLコンテンツを解析するサービスクラス。
+ */
 @Service
 public class XbrlParserService {
 
@@ -30,6 +33,12 @@ public class XbrlParserService {
         this.documentBuilder = factory.newDocumentBuilder();
     }
 
+    /**
+     * XBRLコンテンツを解析し、FinancialDataのリストを返します。
+     *
+     * @param xbrlContent 解析するXBRLコンテンツのバイト配列
+     * @return 解析されたFinancialDataのリスト
+     */
     // TODO SAXパーサーで逐次解析の方がメモリ効率が良い
     public List<FinancialData> parseXbrl(byte[] xbrlContent) {
         var result = new ArrayList<FinancialData>();

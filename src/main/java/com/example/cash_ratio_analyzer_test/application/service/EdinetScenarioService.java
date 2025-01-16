@@ -15,17 +15,17 @@ public class EdinetScenarioService {
 
     private final EdinetDocumentListService edinetDocumentListService;
     private final EdinetDataFetchService edinetDataFetchService;
-    private final EdinetDataParsingService edinetDataParsingService;
+    private final EdinetFileExtractionService edinetFileExtractionService;
     private final JsonParserService jsonParserService;
     private final XbrlParserService xbrlParserService;
     private final FinancialDocumentMetadataService financialDocumentMetadataService;
     private final FinancialDocumentService financialDocumentService;
 
-    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetDataParsingService edinetDataParsingService, JsonParserService jsonParserService, XbrlParserService xbrlParserService, FinancialDocumentMetadataService financialDocumentMetadataService, FinancialDocumentService financialDocumentService) {
+    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetFileExtractionService edinetFileExtractionService, JsonParserService jsonParserService, XbrlParserService xbrlParserService, FinancialDocumentMetadataService financialDocumentMetadataService, FinancialDocumentService financialDocumentService) {
         this.financialDocumentMetadataService = financialDocumentMetadataService;
         this.edinetDocumentListService = edinetDocumentListService;
         this.edinetDataFetchService = edinetDataFetchService;
-        this.edinetDataParsingService = edinetDataParsingService;
+        this.edinetFileExtractionService = edinetFileExtractionService;
         this.jsonParserService = jsonParserService;
         this.xbrlParserService = xbrlParserService;
         this.financialDocumentService = financialDocumentService;
@@ -42,6 +42,7 @@ public class EdinetScenarioService {
         // TODO DBに保存
         financialDocumentMetadataService.createMetadata(metadataList);
 
+        // TODO　ここはResponsEntityを返すのは微妙かも
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Document metadata processed successfully.");
     }
@@ -49,10 +50,11 @@ public class EdinetScenarioService {
     // TODO transactionalアノテーションを付与する
     // 書類取得APIから財務データ取得、分析して登録する処理を管理する
     public ResponseEntity<FinancialDocument> fetchAndSaveFinancialData(String documentId) {
+
         var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentId);
         // MapかListで返すようにしても良いかも（対象が複数ある場合）
-        // 一時ファイル作成も検討する（将来的に）
-        var targetData = edinetDataParsingService.extractTargetFile(fetchData);
+        // 一時ファイル作成して抽出する処理も検討する（将来的に）
+        var targetData = edinetFileExtractionService.extractTargetFile(fetchData);
         // XBRLから必要なデータを抽出
         var extractedData = xbrlParserService.parseXbrl(targetData);
         // TODO DBに保存

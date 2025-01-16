@@ -10,9 +10,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-// TODO クラス名が適切か検討する
+/**
+ * EDINETファイル抽出サービスクラス。
+ * 指定されたバイト配列（ZIP形式）からターゲットファイルを抽出する機能を提供します。
+ */
 @Service
-public class EdinetDataParsingService {
+public class EdinetFileExtractionService {
 
     @Value("${download.targetFilePrefix:}")
     private String targetFilePrefix;
