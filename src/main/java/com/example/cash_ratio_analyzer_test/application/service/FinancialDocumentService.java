@@ -3,7 +3,6 @@ package com.example.cash_ratio_analyzer_test.application.service;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
 import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
-import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentMetadataRepository;
 import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +11,11 @@ import java.util.List;
 @Service
 public class FinancialDocumentService {
 
-    private final FinancialDocumentMetadataService financialDocumentMetadataService;
-
     private final IFinancialDocumentRepository financialDocumentRepository;
 
     private final ICompanyRepository companyRepository;
 
-    public FinancialDocumentService(IFinancialDocumentMetadataRepository financialDocumentMetadataRepository, FinancialDocumentMetadataService financialDocumentMetadataService, IFinancialDocumentRepository financialDocumentRepository1, ICompanyRepository companyRepository) {
-        this.financialDocumentMetadataService = financialDocumentMetadataService;
+    public FinancialDocumentService(IFinancialDocumentRepository financialDocumentRepository1, ICompanyRepository companyRepository) {
         this.financialDocumentRepository = financialDocumentRepository1;
         this.companyRepository = companyRepository;
     }
