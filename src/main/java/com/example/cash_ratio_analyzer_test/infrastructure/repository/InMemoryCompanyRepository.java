@@ -1,6 +1,7 @@
 package com.example.cash_ratio_analyzer_test.infrastructure.repository;
 
 import com.example.cash_ratio_analyzer_test.domain.model.Company;
+import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
 import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 @Repository
 public class InMemoryCompanyRepository implements ICompanyRepository {
 
-    private Map<String, Company> companyStore = new HashMap<>();
+    private Map<EdinetCode, Company> companyStore = new HashMap<>();
 
     @Override
     public List<Company> findAll() {
