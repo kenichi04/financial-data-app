@@ -17,10 +17,15 @@ public class FinancialDocumentMetadataService {
 
     // TODO transactionalアノテーションを付与する
     public void createMetadata(List<FinancialDocumentMetadata> metadataList) {
-        // TODO companyも保存するか？
+        // TODO companyは事前登録している想定
         financialDocumentMetadataRepository.save(metadataList);
     }
 
+    /**
+     * 指定されたドキュメントIDに基づいてメタデータの処理ステータスを更新します。
+     *
+     * @param documentId 更新するメタデータのドキュメントID
+     */
     public void updateMetadataProcessedStatus(String documentId) {
         var metadata = financialDocumentMetadataRepository.findByDocumentId(documentId);
         metadata.updateProcessedStatus();

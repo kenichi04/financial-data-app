@@ -14,6 +14,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * EDINET書類一覧APIレスポンスのJSONデータを解析するサービスクラス。
+ */
 @Service
 public class JsonParserService {
 
@@ -23,6 +26,13 @@ public class JsonParserService {
         this.documentService = documentService;
     }
 
+    /**
+     * JSONデータを解析し、許可されたドキュメントタイプのFinancialDocumentMetadataリストを返します。
+     *
+     * @param jsonData JSON形式のデータ
+     * @return 許可されたドキュメントタイプのFinancialDocumentMetadataリスト
+     * @throws RuntimeException JSONデータの解析中にエラーが発生した場合
+     */
     public List<FinancialDocumentMetadata> parseDocumentList(String jsonData) {
         var response = parseJsonData(jsonData);
 
@@ -43,6 +53,7 @@ public class JsonParserService {
                             result.getDocID(),
                             result.getDocDescription(),
                             result.getEdinetCode(),
+                            // 提出会社名はデバッグ用に取得しておく
                             result.getFilerName(),
                             documentType,
                             submissionDate);

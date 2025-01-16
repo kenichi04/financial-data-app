@@ -38,6 +38,9 @@ public class FinancialDocumentMetadata {
         return documentId;
     }
 
+    /**
+     * 書類の処理ステータスを更新します。（書類取得APIで取得、保存後）
+     */
     public void updateProcessedStatus() {
         this.processed = true;
     }

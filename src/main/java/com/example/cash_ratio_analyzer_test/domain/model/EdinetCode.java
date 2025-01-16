@@ -1,7 +1,5 @@
 package com.example.cash_ratio_analyzer_test.domain.model;
 
-import java.util.Objects;
-
 public record EdinetCode(String value) {
     public EdinetCode {
         // EDINETコードは6桁の英数字

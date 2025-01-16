@@ -1,7 +1,5 @@
 package com.example.cash_ratio_analyzer_test.domain.model;
 
-import java.util.Objects;
-
 public record DocumentId(String value) {
     public DocumentId {
         // 書類管理番号は半角6桁

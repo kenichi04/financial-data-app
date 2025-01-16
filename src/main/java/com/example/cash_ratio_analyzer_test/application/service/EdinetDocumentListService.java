@@ -11,6 +11,9 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * EDINETの書類一覧を取得するサービスクラス。
+ */
 @Service
 public class EdinetDocumentListService {
 
@@ -27,8 +30,16 @@ public class EdinetDocumentListService {
         this.apiResponseValidator = apiResponseValidator;
     }
 
+    /**
+     * EDINET APIから書類一覧（メタデータ）を取得します。
+     *
+     * @param mode     取得モード（例：METADATA_ONLY、METADATA_AND_LIST）
+     * @param fromDate 取得開始日
+     * @return 書類一覧を含むレスポンスボディのJSON形式の文字列
+     */
     public String fetchDocumentList(FetchMode mode, LocalDate fromDate) {
         var restTemplate = new RestTemplate();
+        // TODO fromDateは当日以前、直近の財務局営業日の24時において10年を経過していない日付
         var formattedDate = fromDate.format(DateTimeFormatter.ofPattern("uuuu-MM-dd"));
 
         var response = restTemplate.exchange(

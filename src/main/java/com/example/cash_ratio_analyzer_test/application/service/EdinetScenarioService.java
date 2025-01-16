@@ -34,8 +34,9 @@ public class EdinetScenarioService {
     // TODO transactionalアノテーションを付与する
     // 書類一覧APIから書類メタデータ取得、登録する処理を管理する
     public ResponseEntity<String> fetchAndSaveDocumentMetadata(LocalDate fromDate) {
+
         var data = edinetDocumentListService.fetchDocumentList(FetchMode.METADATA_AND_LIST, fromDate);
-        // TODO companyもここで登録するか？もしくは事前登録しておくか？
+        // TODO companyはここで抽出・登録せず、事前登録する想定
         var metadataList = jsonParserService.parseDocumentList(data);
 
         // TODO DBに保存
