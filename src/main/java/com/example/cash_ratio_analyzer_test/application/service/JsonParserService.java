@@ -2,6 +2,7 @@ package com.example.cash_ratio_analyzer_test.application.service;
 
 import com.example.cash_ratio_analyzer_test.application.service.dto.DocumentListResponse;
 import com.example.cash_ratio_analyzer_test.application.service.dto.ProcessedResponseData;
+import com.example.cash_ratio_analyzer_test.application.service.dto.Result;
 import com.example.cash_ratio_analyzer_test.domain.enums.EdinetDocumentType;
 import com.example.cash_ratio_analyzer_test.domain.model.Company;
 import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * EDINET書類一覧APIレスポンスのJSONデータを解析するサービスクラス。
@@ -30,7 +32,7 @@ public class JsonParserService {
     }
 
     /**
-     * JSONデータを解析し、許可されたドキュメントタイプのFinancialDocumentMetadataリストを含む
+     * JSONデータを解析し、許可されたドキュメントタイプのFinancialDocumentMetadataリストおよびCompanyを含む
      * ProcessedResponseDataオブジェクトを返します。
      *
      * @param jsonData JSON形式のデータ
@@ -45,38 +47,11 @@ public class JsonParserService {
             return Optional.empty();
         }
 
-        Map<EdinetCode, Company> companyMap = new HashMap<>();
-        List<FinancialDocumentMetadata> metadataList = new ArrayList<>();
-
-        response.getResults().stream()
-            .filter(result -> documentService.isPermittedDocumentType(result.getDocTypeCode()))
-            .forEach(
-                result -> {
-                    var edinetCode = new EdinetCode(result.getEdinetCode());
-                    var documentType = EdinetDocumentType.fromCode(
-                            Integer.parseInt(result.getDocTypeCode()));
-                    var submissionDate = LocalDate.parse(result.getSubmitDateTime(),
-                            DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm"));
-
-                    var metadata = new FinancialDocumentMetadata(
-                            result.getDocID(),
-                            result.getDocDescription(),
-                            edinetCode,
-                            // TODO 提出会社名はデバッグ用, 保存しない
-                            result.getFilerName(),
-                            documentType,
-                            submissionDate);
-                    metadataList.add(metadata);
-
-                    if (!companyMap.containsKey(edinetCode)) {
-                        companyMap.put(edinetCode,
-                                new Company(edinetCode, result.getFilerName(), result.getSecCode(), result.getJCN()));
-                    }
-                }
-            );
-
-        return Optional.of(new ProcessedResponseData(
-                new ArrayList<>(companyMap.values()), metadataList));
+        // TODO ここからはJSONパースとは関係ないので、別のクラスに移動すべき
+        // このクラスで別クラスのフィールドを持ち、処理を委譲するようにする
+        var targetResults = filterPermittedDocumentTypes(response.getResults());
+        var processedResponseData = processResults(targetResults);
+        return Optional.of(processedResponseData);
     }
 
     /**
@@ -107,5 +82,50 @@ public class JsonParserService {
         if (status == null || !status.equals(String.valueOf(HttpStatus.OK.value()))) {
             throw new RuntimeException("Failed to fetch data from Edinet API. status code: " + status);
         }
+    }
+
+
+    /**
+     * 許可されたドキュメントタイプの結果のみをフィルタリングします。
+     *
+     * @param results フィルタリングする結果のリスト
+     * @return 許可されたドキュメントタイプの結果のリスト
+     */
+    private List<Result> filterPermittedDocumentTypes(List<Result> results) {
+        return results.stream()
+                .filter(result -> documentService.isPermittedDocumentType(result.getDocTypeCode()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 結果リストを処理し、ProcessedResponseDataオブジェクトを生成します。
+     *
+     * @param results 処理する結果のリスト
+     * @return CompanyオブジェクトのリストとFinancialDocumentMetadataオブジェクトのリストを含むProcessedResponseDataオブジェクト
+     */
+    private ProcessedResponseData processResults(List<Result> results) {
+        Map<EdinetCode, Company> companyMap = new HashMap<>();
+        List<FinancialDocumentMetadata> metadataList = new ArrayList<>();
+
+        for (var result : results) {
+            var edinetCode = new EdinetCode(result.getEdinetCode());
+            var documentType = EdinetDocumentType.fromCode(Integer.parseInt(result.getDocTypeCode()));
+            var submissionDate = LocalDate.parse(result.getSubmitDateTime(), DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm"));
+
+            var metadata = new FinancialDocumentMetadata(
+                    result.getDocID(),
+                    result.getDocDescription(),
+                    edinetCode,
+                    result.getFilerName(),
+                    documentType,
+                    submissionDate);
+            metadataList.add(metadata);
+
+            if (!companyMap.containsKey(edinetCode)) {
+                companyMap.put(edinetCode, new Company(edinetCode, result.getFilerName(), result.getSecCode(), result.getJCN()));
+            }
+        }
+
+        return new ProcessedResponseData(new ArrayList<>(companyMap.values()), metadataList);
     }
 }
