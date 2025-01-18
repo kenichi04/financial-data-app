@@ -37,10 +37,14 @@ public class EdinetScenarioService {
 
         var data = edinetDocumentListService.fetchDocumentList(FetchMode.METADATA_AND_LIST, fromDate);
         // TODO companyはここで抽出・登録せず、事前登録する想定
-        var metadataList = jsonParserService.parseDocumentList(data);
+        var processedResponseData = jsonParserService.parseDocumentList(data);
 
+        if (processedResponseData.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                    .body("No document metadata to process.");
+        }
         // TODO DBに保存
-        financialDocumentMetadataService.createMetadata(metadataList);
+        financialDocumentMetadataService.createMetadata(processedResponseData.get());
 
         // TODO　ここはResponsEntityを返すのは微妙かも
         return ResponseEntity.status(HttpStatus.CREATED)

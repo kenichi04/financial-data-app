@@ -12,9 +12,11 @@ public class Company {
     // TODO Entityでは遅延ロードを使うべき
     private List<FinancialDocument> documents;
 
-    public Company(EdinetCode edinetCode, String name) {
+    public Company(EdinetCode edinetCode, String name, String securityCode, String corporateNumber) {
         this.edinetCode = edinetCode;
         this.name = name;
+        this.securityCode = securityCode;
+        this.corporateNumber = corporateNumber;
     }
 
     public EdinetCode getEdinetCode() {

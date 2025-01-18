@@ -11,7 +11,7 @@ public class FinancialDocumentMetadata {
     private String description;
 
     /** 提出者EDINETコード */
-    private String edinetCode;
+    private EdinetCode edinetCode;
 
     /** 提出者名 */
     private String filerName;
@@ -24,7 +24,7 @@ public class FinancialDocumentMetadata {
     /** 書類取得APIで取得済か */
     private boolean processed = false;
 
-    public FinancialDocumentMetadata(String documentId, String description, String edinetCode, String filerName, EdinetDocumentType documentType, LocalDate submissionDate) {
+    public FinancialDocumentMetadata(String documentId, String description, EdinetCode edinetCode, String filerName, EdinetDocumentType documentType, LocalDate submissionDate) {
         this.documentId = documentId;
         this.description = description;
         this.edinetCode = edinetCode;

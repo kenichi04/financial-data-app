@@ -1,7 +1,10 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
 import com.example.cash_ratio_analyzer_test.application.service.dto.DocumentListResponse;
+import com.example.cash_ratio_analyzer_test.application.service.dto.ProcessedResponseData;
 import com.example.cash_ratio_analyzer_test.domain.enums.EdinetDocumentType;
+import com.example.cash_ratio_analyzer_test.domain.model.Company;
+import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
 import com.example.cash_ratio_analyzer_test.domain.service.DocumentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.*;
 
 /**
  * EDINET書類一覧APIレスポンスのJSONデータを解析するサービスクラス。
@@ -27,39 +30,53 @@ public class JsonParserService {
     }
 
     /**
-     * JSONデータを解析し、許可されたドキュメントタイプのFinancialDocumentMetadataリストを返します。
+     * JSONデータを解析し、許可されたドキュメントタイプのFinancialDocumentMetadataリストを含む
+     * ProcessedResponseDataオブジェクトを返します。
      *
      * @param jsonData JSON形式のデータ
-     * @return 許可されたドキュメントタイプのFinancialDocumentMetadataリスト
+     * @return 許可されたドキュメントタイプのFinancialDocumentMetadataリストを含むProcessedResponseDataオブジェクト
      * @throws RuntimeException JSONデータの解析中にエラーが発生した場合
      */
-    public List<FinancialDocumentMetadata> parseDocumentList(String jsonData) {
+    public Optional<ProcessedResponseData> parseDocumentList(String jsonData) {
         var response = parseJsonData(jsonData);
 
         validateResponseStatus(response.getStatus());
         if (response.getCount() == 0 || response.getResults() == null) {
-            return List.of();
+            return Optional.empty();
         }
 
-        var metadataList = response.getResults().stream()
-                .filter(result -> documentService.isPermittedDocumentType(result.getDocTypeCode()))
-                .map(result -> {
+        Map<EdinetCode, Company> companyMap = new HashMap<>();
+        List<FinancialDocumentMetadata> metadataList = new ArrayList<>();
+
+        response.getResults().stream()
+            .filter(result -> documentService.isPermittedDocumentType(result.getDocTypeCode()))
+            .forEach(
+                result -> {
+                    var edinetCode = new EdinetCode(result.getEdinetCode());
                     var documentType = EdinetDocumentType.fromCode(
                             Integer.parseInt(result.getDocTypeCode()));
                     var submissionDate = LocalDate.parse(result.getSubmitDateTime(),
                             DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm"));
 
-                    return new FinancialDocumentMetadata(
+                    var metadata = new FinancialDocumentMetadata(
                             result.getDocID(),
                             result.getDocDescription(),
-                            result.getEdinetCode(),
-                            // 提出会社名はデバッグ用に取得しておく
+                            edinetCode,
+                            // TODO 提出会社名はデバッグ用, 保存しない
                             result.getFilerName(),
                             documentType,
                             submissionDate);
-                }).toList();
+                    metadataList.add(metadata);
 
-        return metadataList;
+                    if (!companyMap.containsKey(edinetCode)) {
+                        companyMap.put(edinetCode,
+                                new Company(edinetCode, result.getFilerName(), result.getSecCode(), result.getJCN()));
+                    }
+                }
+            );
+
+        return Optional.of(new ProcessedResponseData(
+                new ArrayList<>(companyMap.values()), metadataList));
     }
 
     /**

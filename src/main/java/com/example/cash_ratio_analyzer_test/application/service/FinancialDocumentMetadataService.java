@@ -1,5 +1,6 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
+import com.example.cash_ratio_analyzer_test.application.service.dto.ProcessedResponseData;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
 import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentMetadataRepository;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,10 @@ public class FinancialDocumentMetadataService {
     }
 
     // TODO transactionalアノテーションを付与する
-    public void createMetadata(List<FinancialDocumentMetadata> metadataList) {
-        // TODO companyは事前登録している想定
+    public void createMetadata(ProcessedResponseData processedResponseData) {
+        // TODO companyも登録
+        var metadataList = processedResponseData.getMetadataList();
+        var companies = processedResponseData.getCompanies();
         financialDocumentMetadataRepository.save(metadataList);
     }
 
