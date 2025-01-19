@@ -38,6 +38,18 @@ public class FinancialDocumentMetadata {
         return documentId;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public EdinetCode getEdinetCode() {
+        return edinetCode;
+    }
+
+    public boolean isProcessed() {
+        return processed;
+    }
+
     /**
      * 書類の処理ステータスを更新します。（書類取得APIで取得、保存後）
      */

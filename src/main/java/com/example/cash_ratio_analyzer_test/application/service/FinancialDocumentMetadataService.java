@@ -1,6 +1,7 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
 import com.example.cash_ratio_analyzer_test.application.service.dto.ProcessedResponseData;
+import com.example.cash_ratio_analyzer_test.domain.model.Company;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
 import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
@@ -22,6 +23,16 @@ public class FinancialDocumentMetadataService {
         this.companyRepository = companyRepository;
     }
 
+    public List<FinancialDocumentMetadata> getUnprocessedMetadata() {
+        // TODO 件数制限を設ける（ここで取得した書類管理番号を元に書類取得APIを呼び出す）
+        return financialDocumentMetadataRepository.findByProcessedFalse();
+    }
+
+    // TODO Companyの処理が多くなったらCompanyServiceを作成する
+    public List<Company> getCompanies() {
+        return companyRepository.findAll();
+    }
+
     /**
      * メタデータを作成します。
      *
@@ -37,6 +48,7 @@ public class FinancialDocumentMetadataService {
         var metadataList = processedResponseData.get().getMetadataList();
         var companies = processedResponseData.get().getCompanies();
         financialDocumentMetadataRepository.save(metadataList);
+        // TODO companyの処理が多くなったらCompanyServiceを作成する
         companyRepository.save(companies);
 
         return metadataList.stream()

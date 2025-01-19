@@ -1,11 +1,13 @@
 package com.example.cash_ratio_analyzer_test.presentation.controller;
 
+import com.example.cash_ratio_analyzer_test.application.service.FinancialDocumentMetadataService;
+import com.example.cash_ratio_analyzer_test.domain.model.Company;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
 import com.example.cash_ratio_analyzer_test.application.service.EdinetScenarioService;
 import com.example.cash_ratio_analyzer_test.application.service.FinancialDocumentService;
+import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
 import com.example.cash_ratio_analyzer_test.presentation.controller.response.FinancialDocumentMetadataPostResponse;
 import com.example.cash_ratio_analyzer_test.presentation.controller.response.FinancialDocumentPostResponse;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -19,9 +21,12 @@ public class EdinetController {
 
     private final FinancialDocumentService financialDocumentService;
 
-    public EdinetController(EdinetScenarioService edinetScenarioService, FinancialDocumentService financialDocumentService) {
+    private final FinancialDocumentMetadataService financialDocumentMetadataService;
+
+    public EdinetController(EdinetScenarioService edinetScenarioService, FinancialDocumentService financialDocumentService, FinancialDocumentMetadataService financialDocumentMetadataService) {
         this.edinetScenarioService = edinetScenarioService;
         this.financialDocumentService = financialDocumentService;
+        this.financialDocumentMetadataService = financialDocumentMetadataService;
     }
 
     @PostMapping("/metadata/fetch")
@@ -41,9 +46,22 @@ public class EdinetController {
         return new FinancialDocumentPostResponse(documentIdModel.value());
     }
 
-    // TODO この処理はEdinet使用しないので別のクラスに移動する
+    // TODO ここから下の処理はEdinet使用しないので別のクラスに移動する
     @GetMapping("/{documentId}")
     public FinancialDocument getFinancialDocument(@PathVariable String documentId) {
+        // TODO レスポンスモデルを作成する
         return financialDocumentService.getFinancialDocument(documentId);
+    }
+
+    @GetMapping("/unprocessedMetadata")
+    public List<FinancialDocumentMetadata> getUnprocessedMetadata() {
+        // TODO レスポンスモデルを作成する
+        return financialDocumentMetadataService.getUnprocessedMetadata();
+    }
+
+    @GetMapping("/companies")
+    public List<Company> getCompanies() {
+        // TODO レスポンスモデルを作成する
+        return financialDocumentMetadataService.getCompanies();
     }
 }

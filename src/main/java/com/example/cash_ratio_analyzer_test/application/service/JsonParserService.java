@@ -51,6 +51,8 @@ public class JsonParserService {
         // TODO ここからはJSONパースとは関係ないので、別のクラスに移動すべき
         // このクラスで別クラスのフィールドを持ち、処理を委譲するようにする
         var targetResults = filterPermittedDocumentTypes(response.getResults());
+        // TODO securityCode = nullの場合は登録しなくてよさそう？（上場企業のみを対象とする）
+        // result.getSecCode()で判定できる
         var processedResponseData = processResults(targetResults);
         return Optional.of(processedResponseData);
     }

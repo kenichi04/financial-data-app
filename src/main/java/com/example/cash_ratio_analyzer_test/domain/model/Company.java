@@ -23,6 +23,18 @@ public class Company {
         return edinetCode;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getSecurityCode() {
+        return securityCode;
+    }
+
+    public String getCorporateNumber() {
+        return corporateNumber;
+    }
+
     public void addDocument(FinancialDocument document) {
         documents.add(document);
     }
