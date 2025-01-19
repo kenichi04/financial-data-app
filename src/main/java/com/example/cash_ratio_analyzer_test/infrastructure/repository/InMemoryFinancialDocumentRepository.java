@@ -16,7 +16,7 @@ public class InMemoryFinancialDocumentRepository implements IFinancialDocumentRe
         financialDocumentStore.put(financialDocument.getDocumentId(), financialDocument);
     }
 
-    public FinancialDocument findByDocumentId(String documentId) {
+    public FinancialDocument findByDocumentId(DocumentId documentId) {
         return financialDocumentStore.getOrDefault(documentId, null);
     }
 }

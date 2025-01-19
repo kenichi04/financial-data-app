@@ -2,6 +2,7 @@ package com.example.cash_ratio_analyzer_test.application.service;
 
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchMode;
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
+import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +54,7 @@ public class EdinetScenarioService {
 
     // TODO transactionalアノテーションを付与する
     // 書類取得APIから財務データ取得、分析して登録する処理を管理する
-    public ResponseEntity<FinancialDocument> fetchAndSaveFinancialData(String documentId) {
+    public DocumentId fetchAndSaveFinancialData(String documentId) {
 
         var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentId);
         // MapかListで返すようにしても良いかも（対象が複数ある場合）
@@ -62,9 +63,9 @@ public class EdinetScenarioService {
         // XBRLから必要なデータを抽出
         var extractedData = xbrlParserService.parseXbrl(targetData);
         // TODO DBに保存
-        financialDocumentService.saveFinancialData(documentId, extractedData);
+        var documentIdModel = financialDocumentService.saveFinancialData(documentId, extractedData);
 
-        var storedData = financialDocumentService.getFinancialDocument(documentId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(storedData);
+        // TODO サービス層で保存結果用の専用クラスを返すことも検討
+        return documentIdModel;
     }
 }

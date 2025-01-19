@@ -7,6 +7,7 @@ import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository
 import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentRepository;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
 import java.util.List;
 
 @Service
@@ -22,7 +23,7 @@ public class FinancialDocumentService {
     }
 
     public FinancialDocument getFinancialDocument(String documentId) {
-        return financialDocumentRepository.findByDocumentId(documentId);
+        return financialDocumentRepository.findByDocumentId(new DocumentId(documentId));
     }
 
     // TODO transactionalアノテーションを付与する
@@ -47,17 +48,21 @@ public class FinancialDocumentService {
      *
      * @param documentId 保存するドキュメントのID
      * @param financialDataList 保存する財務データのリスト
+     * @return 保存されたドキュメントのID
      */
     // TODO transactionalアノテーションを付与する
     // 書類取得APIレスポンスからの処理を想定。documentは上で作成済にするか、新規作成するかは要検討（dataなしのdocument作成してもよいのか）
-    public void saveFinancialData(String documentId, List<FinancialData> financialDataList) {
+    public DocumentId saveFinancialData(String documentId, List<FinancialData> financialDataList) {
         // financialDocumentは新規作成のみ、更新は不要の想定
-        var financialDocument = new FinancialDocument(new DocumentId(documentId));
+        var documentIdModel = new DocumentId(documentId);
+        var financialDocument = new FinancialDocument(documentIdModel);
         financialDocument.createData(financialDataList);
         financialDocumentRepository.save(financialDocument);
 
         // メタデータを処理済に更新
-        updateMetadataProcessedStatus(documentId);
+        updateMetadataProcessedStatus(documentIdModel.value());
+
+        return documentIdModel;
     }
 
     /**
