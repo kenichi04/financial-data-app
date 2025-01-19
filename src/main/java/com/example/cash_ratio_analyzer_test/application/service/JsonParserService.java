@@ -85,7 +85,6 @@ public class JsonParserService {
         }
     }
 
-
     /**
      * 許可されたドキュメントタイプの結果のみをフィルタリングします。
      *

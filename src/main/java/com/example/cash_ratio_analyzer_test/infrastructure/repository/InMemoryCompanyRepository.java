@@ -28,4 +28,10 @@ public class InMemoryCompanyRepository implements ICompanyRepository {
     public void save(Company company) {
         companyStore.put(company.getEdinetCode(), company);
     }
+
+    @Override
+    public void save(List<Company> companies) {
+        companies.forEach(company ->
+                companyStore.put(company.getEdinetCode(), company));
+    }
 }
