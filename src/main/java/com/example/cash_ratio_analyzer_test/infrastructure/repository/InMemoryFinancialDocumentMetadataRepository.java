@@ -1,5 +1,6 @@
 package com.example.cash_ratio_analyzer_test.infrastructure.repository;
 
+import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
 import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentMetadataRepository;
 import org.springframework.stereotype.Repository;
@@ -10,10 +11,10 @@ import java.util.Map;
 
 @Repository
 public class InMemoryFinancialDocumentMetadataRepository implements IFinancialDocumentMetadataRepository {
-    private Map<String, FinancialDocumentMetadata> metadataStore = new HashMap<>();
+    private Map<DocumentId, FinancialDocumentMetadata> metadataStore = new HashMap<>();
 
     @Override
-    public FinancialDocumentMetadata findByDocumentId(String documentId) {
+    public FinancialDocumentMetadata findByDocumentId(DocumentId documentId) {
         return metadataStore.getOrDefault(documentId, null);
     }
 

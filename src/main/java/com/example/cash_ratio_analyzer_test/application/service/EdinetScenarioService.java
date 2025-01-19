@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 // TODO 2つのメソッドのユースケース違うので、クラス分けても良いかも
 @Service
@@ -34,22 +35,17 @@ public class EdinetScenarioService {
 
     // TODO transactionalアノテーションを付与する
     // 書類一覧APIから書類メタデータ取得、登録する処理を管理する
-    public ResponseEntity<String> fetchAndSaveDocumentMetadata(LocalDate fromDate) {
+    public List<DocumentId> fetchAndSaveDocumentMetadata(LocalDate fromDate) {
 
         var data = edinetDocumentListService.fetchDocumentList(FetchMode.METADATA_AND_LIST, fromDate);
-        // TODO companyはここで抽出・登録せず、事前登録する想定
+        // metadataおよびcompanyを作成
         var processedResponseData = jsonParserService.parseDocumentList(data);
 
-        if (processedResponseData.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                    .body("No document metadata to process.");
-        }
         // TODO DBに保存
-        financialDocumentMetadataService.createMetadata(processedResponseData.get());
+        var documentIds = financialDocumentMetadataService.createMetadata(processedResponseData);
 
-        // TODO　ここはResponsEntityを返すのは微妙かも
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("Document metadata processed successfully.");
+        // TODO サービス層で保存結果用の専用クラスを返すことも検討
+        return documentIds;
     }
 
     // TODO transactionalアノテーションを付与する

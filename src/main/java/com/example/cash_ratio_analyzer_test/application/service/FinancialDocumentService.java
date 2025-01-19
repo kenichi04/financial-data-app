@@ -60,7 +60,7 @@ public class FinancialDocumentService {
         financialDocumentRepository.save(financialDocument);
 
         // メタデータを処理済に更新
-        updateMetadataProcessedStatus(documentIdModel.value());
+        updateMetadataProcessedStatus(documentIdModel);
 
         return documentIdModel;
     }
@@ -70,7 +70,7 @@ public class FinancialDocumentService {
      *
      * @param documentId 更新するドキュメントのID
      */
-    private void updateMetadataProcessedStatus(String documentId) {
+    private void updateMetadataProcessedStatus(DocumentId documentId) {
         // TODO 一旦コメントアウト（nullが返るため）
         // 実運用ではmetadataテーブルから取得後にここを通るため、nullはない
 //        financialDocumentMetadataService.updateMetadataProcessedStatus(documentId);

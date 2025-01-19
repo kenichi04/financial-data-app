@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class FinancialDocumentMetadata {
 
-    private String documentId;
+    private DocumentId documentId;
 
     private String description;
 
@@ -24,7 +24,7 @@ public class FinancialDocumentMetadata {
     /** 書類取得APIで取得済か */
     private boolean processed = false;
 
-    public FinancialDocumentMetadata(String documentId, String description, EdinetCode edinetCode, String filerName, EdinetDocumentType documentType, LocalDate submissionDate) {
+    public FinancialDocumentMetadata(DocumentId documentId, String description, EdinetCode edinetCode, String filerName, EdinetDocumentType documentType, LocalDate submissionDate) {
         this.documentId = documentId;
         this.description = description;
         this.edinetCode = edinetCode;
@@ -34,7 +34,7 @@ public class FinancialDocumentMetadata {
         this.processed = false;
     }
 
-    public String getDocumentId() {
+    public DocumentId getDocumentId() {
         return documentId;
     }
 
