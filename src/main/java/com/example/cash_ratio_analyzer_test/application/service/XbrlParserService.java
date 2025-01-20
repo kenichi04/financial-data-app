@@ -54,6 +54,7 @@ public class XbrlParserService {
             return result;
         }
 
+
         // TODO ここで取得する情報（科目）を選別する > accountsテーブルに取得する科目をマスタデータとして登録しておく想定
         // 企業データは登録済の想定, 企業に紐づく文書データは別APIで事前登録済の想定
         // ここで保存する科目は、登録済の文書データに紐づく必要がある
@@ -93,6 +94,7 @@ public class XbrlParserService {
             return Optional.empty();
         }
 
+        // TODO Accountへの関連付けを検討
         return Optional.of(new FinancialData(name, contextRef, unitRef, value));
     }
 

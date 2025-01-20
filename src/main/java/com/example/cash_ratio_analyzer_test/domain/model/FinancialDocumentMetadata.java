@@ -16,7 +16,12 @@ public class FinancialDocumentMetadata {
     /** 提出者名 */
     private String filerName;
 
+    /** 書類種別 */
     private EdinetDocumentType documentType;
+
+    // TODO これでフィルタ掛けるか検討
+    /** 様式コード */
+    private String formCode;
 
     /** 提出日 */
     private LocalDate submissionDate;

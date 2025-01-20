@@ -53,6 +53,7 @@ public class FinancialDocumentService {
     // TODO transactionalアノテーションを付与する
     // 書類取得APIレスポンスからの処理を想定。documentは上で作成済にするか、新規作成するかは要検討（dataなしのdocument作成してもよいのか）
     public DocumentId saveFinancialData(String documentId, List<FinancialData> financialDataList) {
+        // TODO financialDocumentの重複チェック（重複は例外をスローする）
         // financialDocumentは新規作成のみ、更新は不要の想定
         var documentIdModel = new DocumentId(documentId);
         var financialDocument = new FinancialDocument(documentIdModel);

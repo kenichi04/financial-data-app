@@ -45,6 +45,8 @@ public class FinancialDocumentMetadataService {
             return List.of();
         }
 
+        // TODO metadataおよびcompanyの重複チェック（エラーではなく、スキップする）
+
         var metadataList = processedResponseData.get().getMetadataList();
         var companies = processedResponseData.get().getCompanies();
         financialDocumentMetadataRepository.save(metadataList);

@@ -50,10 +50,10 @@ public class JsonParserService {
 
         // TODO ここからはJSONパースとは関係ないので、別のクラスに移動すべき
         // このクラスで別クラスのフィールドを持ち、処理を委譲するようにする
-        var targetResults = filterPermittedDocumentTypes(response.getResults());
-        // TODO securityCode = nullの場合は登録しなくてよさそう？（上場企業のみを対象とする）
-        // result.getSecCode()で判定できる
-        var processedResponseData = processResults(targetResults);
+        var permittedDocumentResults = filterPermittedDocumentTypes(response.getResults());
+        var resultsWithSecCode = filterResultsWithSecCode(permittedDocumentResults);
+
+        var processedResponseData = processResults(resultsWithSecCode);
         return Optional.of(processedResponseData);
     }
 
@@ -94,8 +94,22 @@ public class JsonParserService {
      * @return 許可されたドキュメントタイプの結果のリスト
      */
     private List<Result> filterPermittedDocumentTypes(List<Result> results) {
+        // TODO 様式コード（formcode）もフィルタ掛けるか？
         return results.stream()
                 .filter(result -> documentService.isPermittedDocumentType(result.getDocTypeCode()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * secCode（証券コード）がnullでない結果のみをフィルタリングします。
+     *
+     * @param results フィルタリングする結果のリスト
+     * @return secCodeがnullでない結果のリスト
+     */
+    private List<Result> filterResultsWithSecCode(List<Result> results) {
+        // 上場企業のみを対象とするため、secCodeがnullの結果は除外する
+        return results.stream()
+                .filter(result -> result.getSecCode() != null)
                 .collect(Collectors.toList());
     }
 

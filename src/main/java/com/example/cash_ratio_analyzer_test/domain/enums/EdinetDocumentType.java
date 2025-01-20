@@ -1,5 +1,8 @@
 package com.example.cash_ratio_analyzer_test.domain.enums;
 
+/**
+ * EDINET書類種別を表す列挙型です。
+ */
 public enum EdinetDocumentType {
     /** 有価証券報告書 */
     YUKASHOKEN_HOKOKUSHO(120),
