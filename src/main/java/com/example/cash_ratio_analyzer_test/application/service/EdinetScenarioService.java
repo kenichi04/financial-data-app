@@ -3,9 +3,6 @@ package com.example.cash_ratio_analyzer_test.application.service;
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchMode;
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
-import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -42,10 +39,8 @@ public class EdinetScenarioService {
         var processedResponseData = jsonParserService.parseDocumentList(data);
 
         // TODO DBに保存
-        var documentIds = financialDocumentMetadataService.createMetadata(processedResponseData);
-
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
-        return documentIds;
+        return financialDocumentMetadataService.createMetadata(processedResponseData);
     }
 
     // TODO transactionalアノテーションを付与する
@@ -59,9 +54,7 @@ public class EdinetScenarioService {
         // XBRLから必要なデータを抽出
         var extractedData = xbrlParserService.parseXbrl(targetData);
         // TODO DBに保存
-        var documentIdModel = financialDocumentService.saveFinancialData(documentId, extractedData);
-
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
-        return documentIdModel;
+        return financialDocumentService.saveFinancialData(documentId, extractedData);
     }
 }
