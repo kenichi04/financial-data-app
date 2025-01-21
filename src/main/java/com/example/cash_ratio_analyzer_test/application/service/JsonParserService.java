@@ -52,6 +52,9 @@ public class JsonParserService {
         // このクラスで別クラスのフィールドを持ち、処理を委譲するようにする
         var permittedDocumentResults = filterPermittedDocumentTypes(response.getResults());
         var resultsWithSecCode = filterResultsWithSecCode(permittedDocumentResults);
+        if (resultsWithSecCode.isEmpty()) {
+            return Optional.empty();
+        }
 
         var processedResponseData = processResults(resultsWithSecCode);
         return Optional.of(processedResponseData);

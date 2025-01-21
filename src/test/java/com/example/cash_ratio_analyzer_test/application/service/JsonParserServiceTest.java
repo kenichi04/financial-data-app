@@ -58,18 +58,56 @@ class JsonParserServiceTest {
     }
 
     @Test
-    void parseDocumentList_noResults_returnsEmptyOptional() {
+    void parseDocumentList_secCodeIsNull_returnsEmptyOptional() {
+        // "docTypeCode": "120" は有価証券報告書
         var jsonData = """
         {
             "metadata": {
                 "resultset": {
-                    "count": 0
+                    "count": 1
                 },
                 "status": "200"
             },
-            "results": []
+            "results": [
+                {
+                    "docID": "12345678",
+                    "docTypeCode": "120",
+                    "secCode": null,
+                    "edinetCode": "E12345",
+                    "filerName": "Test Filer",
+                    "submitDateTime": "2023-01-01 00:00",
+                    "docDescription": "Test Description"
+                }
+            ]
         }
         """;
+
+        when(documentService.isPermittedDocumentType(anyString())).thenReturn(true);
+
+        Optional<ProcessedResponseData> result = jsonParserService.parseDocumentList(jsonData);
+
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    void parseDocumentList_noResults_returnsEmptyOptional() {
+    var jsonData = """
+    {
+        "metadata": {
+            "title": "提出された書類を把握するためのAPI",
+            "parameter": {
+                "date": "2025-01-19",
+                "type": "2"
+            },
+            "resultset": {
+                "count": 0
+            },
+            "processDateTime": "2025-01-21 00:03",
+            "status": "200",
+            "message": "OK"
+        }
+    }
+    """;
 
         Optional<ProcessedResponseData> result = jsonParserService.parseDocumentList(jsonData);
         assertFalse(result.isPresent());
