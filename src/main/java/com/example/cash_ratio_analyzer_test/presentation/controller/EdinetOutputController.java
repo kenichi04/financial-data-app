@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 // Edinetデータ出力テスト用
+@Deprecated
 @RestController
 @RequestMapping("/edinet/output")
 public class EdinetOutputController {
