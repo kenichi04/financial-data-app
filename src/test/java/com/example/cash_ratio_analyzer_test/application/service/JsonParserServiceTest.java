@@ -80,7 +80,7 @@ class JsonParserServiceTest {
                 }
             ]
         }
-    """;
+        """;
 
         when(documentService.isPermittedDocumentType(anyString())).thenReturn(false);
 
@@ -123,23 +123,23 @@ class JsonParserServiceTest {
 
     @Test
     void parseDocumentList_noResults_returnsEmptyOptional() {
-    var jsonData = """
-    {
-        "metadata": {
-            "title": "提出された書類を把握するためのAPI",
-            "parameter": {
-                "date": "2025-01-19",
-                "type": "2"
-            },
-            "resultset": {
-                "count": 0
-            },
-            "processDateTime": "2025-01-21 00:03",
-            "status": "200",
-            "message": "OK"
+        var jsonData = """
+        {
+            "metadata": {
+                "title": "提出された書類を把握するためのAPI",
+                "parameter": {
+                    "date": "2025-01-19",
+                    "type": "2"
+                },
+                "resultset": {
+                    "count": 0
+                },
+                "processDateTime": "2025-01-21 00:03",
+                "status": "200",
+                "message": "OK"
+            }
         }
-    }
-    """;
+        """;
 
         Optional<ProcessedResponseData> result = jsonParserService.parseDocumentList(jsonData);
         assertFalse(result.isPresent());
@@ -158,9 +158,6 @@ class JsonParserServiceTest {
             "results": []
         }
         """;
-        assertThrows(RuntimeException.class, () -> {
-            jsonParserService.parseDocumentList(jsonData);
-        });
+        assertThrows(RuntimeException.class, () -> jsonParserService.parseDocumentList(jsonData));
     }
-
 }
