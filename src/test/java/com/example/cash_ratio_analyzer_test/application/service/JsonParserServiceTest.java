@@ -58,6 +58,38 @@ class JsonParserServiceTest {
     }
 
     @Test
+    void parseDocumentList_unpermittedDocumentType_returnsEmptyOptional() {
+        // docTypeCodeに許可されていないコードを指定
+        var jsonData = """
+        {
+            "metadata": {
+                "resultset": {
+                    "count": 1
+                },
+                "status": "200"
+            },
+            "results": [
+                {
+                    "docID": "12345678",
+                    "docTypeCode": "130",
+                    "secCode": "1234",
+                    "edinetCode": "E12345",
+                    "filerName": "Test Filer",
+                    "submitDateTime": "2023-01-01 00:00",
+                    "docDescription": "Test Description"
+                }
+            ]
+        }
+    """;
+
+        when(documentService.isPermittedDocumentType(anyString())).thenReturn(false);
+
+        Optional<ProcessedResponseData> result = jsonParserService.parseDocumentList(jsonData);
+
+        assertFalse(result.isPresent());
+    }
+
+    @Test
     void parseDocumentList_secCodeIsNull_returnsEmptyOptional() {
         // "docTypeCode": "120" は有価証券報告書
         var jsonData = """
