@@ -25,13 +25,13 @@ class JsonParserServiceTest {
 
     @Test
     void parseDocumentList_validJsonData_returnsProcessedResponseData() {
+        // "docTypeCode": "120" は有価証券報告書
         var jsonData = """
         {
             "metadata": {
                 "resultset": {
                     "count": 1
                 },
-                "processDateTime": "2023-01-01 00:00",
                 "status": "200"
             },
             "results": [
@@ -56,4 +56,41 @@ class JsonParserServiceTest {
         assertEquals(1, result.get().getMetadataList().size());
         assertEquals("12345678", result.get().getMetadataList().get(0).getDocumentId().value());
     }
+
+    @Test
+    void parseDocumentList_noResults_returnsEmptyOptional() {
+        var jsonData = """
+        {
+            "metadata": {
+                "resultset": {
+                    "count": 0
+                },
+                "status": "200"
+            },
+            "results": []
+        }
+        """;
+
+        Optional<ProcessedResponseData> result = jsonParserService.parseDocumentList(jsonData);
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    void parseDocumentList_invalidStatus_throwsRuntimeException() {
+        var jsonData = """
+        {
+            "metadata": {
+                "resultset": {
+                    "count": 0
+                },
+                "status": "500"
+            },
+            "results": []
+        }
+        """;
+        assertThrows(RuntimeException.class, () -> {
+            jsonParserService.parseDocumentList(jsonData);
+        });
+    }
+
 }
