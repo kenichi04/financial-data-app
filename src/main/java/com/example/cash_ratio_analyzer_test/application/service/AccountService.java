@@ -20,4 +20,8 @@ public class AccountService {
         var accountNames = accounts.stream().map(Account::getName).toList();
         return accountNames;
     }
+
+    public List<Account> getAccounts() {
+        return accountRepository.findAll();
+    }
 }

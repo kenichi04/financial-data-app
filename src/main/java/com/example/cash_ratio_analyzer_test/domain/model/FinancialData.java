@@ -6,24 +6,24 @@ import java.math.BigDecimal;
 // TODO 別途データ永続用のエンティティクラス（FinancialDataEntity）を作成して、データとロジックを分離する
 public class FinancialData {
     private DocumentId documentId;
-    private String name;
+    private Account account;
     // 前期、今期の判定
     private String contextRef;
+    // TODO 通貨は値オブジェクトもしくはenumで持つ方が良い。
+    // TODO 変数名もEdinetレスポンスに合わせており分かりにくい？
     private String unitRef;
     private BigDecimal value;
-    // TODO 通貨はFinancialDocumentクラスで持つ方が良さそう
     private String currency;
-    // TODO 貸方、借方の判定は？属する種類（貸借対照表、損益計算書）は？
 
-    public FinancialData(String name, String contextRef, String unitRef, BigDecimal value) {
-        this.name = name;
+    public FinancialData(Account account, String contextRef, String unitRef, BigDecimal value) {
+        this.account = account;
         this.contextRef = contextRef;
         this.unitRef = unitRef;
         this.value = value;
     }
 
-    public String getName() {
-        return name;
+    public Account getAccount() {
+        return account;
     }
 
     public String getContextRef() {

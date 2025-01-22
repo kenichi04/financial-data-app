@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 // TODO インターフェース作成して、切替可能にする
 /**
@@ -78,11 +79,13 @@ public class XbrlParserService {
      * @return 抽出されたFinancialData、該当するデータが無い場合はOptional.empty()
      */
     private Optional<FinancialData> extractFinancialDataFromElement(Element element) {
-        var targetAccounts = accountService.getAccountNames();
+        var accountMap = accountService.getAccounts().stream()
+                .collect(Collectors.toMap(account -> account.getName(), account -> account));
 
         // `jppfs_cor:`は名前空間プレフィックスのため不要
+        // 財務諸表本表タクソノミの語彙スキーマの名前空間宣言
         var name = element.getAttribute("name").replace("jppfs_cor:", "");
-        if (name.isEmpty() || !targetAccounts.contains(name)) {
+        if (name.isEmpty() || !accountMap.containsKey(name)) {
             return Optional.empty();
         }
 
@@ -94,8 +97,8 @@ public class XbrlParserService {
             return Optional.empty();
         }
 
-        // TODO Accountへの関連付けを検討
-        return Optional.of(new FinancialData(name, contextRef, unitRef, value));
+        var account = accountMap.get(name);
+        return Optional.of(new FinancialData(account, contextRef, unitRef, value));
     }
 
     /**
