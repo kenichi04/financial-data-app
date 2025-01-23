@@ -80,7 +80,7 @@ public class XbrlParserService {
      */
     private Optional<FinancialData> extractFinancialDataFromElement(Element element) {
         var accountMap = accountService.getAccounts().stream()
-                .collect(Collectors.toMap(account -> account.getName(), account -> account));
+                .collect(Collectors.toMap(account -> account.getCode(), account -> account));
 
         // `jppfs_cor:`は名前空間プレフィックスのため不要
         // 財務諸表本表タクソノミの語彙スキーマの名前空間宣言

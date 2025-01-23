@@ -15,12 +15,6 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public List<String> getAccountNames() {
-        var accounts = accountRepository.findAll();
-        var accountNames = accounts.stream().map(Account::getName).toList();
-        return accountNames;
-    }
-
     public List<Account> getAccounts() {
         return accountRepository.findAll();
     }
