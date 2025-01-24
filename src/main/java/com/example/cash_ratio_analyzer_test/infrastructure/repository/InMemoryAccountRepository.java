@@ -15,7 +15,7 @@ public class InMemoryAccountRepository implements IAccountRepository {
     private Map<Long, Account> accountStore = new HashMap<>(){
         {
             // 現金預金
-            put(1L, new Account("CashAndDeposits", "現金預金"));
+            put(1L, new Account("CashAndDeposits", "現金預金", "Cash and deposits", "debit"));
         }
     };
 
