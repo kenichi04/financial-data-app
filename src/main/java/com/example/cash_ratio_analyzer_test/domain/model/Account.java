@@ -24,4 +24,12 @@ public class Account {
     public String getNameJp() {
         return nameJp;
     }
+
+    public String getNameEn() {
+        return nameEn;
+    }
+
+    public Balance getBalance() {
+        return balance;
+    }
 }

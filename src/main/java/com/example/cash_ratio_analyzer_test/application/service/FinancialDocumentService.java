@@ -26,23 +26,6 @@ public class FinancialDocumentService {
         return financialDocumentRepository.findByDocumentId(new DocumentId(documentId));
     }
 
-    // TODO transactionalアノテーションを付与する
-    // 書類一覧APIレスポンスからdocument作成する場合は、dataが取得できないため、documentIdのみで作成する
-    // TODO 処理見直し（たぶん不要になる）. 書類一覧APIではdocumentではなく、documentMetadataを作成する方針に変更
-    public void create(String edinetCode, String documentId) {
-        // TODO 直接companyRepository使うか？companyServiceでラップするか？
-        var company = companyRepository.findByCompanyEdinetCode(edinetCode);
-        // 仮実装, ここでcompanyIdを使用してcompanyの存在チェック
-        if (company == null) {
-            throw new RuntimeException("company is not found");
-        }
-        // companyとdocumentは一対多の関係
-        // ここの処理は検討
-        var financialDocument = new FinancialDocument(new DocumentId(documentId));
-        company.addDocument(financialDocument);
-        companyRepository.save(company);
-    }
-
     /**
      * 指定されたドキュメントIDに対応する財務データを保存します。
      *
@@ -56,8 +39,8 @@ public class FinancialDocumentService {
         // TODO financialDocumentの重複チェック（重複は例外をスローする）
         // financialDocumentは新規作成のみ、更新は不要の想定
         var documentIdModel = new DocumentId(documentId);
-        var financialDocument = new FinancialDocument(documentIdModel);
-        financialDocument.createData(financialDataList);
+        var financialDocument = new FinancialDocument(documentIdModel, financialDataList);
+
         financialDocumentRepository.save(financialDocument);
 
         // メタデータを処理済に更新

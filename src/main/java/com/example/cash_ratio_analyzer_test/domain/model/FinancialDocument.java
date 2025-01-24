@@ -1,5 +1,7 @@
 package com.example.cash_ratio_analyzer_test.domain.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FinancialDocument {
@@ -10,8 +12,15 @@ public class FinancialDocument {
 //    private String fiscalYear;
     private List<FinancialData> data;
 
-    public FinancialDocument(DocumentId documentId) {
+    public FinancialDocument(DocumentId documentId, List<FinancialData> data) {
+        if (documentId == null) {
+            throw new IllegalArgumentException("DocumentId cannot be null");
+        }
+        if (data == null || data.isEmpty()) {
+            throw new IllegalArgumentException("FinancialData list cannot be null or empty");
+        }
         this.documentId = documentId;
+        this.data = new ArrayList<>(data);
     }
 
     public DocumentId getDocumentId() {
@@ -19,10 +28,7 @@ public class FinancialDocument {
     }
 
     public List<FinancialData> getData() {
-        return data;
-    }
-
-    public void createData(List<FinancialData> data) {
-        this.data = data;
+        // リストの直接変更を防ぐため、コピーを返す
+        return Collections.unmodifiableList(data);
     }
 }
