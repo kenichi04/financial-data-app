@@ -41,7 +41,6 @@ public class EdinetController {
 
     @PostMapping("/financial-data/{documentId}/fetch")
     public FinancialDocumentPostResponse fetchAndSaveFinancialData(@PathVariable String documentId) {
-        // String testDocumentNumber = "S100TGZR";
         var documentIdModel = edinetScenarioService.fetchAndSaveFinancialData(documentId);
         return new FinancialDocumentPostResponse(documentIdModel.value());
     }

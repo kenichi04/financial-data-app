@@ -1,6 +1,8 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
+import com.example.cash_ratio_analyzer_test.application.service.constants.XbrlConstants;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
+import com.example.cash_ratio_analyzer_test.domain.model.Account;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -47,29 +50,27 @@ public class XbrlParserService {
 
         var document = parseDocumentToDom(xbrlContent);
         var elements = document.getDocumentElement();
-        // TODO タグについては要検討 > 一旦ix:nonFractionでよさそう （enum、定数で管理？）
-        // ix:nonFraction: 金額又は数値を表現する場合
-        // 参考: https://www.fsa.go.jp/search/20151228/2b_1.pdf
-        var nodeList = elements.getElementsByTagName("ix:nonFraction");
+        // TODO タグについては要検討 > 一旦ix:nonFractionでよさそう(nonFraction以外も使う場合はenumで管理)
+        var nodeList = elements.getElementsByTagName(XbrlConstants.IX_NON_FRACTION);
 
         if (nodeList.getLength() == 0) {
             return result;
         }
 
+        // 取得するFinancialDataを選別するための科目マップ. accountsテーブルに対象となる科目をマスタデータとして登録しておく想定
+        var accountMap = accountService.getAccounts().stream()
+                .collect(Collectors.toMap(account -> account.getCode(), account -> account));
 
-        // TODO ここで取得する情報（科目）を選別する > accountsテーブルに取得する科目をマスタデータとして登録しておく想定
-        // 企業データは登録済の想定, 企業に紐づく文書データは別APIで事前登録済の想定
-        // ここで保存する科目は、登録済の文書データに紐づく必要がある
+        // ここで保存するデータは、登録済の文書メタデータに紐づく必要がある
         for (int i = 0; i < nodeList.getLength(); i++) {
             var element = (Element) nodeList.item(i);
-            var financialData = extractFinancialDataFromElement(element);
+            var financialData = extractFinancialDataFromElement(element, accountMap);
 
             if (financialData.isEmpty()) {
                 continue;
             }
             result.add(financialData.get());
         }
-
         return result;
     }
 
@@ -77,21 +78,20 @@ public class XbrlParserService {
      * 指定されたXML要素からFinancialDataを抽出します。
      *
      * @param element XML要素
+     * @param accountMap 科目マップ
      * @return 抽出されたFinancialData、該当するデータが無い場合はOptional.empty()
      */
-    private Optional<FinancialData> extractFinancialDataFromElement(Element element) {
-        var accountMap = accountService.getAccounts().stream()
-                .collect(Collectors.toMap(account -> account.getCode(), account -> account));
+    private Optional<FinancialData> extractFinancialDataFromElement(Element element, Map<String, Account> accountMap) {
 
         // `jppfs_cor:`は名前空間プレフィックスのため不要
-        // 財務諸表本表タクソノミの語彙スキーマの名前空間宣言
-        var name = element.getAttribute("name").replace("jppfs_cor:", "");
+        var name = element.getAttribute(XbrlConstants.ATTRIBUTE_NAME)
+                .replace(XbrlConstants.JPPFS_COR_NAMESPACE_PREFIX, "");
         if (name.isEmpty() || !accountMap.containsKey(name)) {
             return Optional.empty();
         }
 
-        var contextRef = element.getAttribute("contextRef");
-        var unitRef = element.getAttribute("unitRef");
+        var contextRef = element.getAttribute(XbrlConstants.ATTRIBUTE_CONTEXT_REF);
+        var unitRef = element.getAttribute(XbrlConstants.ATTRIBUTE_UNIT_REF);
         var value = extractValueFromElement(element);
         // 金額が0の場合は登録しない
         if (value.equals(BigDecimal.ZERO)) {
