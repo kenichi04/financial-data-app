@@ -82,7 +82,6 @@ public class XbrlParserService {
      * @return 抽出されたFinancialData、該当するデータが無い場合はOptional.empty()
      */
     private Optional<FinancialData> extractFinancialDataFromElement(Element element, Map<String, Account> accountMap) {
-
         // `jppfs_cor:`は名前空間プレフィックスのため不要
         var name = element.getAttribute(XbrlConstants.ATTRIBUTE_NAME)
                 .replace(XbrlConstants.JPPFS_COR_NAMESPACE_PREFIX, "");
@@ -111,7 +110,8 @@ public class XbrlParserService {
     private BigDecimal extractValueFromElement(Element element) {
         try {
             // 金額はカンマ区切り
-            return new BigDecimal(element.getTextContent().trim().replace(",", ""));
+            return new BigDecimal(element.getTextContent().trim()
+                    .replace(XbrlConstants.COMMA, ""));
         } catch (NumberFormatException e) {
             return BigDecimal.ZERO;
         }
