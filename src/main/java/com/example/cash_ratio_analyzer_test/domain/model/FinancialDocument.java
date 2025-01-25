@@ -5,12 +5,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class FinancialDocument {
+    private Long id;
 
     /** 書類管理番号 */
-    private DocumentId documentId;
+    private final DocumentId documentId;
 //    private String documentType;
 //    private String fiscalYear;
-    private List<FinancialData> data;
+    private final List<FinancialData> data;
 
     public FinancialDocument(DocumentId documentId, List<FinancialData> data) {
         if (documentId == null) {

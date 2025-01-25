@@ -3,12 +3,13 @@ package com.example.cash_ratio_analyzer_test.domain.model;
 import java.util.List;
 
 public class Company {
-    private EdinetCode edinetCode;
-    private String name;
+    private Long id;
+    private final EdinetCode edinetCode;
+    private final String name;
     /** 証券コード */
-    private String securityCode;
+    private final String securityCode;
     /** 法人番号 */
-    private String corporateNumber;
+    private final String corporateNumber;
     // TODO Entityでは遅延ロードを使うべき
     private List<FinancialDocument> documents;
 

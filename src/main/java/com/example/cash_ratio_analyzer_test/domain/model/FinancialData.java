@@ -7,16 +7,18 @@ import java.math.BigDecimal;
 // ドメインモデルとしての財務データ
 // TODO 別途データ永続用のエンティティクラス（FinancialDataEntity）を作成して、データとロジックを分離する
 public class FinancialData {
+    private Long id;
+    // TODO 必要かどうか検討
     private DocumentId documentId;
-    private Account account;
+    private final Account account;
     // 前期、今期の判定
-    private String contextRef;
-    private BigDecimal value;
-    private Currency currency;
+    private final String periodContext;
+    private final BigDecimal value;
+    private final Currency currency;
 
-    public FinancialData(Account account, String contextRef, BigDecimal value, Currency currency) {
+    public FinancialData(Account account, String periodContext, BigDecimal value, Currency currency) {
         this.account = account;
-        this.contextRef = contextRef;
+        this.periodContext = periodContext;
         this.value = value;
         this.currency = currency;
     }
@@ -25,8 +27,8 @@ public class FinancialData {
         return account;
     }
 
-    public String getContextRef() {
-        return contextRef;
+    public String getPeriodContext() {
+        return periodContext;
     }
 
     public BigDecimal getValue() {
