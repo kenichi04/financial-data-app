@@ -1,5 +1,6 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
+import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -98,7 +99,7 @@ public class XbrlParserService {
         }
 
         var account = accountMap.get(name);
-        return Optional.of(new FinancialData(account, contextRef, unitRef, value));
+        return Optional.of(new FinancialData(account, contextRef, value, Currency.fromCode(unitRef)));
     }
 
     /**

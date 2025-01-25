@@ -1,5 +1,7 @@
 package com.example.cash_ratio_analyzer_test.domain.model;
 
+import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
+
 import java.math.BigDecimal;
 
 // ドメインモデルとしての財務データ
@@ -9,17 +11,14 @@ public class FinancialData {
     private Account account;
     // 前期、今期の判定
     private String contextRef;
-    // TODO 通貨は値オブジェクトもしくはenumで持つ方が良い。
-    // TODO 変数名もEdinetレスポンスに合わせており分かりにくい？
-    private String unitRef;
     private BigDecimal value;
-    private String currency;
+    private Currency currency;
 
-    public FinancialData(Account account, String contextRef, String unitRef, BigDecimal value) {
+    public FinancialData(Account account, String contextRef, BigDecimal value, Currency currency) {
         this.account = account;
         this.contextRef = contextRef;
-        this.unitRef = unitRef;
         this.value = value;
+        this.currency = currency;
     }
 
     public Account getAccount() {
@@ -30,11 +29,11 @@ public class FinancialData {
         return contextRef;
     }
 
-    public String getUnitRef() {
-        return unitRef;
-    }
-
     public BigDecimal getValue() {
         return value;
+    }
+
+    public Currency getCurrency() {
+        return currency;
     }
 }
