@@ -29,6 +29,8 @@ public class FinancialDocumentMetadata {
     /** 書類取得APIで取得済か */
     private boolean processed = false;
 
+    // TODO 書類取得で失敗したかのステータスも追加する？もしくはリトライ回数を追加する？
+
     public FinancialDocumentMetadata(DocumentId documentId, String description, EdinetCode edinetCode, String filerName, EdinetDocumentType documentType, LocalDate submissionDate) {
         this.documentId = documentId;
         this.description = description;

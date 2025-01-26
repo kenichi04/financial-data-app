@@ -38,6 +38,9 @@ public class XbrlParserService {
         this.documentBuilder = factory.newDocumentBuilder();
     }
 
+    // TODO タグ情報（ix:header)の解析メソッドを追加
+    // TODO これに伴い、parseXbrlメソッドのリファクタリング（名前も分かりにくい）が必要
+
     /**
      * XBRLコンテンツを解析し、FinancialDataのリストを返します。
      *
@@ -84,7 +87,7 @@ public class XbrlParserService {
     private Optional<FinancialData> extractFinancialDataFromElement(Element element, Map<String, Account> accountMap) {
         // `jppfs_cor:`は名前空間プレフィックスのため不要
         var name = element.getAttribute(XbrlConstants.ATTRIBUTE_NAME)
-                .replace(XbrlConstants.JPPFS_COR_NAMESPACE_PREFIX, "");
+                .replace(XbrlConstants.JP_PFS_COR_NAMESPACE_PREFIX, "");
         if (name.isEmpty() || !accountMap.containsKey(name)) {
             return Optional.empty();
         }
