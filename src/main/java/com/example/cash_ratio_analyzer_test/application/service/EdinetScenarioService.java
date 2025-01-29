@@ -48,7 +48,6 @@ public class EdinetScenarioService {
     public DocumentId fetchAndSaveFinancialData(String documentId) {
 
         var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentId);
-        // MapかListで返すようにしても良いかも（対象が複数ある場合）
         // 一時ファイル作成して抽出する処理も検討する（将来的に）
         // TODO ターゲットファイルを可変長引数で指定できるようにする
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
