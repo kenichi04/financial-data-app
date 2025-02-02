@@ -48,18 +48,10 @@ public class XbrlParserService {
             return;
         }
 
-        // 取得するFinancialDataを選別するための科目マップ. accountsテーブルに対象となる科目をマスタデータとして登録しておく想定
-        var accountMap = accountService.getAccounts().stream()
-                .collect(Collectors.toMap(account -> account.getCode(), account -> account));
-
-        // ここで保存するデータは、登録済の文書メタデータに紐づく必要がある
+        // TODO IX_HEADERタグは1つしかないと思うので、for文は不要？
         for (int i = 0; i < nodeList.getLength(); i++) {
             var element = (Element) nodeList.item(i);
-            var financialData = extractFinancialDataFromElement(element, accountMap);
 
-            if (financialData.isEmpty()) {
-                continue;
-            }
             // TODO コンテキストIDタグの情報を取得して、instantから期末日を取得できる
             // <xbrli:context id="CurrentYearInstant"><xbrli:instant>2024-02-29</xbrli:instant></xbrli:context>
             // TODO ユニットIDの情報を取得して、Currencyを登録する
