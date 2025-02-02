@@ -48,7 +48,7 @@
 
 ## TODO
 - [ ] XBRL解析サービスにタグ情報取得処理を追加
-  - [ ] 表紙のインラインXBRLファイル有無で処理を分岐
+  - [x] 表紙のインラインXBRLファイル有無で処理を分岐
 - [ ] 通貨はユニット定義で取得できるため、FinancialData個別ではなく、FinancialDocumentに持たせる
 - [ ] 会計年度をコンテキストの定義から取得する
 - [ ] FinancialDataとAccountの関係見直し

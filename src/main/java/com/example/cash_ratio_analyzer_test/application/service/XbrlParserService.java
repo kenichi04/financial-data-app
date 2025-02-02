@@ -38,8 +38,34 @@ public class XbrlParserService {
         this.documentBuilder = factory.newDocumentBuilder();
     }
 
-    // TODO タグ情報（ix:header)の解析メソッドを追加
-    // TODO これに伴い、parseXbrlメソッドのリファクタリング（名前も分かりにくい）が必要
+    // TODO メソッド実装. Javadocコメントも追加
+    public void extractTagInfoFromHeaderOrFirstFile(byte[] contentWithTagInfo) {
+        var document = parseDocumentToDom(contentWithTagInfo);
+        var elements = document.getDocumentElement();
+        var nodeList = elements.getElementsByTagName(XbrlConstants.IX_HEADER);
+
+        if (nodeList.getLength() == 0) {
+            return;
+        }
+
+        // 取得するFinancialDataを選別するための科目マップ. accountsテーブルに対象となる科目をマスタデータとして登録しておく想定
+        var accountMap = accountService.getAccounts().stream()
+                .collect(Collectors.toMap(account -> account.getCode(), account -> account));
+
+        // ここで保存するデータは、登録済の文書メタデータに紐づく必要がある
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            var element = (Element) nodeList.item(i);
+            var financialData = extractFinancialDataFromElement(element, accountMap);
+
+            if (financialData.isEmpty()) {
+                continue;
+            }
+            // TODO コンテキストIDタグの情報を取得して、instantから期末日を取得できる
+            // <xbrli:context id="CurrentYearInstant"><xbrli:instant>2024-02-29</xbrli:instant></xbrli:context>
+            // TODO ユニットIDの情報を取得して、Currencyを登録する
+            // <xbrli:unit id="JPY">
+        }
+    }
 
     /**
      * XBRLコンテンツを解析し、FinancialDataのリストを返します。
@@ -48,7 +74,7 @@ public class XbrlParserService {
      * @return 解析されたFinancialDataのリスト
      */
     // TODO SAXパーサーで逐次解析の方がメモリ効率が良い
-    public List<FinancialData> parseXbrl(byte[] xbrlContent) {
+    public List<FinancialData> extractFinancialDataFromXbrl(byte[] xbrlContent) {
         var result = new ArrayList<FinancialData>();
 
         var document = parseDocumentToDom(xbrlContent);

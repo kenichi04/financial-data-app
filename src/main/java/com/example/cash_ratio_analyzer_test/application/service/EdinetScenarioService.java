@@ -49,10 +49,10 @@ public class EdinetScenarioService {
 
         var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentId);
         // 一時ファイル作成して抽出する処理も検討する（将来的に）
-        // TODO ターゲットファイルを可変長引数で指定できるようにする
+        // TODO ターゲットファイルを可変長引数で指定できるようにする？
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
         // XBRLから必要なデータを抽出
-        var extractedData = xbrlParserService.parseXbrl(extractedFiles.getTargetFileContent());
+        var extractedData = xbrlParserService.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
         // TODO DBに保存
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
         return financialDocumentService.saveFinancialData(documentId, extractedData);

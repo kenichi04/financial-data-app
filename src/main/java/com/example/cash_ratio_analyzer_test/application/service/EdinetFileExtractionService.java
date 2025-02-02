@@ -22,10 +22,10 @@ public class EdinetFileExtractionService {
     @Value("${download.targetFilePrefix:}")
     private String targetFilePrefix;
 
-    private static final String INLINE_XBRL_HEADER_FILE_PREFIX = "0000000_header";
+    private static final String INLINE_XBRL_HEADER_FILE_PREFIX = "XBRL/PublicDoc/0000000_header";
 
     // TODO もう少し具体的なファイル名を指定する
-    private static final String INLINE_XBRL_FIRST_MAIN_FILE_PREFIX = "0101";
+    private static final String INLINE_XBRL_FIRST_MAIN_FILE_PREFIX = "XBRL/PublicDoc/0101";
 
     /**
      * 指定されたバイト配列（ZIP形式）からターゲットファイルを抽出します。
@@ -65,7 +65,6 @@ public class EdinetFileExtractionService {
             e.printStackTrace();
         }
 
-        // TODO null安全なコードにリファクタリング
         return new ExtractedFiles(headerContent, firstMainContent, targetFileContent);
     }
 
