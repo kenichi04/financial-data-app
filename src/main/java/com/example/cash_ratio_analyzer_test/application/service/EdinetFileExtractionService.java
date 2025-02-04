@@ -36,8 +36,11 @@ public class EdinetFileExtractionService {
     public ExtractedFiles extractTargetFile(byte[] fetchData) {
         Map<String, byte[]> targetFileMap = new HashMap<>();
 
+        String headerFileName = null;
         byte[] headerContent = null;
+        String firstMainFileName = null;
         byte[] firstMainContent = null;
+        String targetFileName = null;
         byte[] targetFileContent = null;
         try (
                 var in = new ByteArrayInputStream(fetchData);
@@ -48,15 +51,18 @@ public class EdinetFileExtractionService {
             while ((entry = zipIn.getNextEntry()) != null) {
                 // 表紙ファイルにタグ情報あり（表紙ファイル無しの場合あり）
                 if (entry.getName().startsWith(INLINE_XBRL_HEADER_FILE_PREFIX)) {
+                    headerFileName = entry.getName();
                     headerContent = extractFileContent(zipIn);
                 }
                 // 表紙ファイル無しの場合、本表の一つ目のファイルにタグ情報あり
                 if (entry.getName().startsWith(INLINE_XBRL_FIRST_MAIN_FILE_PREFIX)) {
+                    firstMainFileName = entry.getName();
                     firstMainContent = extractFileContent(zipIn);
                 }
                 // 調査：第５【経理の状況】を取得できる想定
                 // TODO 対象ファイルの選定
                 if (entry.getName().startsWith(targetFilePrefix)) {
+                    targetFileName = entry.getName();
                     targetFileContent = extractFileContent(zipIn);
                 }
             }
@@ -65,7 +71,7 @@ public class EdinetFileExtractionService {
             e.printStackTrace();
         }
 
-        return new ExtractedFiles(headerContent, firstMainContent, targetFileContent);
+        return new ExtractedFiles(headerFileName, headerContent, firstMainFileName, firstMainContent, targetFileName, targetFileContent);
     }
 
     /**

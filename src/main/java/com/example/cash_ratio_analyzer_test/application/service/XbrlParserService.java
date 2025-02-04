@@ -54,8 +54,9 @@ public class XbrlParserService {
 
             // TODO コンテキストIDタグの情報を取得して、instantから期末日を取得できる
             // <xbrli:context id="CurrentYearInstant"><xbrli:instant>2024-02-29</xbrli:instant></xbrli:context>
-            // TODO ユニットIDの情報を取得して、Currencyを登録する
-            // <xbrli:unit id="JPY">
+            // TODO ユニットIDの情報を取得して、Currencyを登録する. 一旦JPYとUSDのみ対応
+            // 日本円：ユニットID：JPY<xbrli:unit id="JPY"> 、measure要素：iso4217:JPYになる
+            // 米ドル：ユニットID：USD<xbrli:unit id="USD"> 、measure要素：iso4217:USDになるもよう
         }
     }
 
