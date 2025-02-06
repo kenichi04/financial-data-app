@@ -1,30 +1,23 @@
-package com.example.cash_ratio_analyzer_test.application.service;
+package com.example.cash_ratio_analyzer_test.application.service.xbrl;
 
 import com.example.cash_ratio_analyzer_test.application.service.constants.XbrlConstants;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
 
 @Service
 public class XbrlTagInfoExtractor {
 
-    private DocumentBuilder documentBuilder;
+    private final XbrlDocumentParser xbrlDocumentParser;
 
-    public XbrlTagInfoExtractor() throws ParserConfigurationException {
-        var factory = DocumentBuilderFactory.newInstance();
-        this.documentBuilder = factory.newDocumentBuilder();
+    public XbrlTagInfoExtractor(XbrlDocumentParser xbrlDocumentParser) {
+        this.xbrlDocumentParser = xbrlDocumentParser;
     }
 
     // TODO メソッド実装. Javadocコメントも追加
     public void extractTagInfoFromHeaderOrFirstFile(byte[] contentWithTagInfo) {
-        var document = parseDocumentToDom(contentWithTagInfo);
+        var document = xbrlDocumentParser.parseDocumentToDom(contentWithTagInfo);
         var elements = document.getDocumentElement();
         var headerNodeList = elements.getElementsByTagName(XbrlConstants.IX_HEADER);
 
@@ -85,20 +78,4 @@ public class XbrlTagInfoExtractor {
             return null;
         }
     }
-
-    /**
-     * XBRLコンテンツをDOMドキュメントに解析します。
-     *
-     * @param xbrlContent 解析するXBRLコンテンツのバイト配列
-     * @return 解析されたDOMドキュメント
-     * @throws RuntimeException XBRLコンテンツの解析に失敗した場合
-     */
-    private Document parseDocumentToDom(byte[] xbrlContent) {
-        try {
-            return documentBuilder.parse(new ByteArrayInputStream(xbrlContent));
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to parse XBRL content: " + e.getMessage());
-        }
-    }
-
 }

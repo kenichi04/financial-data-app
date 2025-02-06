@@ -1,19 +1,13 @@
-package com.example.cash_ratio_analyzer_test.application.service;
+package com.example.cash_ratio_analyzer_test.application.service.xbrl;
 
+import com.example.cash_ratio_analyzer_test.application.service.AccountService;
 import com.example.cash_ratio_analyzer_test.application.service.constants.XbrlConstants;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import com.example.cash_ratio_analyzer_test.domain.model.Account;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,19 +17,19 @@ import java.util.stream.Collectors;
 
 // TODO インターフェース作成して、切替可能にする
 /**
- * EDINET書類取得APIレスポンスから抽出したXBRLコンテンツを解析するサービスクラス。
+ * XBRLコンテンツから財務データを抽出するサービスクラス。
+ * このクラスは、XBRLコンテンツを解析し、関連する財務データをFinancialDataオブジェクトのリストに抽出するメソッドを提供します。
  */
 @Service
 public class XbrlFinancialDataExtractor {
 
     private final AccountService accountService;
 
-    private DocumentBuilder documentBuilder;
+    private final XbrlDocumentParser xbrlDocumentParser;
 
-    public XbrlFinancialDataExtractor(AccountService accountService) throws ParserConfigurationException {
+    public XbrlFinancialDataExtractor(AccountService accountService, XbrlDocumentParser xbrlDocumentParser) {
         this.accountService = accountService;
-        var factory = DocumentBuilderFactory.newInstance();
-        this.documentBuilder = factory.newDocumentBuilder();
+        this.xbrlDocumentParser = xbrlDocumentParser;
     }
 
     /**
@@ -48,7 +42,7 @@ public class XbrlFinancialDataExtractor {
     public List<FinancialData> extractFinancialDataFromXbrl(byte[] xbrlContent) {
         var result = new ArrayList<FinancialData>();
 
-        var document = parseDocumentToDom(xbrlContent);
+        var document = xbrlDocumentParser.parseDocumentToDom(xbrlContent);
         var elements = document.getDocumentElement();
         // TODO タグについては要検討 > 一旦ix:nonFractionでよさそう(nonFraction以外も使う場合はenumで管理)
         var nodeList = elements.getElementsByTagName(XbrlConstants.IX_NON_FRACTION);
@@ -114,21 +108,6 @@ public class XbrlFinancialDataExtractor {
                     .replace(XbrlConstants.COMMA, ""));
         } catch (NumberFormatException e) {
             return BigDecimal.ZERO;
-        }
-    }
-
-    /**
-     * XBRLコンテンツをDOMドキュメントに解析します。
-     *
-     * @param xbrlContent 解析するXBRLコンテンツのバイト配列
-     * @return 解析されたDOMドキュメント
-     * @throws RuntimeException XBRLコンテンツの解析に失敗した場合
-     */
-    private Document parseDocumentToDom(byte[] xbrlContent) {
-        try {
-            return documentBuilder.parse(new ByteArrayInputStream(xbrlContent));
-        } catch (SAXException | IOException e) {
-            throw new RuntimeException("Failed to parse XBRL content: " + e.getMessage());
         }
     }
 }

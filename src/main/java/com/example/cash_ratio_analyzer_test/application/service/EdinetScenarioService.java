@@ -2,6 +2,8 @@ package com.example.cash_ratio_analyzer_test.application.service;
 
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchMode;
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
+import com.example.cash_ratio_analyzer_test.application.service.xbrl.XbrlFinancialDataExtractor;
+import com.example.cash_ratio_analyzer_test.application.service.xbrl.XbrlTagInfoExtractor;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import org.springframework.stereotype.Service;
 
