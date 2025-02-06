@@ -14,6 +14,9 @@ public class XbrlConstants {
     // ix はインラインXBRLの名前空間宣言
     public static final String IX_HEADER = "ix:header";
 
+    /** ユニットのタグ */
+    public static final String XBRLI_UNIT = "xbrli:unit";
+
     /** 金額又は数値を表現するインラインXBRLの要素 */
     public static final String IX_NON_FRACTION = "ix:nonFraction";
 

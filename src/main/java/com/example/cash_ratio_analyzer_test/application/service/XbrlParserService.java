@@ -42,21 +42,34 @@ public class XbrlParserService {
     public void extractTagInfoFromHeaderOrFirstFile(byte[] contentWithTagInfo) {
         var document = parseDocumentToDom(contentWithTagInfo);
         var elements = document.getDocumentElement();
-        var nodeList = elements.getElementsByTagName(XbrlConstants.IX_HEADER);
+        var headerNode = elements.getElementsByTagName(XbrlConstants.IX_HEADER);
 
-        if (nodeList.getLength() == 0) {
+        if (headerNode.getLength() == 0) {
+            // TODO headerタグなしの場合は想定外なので例外をスロー
             return;
         }
 
-        // TODO IX_HEADERタグは1つしかないと思うので、for文は不要？
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            var element = (Element) nodeList.item(i);
+        // TODO コンテキストIDタグの情報を取得して、instantから期末日を取得できる
+        // <xbrli:context id="CurrentYearInstant"><xbrli:instant>2024-02-29</xbrli:instant></xbrli:context>
 
-            // TODO コンテキストIDタグの情報を取得して、instantから期末日を取得できる
-            // <xbrli:context id="CurrentYearInstant"><xbrli:instant>2024-02-29</xbrli:instant></xbrli:context>
-            // TODO ユニットIDの情報を取得して、Currencyを登録する. 一旦JPYとUSDのみ対応
-            // 日本円：ユニットID：JPY<xbrli:unit id="JPY"> 、measure要素：iso4217:JPYになる
-            // 米ドル：ユニットID：USD<xbrli:unit id="USD"> 、measure要素：iso4217:USDになるもよう
+        var unitNodeList = elements.getElementsByTagName(XbrlConstants.XBRLI_UNIT);
+        for (int i = 0; i < unitNodeList.getLength(); i++) {
+            var element = (Element) unitNodeList.item(i);
+            var unitId = element.getAttribute("id");
+            // unitタグは複数あるため、JPT, USDに一致するタグのみ次処理へ
+            try {
+                Currency.fromCode(unitId);
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
+            // TODO 一つしかないと思うので、最初の要素を取得で良いはず？
+            var measureNode = element.getElementsByTagName("xbrli:measure").item(0);
+            var measure = measureNode.getTextContent();
+            var test = measureNode.getFirstChild().getNodeValue();
+            // TODO これは良くない
+            if (measure.equals("iso4217:JPY")) {
+            } else if (measure.equals("iso4217:USD")) {
+            }
         }
     }
 
