@@ -17,18 +17,18 @@ public class EdinetScenarioService {
     private final EdinetFileExtractionService edinetFileExtractionService;
     private final JsonParserService jsonParserService;
     private final XbrlTagInfoExtractor xbrlTagInfoExtractor;
-    private final XbrlParserService xbrlParserService;
+    private final XbrlFinancialDataExtractor xbrlFinancialDataExtractor;
     private final FinancialDocumentMetadataService financialDocumentMetadataService;
     private final FinancialDocumentService financialDocumentService;
 
-    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetFileExtractionService edinetFileExtractionService, JsonParserService jsonParserService, XbrlTagInfoExtractor xbrlTagInfoExtractor, XbrlParserService xbrlParserService, FinancialDocumentMetadataService financialDocumentMetadataService, FinancialDocumentService financialDocumentService) {
+    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetFileExtractionService edinetFileExtractionService, JsonParserService jsonParserService, XbrlTagInfoExtractor xbrlTagInfoExtractor, XbrlFinancialDataExtractor xbrlFinancialDataExtractor, FinancialDocumentMetadataService financialDocumentMetadataService, FinancialDocumentService financialDocumentService) {
         this.financialDocumentMetadataService = financialDocumentMetadataService;
         this.edinetDocumentListService = edinetDocumentListService;
         this.edinetDataFetchService = edinetDataFetchService;
         this.edinetFileExtractionService = edinetFileExtractionService;
         this.jsonParserService = jsonParserService;
         this.xbrlTagInfoExtractor = xbrlTagInfoExtractor;
-        this.xbrlParserService = xbrlParserService;
+        this.xbrlFinancialDataExtractor = xbrlFinancialDataExtractor;
         this.financialDocumentService = financialDocumentService;
     }
 
@@ -56,7 +56,7 @@ public class EdinetScenarioService {
         // TODO タグ情報を持つファイルから必要なメタ情報を抽出
         xbrlTagInfoExtractor.extractTagInfoFromHeaderOrFirstFile(extractedFiles.getHeaderOrFirstMainContent());
         // XBRLから必要な財務データを抽出
-        var extractedData = xbrlParserService.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
+        var extractedData = xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
         // TODO DBに保存
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
         return financialDocumentService.saveFinancialData(documentId, extractedData);

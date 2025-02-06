@@ -7,7 +7,6 @@ import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -27,13 +26,13 @@ import java.util.stream.Collectors;
  * EDINET書類取得APIレスポンスから抽出したXBRLコンテンツを解析するサービスクラス。
  */
 @Service
-public class XbrlParserService {
+public class XbrlFinancialDataExtractor {
 
     private final AccountService accountService;
 
     private DocumentBuilder documentBuilder;
 
-    public XbrlParserService(AccountService accountService) throws ParserConfigurationException {
+    public XbrlFinancialDataExtractor(AccountService accountService) throws ParserConfigurationException {
         this.accountService = accountService;
         var factory = DocumentBuilderFactory.newInstance();
         this.documentBuilder = factory.newDocumentBuilder();
