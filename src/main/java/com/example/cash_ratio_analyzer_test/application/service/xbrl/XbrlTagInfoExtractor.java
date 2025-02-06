@@ -38,6 +38,17 @@ public class XbrlTagInfoExtractor {
         // TODO FinancialDocument生成して返す. もしくは、FinancialDocument生成に必要なメタ情報を返す. メタ情報クラス作る方が疎結合になるかも
     }
 
+    // TODO コンテキストの定義から当年度の会計年度を取得
+    // id例（時点）: CurrentYearInstant_{メンバー要素名}　⇒　periodタグの子要素のinstantタグの値
+    // id例（期間）: CurrentYearDuration_{メンバー要素名} ⇒ periodタグの子要素のendDateタグの値
+    // 会計期間末（時点）／会計期間（期間）のどちらかが取得できれば良さそう ※対象は`経理の状況`になると思うので.
+    private void extractContextFromNodeList(NodeList contextNodeList) {
+        for (int i = 0; i < contextNodeList.getLength(); i++) {
+            var element = (Element) contextNodeList.item(i);
+            var contextId = element.getAttribute(XbrlConstants.ATTRIBUTE_ID);
+        }
+    }
+
     /**
      * 指定された単位ノードリストから通貨を抽出します。
      *

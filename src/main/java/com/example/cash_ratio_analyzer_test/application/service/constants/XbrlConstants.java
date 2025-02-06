@@ -1,5 +1,6 @@
 package com.example.cash_ratio_analyzer_test.application.service.constants;
 
+// TODO フィールドが多くなってきたので整理したい
 public class XbrlConstants {
     /** '財務諸表本表タクソノミ'の語彙スキーマの名前空間宣言プレフィックス */
     public static final String JP_PFS_COR_NAMESPACE_PREFIX = "jppfs_cor:";
@@ -32,6 +33,18 @@ public class XbrlConstants {
     public static final String ATTRIBUTE_CONTEXT_REF = "contextRef";
 
     public static final String ATTRIBUTE_UNIT_REF = "unitRef";
+
+    /** `当期連結時点`を意味するコンテキストID */
+    public static final String CONTEXT_CURRENT_YEAR_INSTANT = "CurrentYearInstant";
+
+    /** `当期連結期間`を意味するコンテキストID */
+    public static final String CONTEXT_CURRENT_YEAR_DURATION = "CurrentYearDuration";
+
+    /** `当期個別時点`を意味するコンテキストID */
+    public static final String CONTEXT_CURRENT_YEAR_INSTANT_NON_CONSOLIDATED_MEMBER = "CurrentYearInstant_NonConsolidatedMember";
+
+    /** `当期個別期間`を意味するコンテキストID */
+    public static final String CONTEXT_CURRENT_YEAR_DURATION_NON_CONSOLIDATED_MEMBER = "CurrentYearDuration_NonConsolidatedMember";
 
     /** ユニット（通貨）のmeasure要素の値のプレフィックス */
     public static final String UNIT_ISO4217 = "iso4217:";
