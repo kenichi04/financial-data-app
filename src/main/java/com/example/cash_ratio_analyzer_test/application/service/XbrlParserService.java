@@ -58,18 +58,23 @@ public class XbrlParserService {
         Currency currency = extractCurrencyFromUnitNodeList(
                 headerNode.getElementsByTagName(XbrlConstants.XBRLI_UNIT));
 
-        // TODO 期間、通貨を財務文書に紐づける
+        // TODO FinancialDocument生成して返す. もしくは、FinancialDocument生成に必要なメタ情報を返す. メタ情報クラス作る方が疎結合になるかも
     }
 
+    /**
+     * 指定された単位ノードリストから通貨を抽出します。
+     *
+     * @param unitNodeList 単位ノードリスト
+     * @return 抽出された通貨
+     * @throws RuntimeException 通貨コードが見つからない場合
+     */
     private Currency extractCurrencyFromUnitNodeList(NodeList unitNodeList) {
         for (int i = 0; i < unitNodeList.getLength(); i++) {
             var element = (Element) unitNodeList.item(i);
             var unitId = element.getAttribute(XbrlConstants.ATTRIBUTE_ID);
             // unitタグは複数あるため、JPY, USDに一致するタグのみ次処理へ
-            Currency currency;
-            try {
-                currency = Currency.fromCode(unitId);
-            } catch (IllegalArgumentException e) {
+            var currency = getCurrencyFromUnitId(unitId);
+            if (currency == null) {
                 continue;
             }
             // TODO 一つしかないと思うので、最初の要素を取得で良いはず？
@@ -82,6 +87,20 @@ public class XbrlParserService {
             }
         }
         throw new RuntimeException("Failed to parse XBRL content: currency code not found");
+    }
+
+    /**
+     * 指定された単位IDから通貨を取得します。
+     *
+     * @param unitId 単位ID
+     * @return 通貨、該当する通貨が無い場合はnull
+     */
+    private Currency getCurrencyFromUnitId(String unitId) {
+        try {
+            return Currency.fromCode(unitId);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     /**
