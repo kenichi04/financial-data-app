@@ -7,6 +7,7 @@ import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -42,35 +43,45 @@ public class XbrlParserService {
     public void extractTagInfoFromHeaderOrFirstFile(byte[] contentWithTagInfo) {
         var document = parseDocumentToDom(contentWithTagInfo);
         var elements = document.getDocumentElement();
-        var headerNode = elements.getElementsByTagName(XbrlConstants.IX_HEADER);
+        var headerNodeList = elements.getElementsByTagName(XbrlConstants.IX_HEADER);
 
-        if (headerNode.getLength() == 0) {
-            // TODO headerタグなしの場合は想定外なので例外をスロー
-            return;
+        // headerタグは1つの想定
+        if (headerNodeList.getLength() == 0 || headerNodeList.getLength() != 1) {
+            throw new RuntimeException("Failed to parse XBRL content: header tag not found");
         }
+        var headerNode = (Element) headerNodeList.item(0);
 
         // TODO コンテキストIDタグの情報を取得して、instantから期末日を取得できる
         // <xbrli:context id="CurrentYearInstant"><xbrli:instant>2024-02-29</xbrli:instant></xbrli:context>
+        var contextNodeList = headerNode.getElementsByTagName(XbrlConstants.XBRLI_CONTEXT);
 
-        var unitNodeList = elements.getElementsByTagName(XbrlConstants.XBRLI_UNIT);
+        Currency currency = extractCurrencyFromUnitNodeList(
+                headerNode.getElementsByTagName(XbrlConstants.XBRLI_UNIT));
+
+        // TODO 期間、通貨を財務文書に紐づける
+    }
+
+    private Currency extractCurrencyFromUnitNodeList(NodeList unitNodeList) {
         for (int i = 0; i < unitNodeList.getLength(); i++) {
             var element = (Element) unitNodeList.item(i);
-            var unitId = element.getAttribute("id");
-            // unitタグは複数あるため、JPT, USDに一致するタグのみ次処理へ
+            var unitId = element.getAttribute(XbrlConstants.ATTRIBUTE_ID);
+            // unitタグは複数あるため、JPY, USDに一致するタグのみ次処理へ
+            Currency currency;
             try {
-                Currency.fromCode(unitId);
+                currency = Currency.fromCode(unitId);
             } catch (IllegalArgumentException e) {
                 continue;
             }
             // TODO 一つしかないと思うので、最初の要素を取得で良いはず？
-            var measureNode = element.getElementsByTagName("xbrli:measure").item(0);
+            var measureNode = element.getElementsByTagName(XbrlConstants.XBRLI_MEASURE).item(0);
             var measure = measureNode.getTextContent();
-            var test = measureNode.getFirstChild().getNodeValue();
-            // TODO これは良くない
-            if (measure.equals("iso4217:JPY")) {
-            } else if (measure.equals("iso4217:USD")) {
+            // ISOプレフィックスを除いた値がJPY or USDになる想定
+            var currencyCode = measure.replace(XbrlConstants.UNIT_ISO4217, "");
+            if (currency.getCode().equals(currencyCode)) {
+                return currency;
             }
         }
+        throw new RuntimeException("Failed to parse XBRL content: currency code not found");
     }
 
     /**

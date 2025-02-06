@@ -14,17 +14,27 @@ public class XbrlConstants {
     // ix はインラインXBRLの名前空間宣言
     public static final String IX_HEADER = "ix:header";
 
-    /** ユニットのタグ */
+    /** コンテキスト定義のタグ */
+    public static final String XBRLI_CONTEXT = "xbrli:context";
+
+    /** ユニット定義のタグ */
     public static final String XBRLI_UNIT = "xbrli:unit";
+
+    public static final String XBRLI_MEASURE = "xbrli:measure";
 
     /** 金額又は数値を表現するインラインXBRLの要素 */
     public static final String IX_NON_FRACTION = "ix:nonFraction";
+
+    public static final String ATTRIBUTE_ID = "id";
 
     public static final String ATTRIBUTE_NAME = "name";
 
     public static final String ATTRIBUTE_CONTEXT_REF = "contextRef";
 
     public static final String ATTRIBUTE_UNIT_REF = "unitRef";
+
+    /** ユニット（通貨）のmeasure要素の値のプレフィックス */
+    public static final String UNIT_ISO4217 = "iso4217:";
 
     public static final String COMMA = ",";
 }
