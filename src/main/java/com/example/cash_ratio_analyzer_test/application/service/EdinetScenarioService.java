@@ -16,16 +16,18 @@ public class EdinetScenarioService {
     private final EdinetDataFetchService edinetDataFetchService;
     private final EdinetFileExtractionService edinetFileExtractionService;
     private final JsonParserService jsonParserService;
+    private final XbrlTagInfoExtractor xbrlTagInfoExtractor;
     private final XbrlParserService xbrlParserService;
     private final FinancialDocumentMetadataService financialDocumentMetadataService;
     private final FinancialDocumentService financialDocumentService;
 
-    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetFileExtractionService edinetFileExtractionService, JsonParserService jsonParserService, XbrlParserService xbrlParserService, FinancialDocumentMetadataService financialDocumentMetadataService, FinancialDocumentService financialDocumentService) {
+    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetFileExtractionService edinetFileExtractionService, JsonParserService jsonParserService, XbrlTagInfoExtractor xbrlTagInfoExtractor, XbrlParserService xbrlParserService, FinancialDocumentMetadataService financialDocumentMetadataService, FinancialDocumentService financialDocumentService) {
         this.financialDocumentMetadataService = financialDocumentMetadataService;
         this.edinetDocumentListService = edinetDocumentListService;
         this.edinetDataFetchService = edinetDataFetchService;
         this.edinetFileExtractionService = edinetFileExtractionService;
         this.jsonParserService = jsonParserService;
+        this.xbrlTagInfoExtractor = xbrlTagInfoExtractor;
         this.xbrlParserService = xbrlParserService;
         this.financialDocumentService = financialDocumentService;
     }
@@ -52,7 +54,7 @@ public class EdinetScenarioService {
         // TODO ターゲットファイルを可変長引数で指定できるようにする？
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
         // TODO タグ情報を持つファイルから必要なメタ情報を抽出
-        xbrlParserService.extractTagInfoFromHeaderOrFirstFile(extractedFiles.getHeaderOrFirstMainContent());
+        xbrlTagInfoExtractor.extractTagInfoFromHeaderOrFirstFile(extractedFiles.getHeaderOrFirstMainContent());
         // XBRLから必要な財務データを抽出
         var extractedData = xbrlParserService.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
         // TODO DBに保存
