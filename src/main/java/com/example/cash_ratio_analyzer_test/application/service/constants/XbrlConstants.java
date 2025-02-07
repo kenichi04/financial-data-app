@@ -18,6 +18,15 @@ public class XbrlConstants {
     /** コンテキスト定義のタグ */
     public static final String XBRLI_CONTEXT = "xbrli:context";
 
+    /** コンテキスト要素の子要素.期間を表現する */
+    public static final String XBRLI_PERIOD = "xbrli:period";
+
+    /** period要素の子要素.`時点`を意味する */
+    public static final String XBRLI_INSTANT = "xbrli:instant";
+
+    /** period要素の子要素.`期間`を意味する（期末日） */
+    public static final String XBRLI_END_DATE = "xbrli:endDate";
+
     /** ユニット定義のタグ */
     public static final String XBRLI_UNIT = "xbrli:unit";
 

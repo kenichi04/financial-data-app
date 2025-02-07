@@ -27,26 +27,46 @@ public class XbrlTagInfoExtractor {
         }
         var headerNode = (Element) headerNodeList.item(0);
 
-        // TODO コンテキストIDタグの情報を取得して、instantから期末日を取得できる
-        // <xbrli:context id="CurrentYearInstant"><xbrli:instant>2024-02-29</xbrli:instant></xbrli:context>
-
-        var contextNodeList = headerNode.getElementsByTagName(XbrlConstants.XBRLI_CONTEXT);
-
-        Currency currency = extractCurrencyFromUnitNodeList(
+        var period = extractContextFromNodeList(
+                headerNode.getElementsByTagName(XbrlConstants.XBRLI_CONTEXT));
+        var currency = extractCurrencyFromUnitNodeList(
                 headerNode.getElementsByTagName(XbrlConstants.XBRLI_UNIT));
 
         // TODO FinancialDocument生成して返す. もしくは、FinancialDocument生成に必要なメタ情報を返す. メタ情報クラス作る方が疎結合になるかも
     }
 
-    // TODO コンテキストの定義から当年度の会計年度を取得
+    // TODO 実装が良くないのでテストコード書いた後にリファクタリングする
     // id例（時点）: CurrentYearInstant_{メンバー要素名}　⇒　periodタグの子要素のinstantタグの値
     // id例（期間）: CurrentYearDuration_{メンバー要素名} ⇒ periodタグの子要素のendDateタグの値
-    // 会計期間末（時点）／会計期間（期間）のどちらかが取得できれば良さそう ※対象は`経理の状況`になると思うので.
-    private void extractContextFromNodeList(NodeList contextNodeList) {
+    private String extractContextFromNodeList(NodeList contextNodeList) {
         for (int i = 0; i < contextNodeList.getLength(); i++) {
             var element = (Element) contextNodeList.item(i);
             var contextId = element.getAttribute(XbrlConstants.ATTRIBUTE_ID);
+            // context要素は複数あるため、特定のコンテキストIDのみ次処理へ
+            if (!XbrlConstants.CONTEXT_CURRENT_YEAR_INSTANT.equals(contextId)
+                    && !XbrlConstants.CONTEXT_CURRENT_YEAR_DURATION.equals(contextId)
+                    && !XbrlConstants.CONTEXT_CURRENT_YEAR_INSTANT_NON_CONSOLIDATED_MEMBER.equals(contextId)
+                    && !XbrlConstants.CONTEXT_CURRENT_YEAR_DURATION_NON_CONSOLIDATED_MEMBER.equals(contextId)) {
+                continue;
+            }
+            // TODO 一つしかないはず.一応確認する？
+            var periodNode = (Element) element.getElementsByTagName(XbrlConstants.XBRLI_PERIOD).item(0);
+            // periodの子要素でどちらかは含まれるはず
+            var instantNodeList = periodNode.getElementsByTagName(XbrlConstants.XBRLI_INSTANT);
+            var endDateNodeList = periodNode.getElementsByTagName(XbrlConstants.XBRLI_END_DATE);
+            String period = null;
+            if (instantNodeList.getLength() == 1) {
+                period = instantNodeList.item(0).getTextContent();
+            }
+            if (endDateNodeList.getLength() == 1) {
+                period = endDateNodeList.item(0).getTextContent();
+            }
+            if (period == null) {
+                throw new RuntimeException("Failed to parse XBRL content: period not found");
+            }
+            return period;
         }
+        throw new RuntimeException("Failed to parse XBRL content: context not found");
     }
 
     /**
