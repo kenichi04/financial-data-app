@@ -2,6 +2,7 @@ package com.example.cash_ratio_analyzer_test.domain.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Currency;
 import java.util.List;
 
 public class FinancialDocument {
@@ -9,8 +10,16 @@ public class FinancialDocument {
 
     /** 書類管理番号 */
     private final DocumentId documentId;
+
 //    private String documentType;
-//    private String fiscalYear;
+
+    /** 会計年度 */
+    // TODO finalにする
+    private String fiscalYear;
+
+    // TODO finalにする
+    private Currency currency;
+
     private final List<FinancialData> data;
 
     public FinancialDocument(DocumentId documentId, List<FinancialData> data) {

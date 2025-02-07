@@ -22,7 +22,7 @@ public class XbrlTagInfoExtractor {
         var headerNodeList = elements.getElementsByTagName(XbrlConstants.IX_HEADER);
 
         // headerタグは1つの想定
-        if (headerNodeList.getLength() == 0 || headerNodeList.getLength() != 1) {
+        if (headerNodeList.getLength() != 1) {
             throw new RuntimeException("Failed to parse XBRL content: header tag not found");
         }
         var headerNode = (Element) headerNodeList.item(0);
@@ -49,8 +49,12 @@ public class XbrlTagInfoExtractor {
                     && !XbrlConstants.CONTEXT_CURRENT_YEAR_DURATION_NON_CONSOLIDATED_MEMBER.equals(contextId)) {
                 continue;
             }
-            // TODO 一つしかないはず.一応確認する？
-            var periodNode = (Element) element.getElementsByTagName(XbrlConstants.XBRLI_PERIOD).item(0);
+
+            var periodNodeList = element.getElementsByTagName(XbrlConstants.XBRLI_PERIOD);
+            if (periodNodeList.getLength() != 1) {
+                throw new RuntimeException("Failed to parse XBRL content: period tag not found");
+            }
+            var periodNode = (Element) periodNodeList.item(0);
             // periodの子要素でどちらかは含まれるはず
             var instantNodeList = periodNode.getElementsByTagName(XbrlConstants.XBRLI_INSTANT);
             var endDateNodeList = periodNode.getElementsByTagName(XbrlConstants.XBRLI_END_DATE);
@@ -64,6 +68,8 @@ public class XbrlTagInfoExtractor {
             if (period == null) {
                 throw new RuntimeException("Failed to parse XBRL content: period not found");
             }
+            // YYYY-MM-DD形式
+            // TODO 形式をチェックして、どこかで変換する
             return period;
         }
         throw new RuntimeException("Failed to parse XBRL content: context not found");
@@ -84,8 +90,12 @@ public class XbrlTagInfoExtractor {
             if (currency == null) {
                 continue;
             }
-            // TODO 一つしかないと思うので、最初の要素を取得で良いはず？
-            var measureNode = element.getElementsByTagName(XbrlConstants.XBRLI_MEASURE).item(0);
+
+            var measureNodeList = element.getElementsByTagName(XbrlConstants.XBRLI_MEASURE);
+            if (measureNodeList.getLength() != 1) {
+                throw new RuntimeException("Failed to parse XBRL content: measure tag not found");
+            }
+            var measureNode = measureNodeList.item(0);
             var measure = measureNode.getTextContent();
             // ISOプレフィックスを除いた値がJPY or USDになる想定
             var currencyCode = measure.replace(XbrlConstants.UNIT_ISO4217, "");
