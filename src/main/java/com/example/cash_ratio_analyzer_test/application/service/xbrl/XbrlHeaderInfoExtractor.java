@@ -6,13 +6,12 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-// TODO クラス名変更. タグ情報というよりヘッダ情報を抽出するクラスのため
 @Service
-public class XbrlTagInfoExtractor {
+public class XbrlHeaderInfoExtractor {
 
     private final XbrlDocumentParser xbrlDocumentParser;
 
-    public XbrlTagInfoExtractor(XbrlDocumentParser xbrlDocumentParser) {
+    public XbrlHeaderInfoExtractor(XbrlDocumentParser xbrlDocumentParser) {
         this.xbrlDocumentParser = xbrlDocumentParser;
     }
 

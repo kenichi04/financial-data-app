@@ -32,6 +32,12 @@
     - ix:nonFraction > 金額または数値
     - ix:nonNumeric > 数値以外の文字列または文章
     - ix:header > ヘッダ情報
+- DEIの設定（P71）
+  - DEI > Document and Entity Information
+    - 提出書類の基本情報（Document Information）
+    - 開示書類等提出者の基本情報（Entity Information）
+  - DEIはix:header要素の子要素「ix:hidden 要素」に定義（表示しない値と同じ方法）
+  - DEIのコンテキストIDは「FilingDateInstant」を利用
 
 ## メモ
 - Accountに登録する科目洗い出し

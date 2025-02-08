@@ -3,7 +3,7 @@ package com.example.cash_ratio_analyzer_test.application.service;
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchMode;
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
 import com.example.cash_ratio_analyzer_test.application.service.xbrl.XbrlFinancialDataExtractor;
-import com.example.cash_ratio_analyzer_test.application.service.xbrl.XbrlTagInfoExtractor;
+import com.example.cash_ratio_analyzer_test.application.service.xbrl.XbrlHeaderInfoExtractor;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +18,18 @@ public class EdinetScenarioService {
     private final EdinetDataFetchService edinetDataFetchService;
     private final EdinetFileExtractionService edinetFileExtractionService;
     private final JsonParserService jsonParserService;
-    private final XbrlTagInfoExtractor xbrlTagInfoExtractor;
+    private final XbrlHeaderInfoExtractor xbrlHeaderInfoExtractor;
     private final XbrlFinancialDataExtractor xbrlFinancialDataExtractor;
     private final FinancialDocumentMetadataService financialDocumentMetadataService;
     private final FinancialDocumentService financialDocumentService;
 
-    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetFileExtractionService edinetFileExtractionService, JsonParserService jsonParserService, XbrlTagInfoExtractor xbrlTagInfoExtractor, XbrlFinancialDataExtractor xbrlFinancialDataExtractor, FinancialDocumentMetadataService financialDocumentMetadataService, FinancialDocumentService financialDocumentService) {
+    public EdinetScenarioService(EdinetDocumentListService edinetDocumentListService, EdinetDataFetchService edinetDataFetchService, EdinetFileExtractionService edinetFileExtractionService, JsonParserService jsonParserService, XbrlHeaderInfoExtractor xbrlHeaderInfoExtractor, XbrlFinancialDataExtractor xbrlFinancialDataExtractor, FinancialDocumentMetadataService financialDocumentMetadataService, FinancialDocumentService financialDocumentService) {
         this.financialDocumentMetadataService = financialDocumentMetadataService;
         this.edinetDocumentListService = edinetDocumentListService;
         this.edinetDataFetchService = edinetDataFetchService;
         this.edinetFileExtractionService = edinetFileExtractionService;
         this.jsonParserService = jsonParserService;
-        this.xbrlTagInfoExtractor = xbrlTagInfoExtractor;
+        this.xbrlHeaderInfoExtractor = xbrlHeaderInfoExtractor;
         this.xbrlFinancialDataExtractor = xbrlFinancialDataExtractor;
         this.financialDocumentService = financialDocumentService;
     }
@@ -56,7 +56,7 @@ public class EdinetScenarioService {
         // TODO ターゲットファイルを可変長引数で指定できるようにする？
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
         // TODO タグ情報を持つファイルから必要なメタ情報を抽出
-        xbrlTagInfoExtractor.extractTagInfoFromHeaderOrFirstFile(extractedFiles.getHeaderOrFirstMainContent());
+        xbrlHeaderInfoExtractor.extractTagInfoFromHeaderOrFirstFile(extractedFiles.getHeaderOrFirstMainContent());
         // XBRLから必要な財務データを抽出
         var extractedData = xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
         // TODO DBに保存
