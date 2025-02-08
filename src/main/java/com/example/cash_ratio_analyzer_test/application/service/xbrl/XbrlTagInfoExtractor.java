@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+// TODO クラス名変更. タグ情報というよりヘッダ情報を抽出するクラスのため
 @Service
 public class XbrlTagInfoExtractor {
 
@@ -35,9 +36,14 @@ public class XbrlTagInfoExtractor {
         // TODO FinancialDocument生成して返す. もしくは、FinancialDocument生成に必要なメタ情報を返す. メタ情報クラス作る方が疎結合になるかも
     }
 
+    /**
+     * 指定されたコンテキストノードリストから期間情報を抽出します。
+     *
+     * @param contextNodeList コンテキストノードリスト
+     * @return 抽出された期間情報
+     * @throws RuntimeException 期間情報が見つからない場合
+     */
     // TODO 実装が良くないのでテストコード書いた後にリファクタリングする
-    // id例（時点）: CurrentYearInstant_{メンバー要素名}　⇒　periodタグの子要素のinstantタグの値
-    // id例（期間）: CurrentYearDuration_{メンバー要素名} ⇒ periodタグの子要素のendDateタグの値
     private String extractContextFromNodeList(NodeList contextNodeList) {
         for (int i = 0; i < contextNodeList.getLength(); i++) {
             var element = (Element) contextNodeList.item(i);

@@ -37,11 +37,20 @@ public class XbrlConstants {
 
     public static final String ATTRIBUTE_ID = "id";
 
+    /** ix:nonFraction要素の属性.報告項目となる要素を指定する */
     public static final String ATTRIBUTE_NAME = "name";
 
+    /** ix:nonFraction要素の属性.コンテキストID（会計期間など）の参照を指定 */
     public static final String ATTRIBUTE_CONTEXT_REF = "contextRef";
 
+    /** ix:nonFraction要素の属性.ユニットID（通貨など）の参照を指定 */
     public static final String ATTRIBUTE_UNIT_REF = "unitRef";
+
+    /** ix:nonFraction要素の属性.数値の表示単位 */
+    public static final String ATTRIBUTE_SCALE = "scale";
+
+    /** ix:nonFraction要素の属性.値が府の場合に`-`（マイナス）を指定 */
+    public static final String ATTRIBUTE_SIGN = "sign";
 
     /** `当期連結時点`を意味するコンテキストID */
     public static final String CONTEXT_CURRENT_YEAR_INSTANT = "CurrentYearInstant";
@@ -59,4 +68,6 @@ public class XbrlConstants {
     public static final String UNIT_ISO4217 = "iso4217:";
 
     public static final String COMMA = ",";
+
+    public static final String MINUS = "-";
 }

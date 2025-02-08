@@ -22,6 +22,7 @@ public class EdinetFileExtractionService {
     @Value("${download.targetFilePrefix:}")
     private String targetFilePrefix;
 
+    // TODO 拡張子チェックも追加する
     private static final String INLINE_XBRL_HEADER_FILE_PREFIX = "XBRL/PublicDoc/0000000_header";
 
     // TODO もう少し具体的なファイル名を指定する

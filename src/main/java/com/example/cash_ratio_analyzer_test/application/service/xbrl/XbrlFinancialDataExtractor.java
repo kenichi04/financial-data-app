@@ -44,7 +44,7 @@ public class XbrlFinancialDataExtractor {
 
         var document = xbrlDocumentParser.parseDocumentToDom(xbrlContent);
         var elements = document.getDocumentElement();
-        // TODO タグについては要検討 > 一旦ix:nonFractionでよさそう(nonFraction以外も使う場合はenumで管理)
+        // 金額を取得するため、ix:nonFraction要素を取得
         var nodeList = elements.getElementsByTagName(XbrlConstants.IX_NON_FRACTION);
 
         if (nodeList.getLength() == 0) {
@@ -85,11 +85,14 @@ public class XbrlFinancialDataExtractor {
 
         var contextRef = element.getAttribute(XbrlConstants.ATTRIBUTE_CONTEXT_REF);
         var unitRef = element.getAttribute(XbrlConstants.ATTRIBUTE_UNIT_REF);
-        var value = extractValueFromElement(element);
+        var sign = element.getAttribute(XbrlConstants.ATTRIBUTE_SIGN);
+        var value = extractValueFromElement(element, XbrlConstants.MINUS.equals(sign));
         // 金額が0の場合は登録しない
         if (value.equals(BigDecimal.ZERO)) {
             return Optional.empty();
         }
+
+        // TODO scaleを考慮して0埋め
 
         var account = accountMap.get(name);
         return Optional.of(new FinancialData(account, contextRef, value, Currency.fromCode(unitRef)));
@@ -101,11 +104,12 @@ public class XbrlFinancialDataExtractor {
      * @param element XML要素
      * @return 抽出された数値、数値が無い場合はBigDecimal.ZERO
      */
-    private BigDecimal extractValueFromElement(Element element) {
+    private BigDecimal extractValueFromElement(Element element, boolean isMinus) {
+        // 金額はカンマ区切り
+        var valueText = element.getTextContent().trim().replace(XbrlConstants.COMMA, "");
+        var value = isMinus ? XbrlConstants.MINUS + valueText : valueText;
         try {
-            // 金額はカンマ区切り
-            return new BigDecimal(element.getTextContent().trim()
-                    .replace(XbrlConstants.COMMA, ""));
+            return new BigDecimal(value);
         } catch (NumberFormatException e) {
             return BigDecimal.ZERO;
         }
