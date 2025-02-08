@@ -1,6 +1,7 @@
 package com.example.cash_ratio_analyzer_test.application.service.constants;
 
 // TODO フィールドが多くなってきたので整理したい
+// メタデータ、ヘッダ情報、財務データ情報用で分ける？
 public class XbrlConstants {
     /** '財務諸表本表タクソノミ'の語彙スキーマの名前空間宣言プレフィックス */
     public static final String JP_PFS_COR_NAMESPACE_PREFIX = "jppfs_cor:";
@@ -11,29 +12,23 @@ public class XbrlConstants {
     /** DEI 語彙スキーマの名前空間宣言 */
     public static final String JP_DEI_NAMESPACE = "jpdei_cor:";
 
-    /** DEIの設定、提出者別タクソノミの参照、コンテキスト定義およびユニット定義の指定箇所 */
+    /** 金額又は数値を表現するインラインXBRLの要素（タグ） */
+    public static final String IX_NON_FRACTION = "ix:nonFraction";
+
+    /** 数値以外の文字列または文章を表現するインラインXBRLの要素（タグ） */
+    public static final String IX_NON_NUMERIC = "ix:nonNumeric";
+
+    /** ヘッダ要素 > DEIの設定、提出者別タクソノミの参照、コンテキスト定義およびユニット定義の指定箇所 */
     // ix はインラインXBRLの名前空間宣言
     public static final String IX_HEADER = "ix:header";
 
-    /** コンテキスト定義のタグ */
-    public static final String XBRLI_CONTEXT = "xbrli:context";
-
-    /** コンテキスト要素の子要素.期間を表現する */
-    public static final String XBRLI_PERIOD = "xbrli:period";
-
-    /** period要素の子要素.`時点`を意味する */
-    public static final String XBRLI_INSTANT = "xbrli:instant";
-
-    /** period要素の子要素.`期間`を意味する（期末日） */
-    public static final String XBRLI_END_DATE = "xbrli:endDate";
+    /** ヘッダ要素の子要素であるhidden要素. DEI及び表示しない値を定義する */
+    public static final String IX_HIDDEN = "ix:hidden";
 
     /** ユニット定義のタグ */
     public static final String XBRLI_UNIT = "xbrli:unit";
 
     public static final String XBRLI_MEASURE = "xbrli:measure";
-
-    /** 金額又は数値を表現するインラインXBRLの要素 */
-    public static final String IX_NON_FRACTION = "ix:nonFraction";
 
     public static final String ATTRIBUTE_ID = "id";
 
@@ -49,7 +44,7 @@ public class XbrlConstants {
     /** ix:nonFraction要素の属性.数値の表示単位 */
     public static final String ATTRIBUTE_SCALE = "scale";
 
-    /** ix:nonFraction要素の属性.値が府の場合に`-`（マイナス）を指定 */
+    /** ix:nonFraction要素の属性.負の値の場合に`-`（マイナス）を指定 */
     public static final String ATTRIBUTE_SIGN = "sign";
 
     /** `当期連結時点`を意味するコンテキストID */

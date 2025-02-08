@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
-// TODO 2つのメソッドのユースケース違うので、クラス分けても良いかも
+// TODO 2つのメソッドのユースケース違うので、クラス分けるべきかも
 @Service
 public class EdinetScenarioService {
 
@@ -55,8 +55,8 @@ public class EdinetScenarioService {
         // 一時ファイル作成して抽出する処理も検討する（将来的に）
         // TODO ターゲットファイルを可変長引数で指定できるようにする？
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
-        // TODO タグ情報を持つファイルから必要なメタ情報を抽出
-        xbrlHeaderInfoExtractor.extractTagInfoFromHeaderOrFirstFile(extractedFiles.getHeaderOrFirstMainContent());
+        // TODO XBRLからヘッダ情報を抽出
+        xbrlHeaderInfoExtractor.extractHeaderInfo(extractedFiles.getHeaderOrFirstMainContent());
         // XBRLから必要な財務データを抽出
         var extractedData = xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
         // TODO DBに保存

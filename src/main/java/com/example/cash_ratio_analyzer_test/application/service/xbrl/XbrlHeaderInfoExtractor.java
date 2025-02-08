@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class XbrlHeaderInfoExtractor {
 
@@ -16,8 +19,8 @@ public class XbrlHeaderInfoExtractor {
     }
 
     // TODO メソッド実装. Javadocコメントも追加
-    public void extractTagInfoFromHeaderOrFirstFile(byte[] contentWithTagInfo) {
-        var document = xbrlDocumentParser.parseDocumentToDom(contentWithTagInfo);
+    public void extractHeaderInfo(byte[] headerContent) {
+        var document = xbrlDocumentParser.parseDocumentToDom(headerContent);
         var elements = document.getDocumentElement();
         var headerNodeList = elements.getElementsByTagName(XbrlConstants.IX_HEADER);
 
@@ -27,9 +30,10 @@ public class XbrlHeaderInfoExtractor {
         }
         var headerNode = (Element) headerNodeList.item(0);
 
-        // TODO 期間はDEIから取得する
-        var period = extractContextFromNodeList(
-                headerNode.getElementsByTagName(XbrlConstants.XBRLI_CONTEXT));
+        // hiddenNodeの一つがDEI情報
+        var hiddenNodeList = headerNode.getElementsByTagName(XbrlConstants.IX_HIDDEN);
+        var deiMap = extractDeiInfoFromHiddenNodeList(hiddenNodeList);
+
         var currency = extractCurrencyFromUnitNodeList(
                 headerNode.getElementsByTagName(XbrlConstants.XBRLI_UNIT));
 
@@ -37,49 +41,33 @@ public class XbrlHeaderInfoExtractor {
     }
 
     /**
-     * 指定されたコンテキストノードリストから期間情報を抽出します。
+     * hiddenNodeListからDEI情報を抽出します。
      *
-     * @param contextNodeList コンテキストノードリスト
-     * @return 抽出された期間情報
-     * @throws RuntimeException 期間情報が見つからない場合
+     * @param hiddenNodeList DEI情報を含む可能性のあるhiddenノードリスト
+     * @return DEI情報のマップ
+     * @throws RuntimeException DEI情報が見つからない場合
      */
-    // 実装が良くないので、使用する場合はテストコード書いた後にリファクタリングする
-    // 期間はDEIから取得するため、このメソッドは使用しない
-    @Deprecated
-    private String extractContextFromNodeList(NodeList contextNodeList) {
-        for (int i = 0; i < contextNodeList.getLength(); i++) {
-            var element = (Element) contextNodeList.item(i);
-            var contextId = element.getAttribute(XbrlConstants.ATTRIBUTE_ID);
-            // context要素は複数あるため、特定のコンテキストIDのみ次処理へ
-            if (!XbrlConstants.CONTEXT_CURRENT_YEAR_INSTANT.equals(contextId)
-                    && !XbrlConstants.CONTEXT_CURRENT_YEAR_DURATION.equals(contextId)
-                    && !XbrlConstants.CONTEXT_CURRENT_YEAR_INSTANT_NON_CONSOLIDATED_MEMBER.equals(contextId)
-                    && !XbrlConstants.CONTEXT_CURRENT_YEAR_DURATION_NON_CONSOLIDATED_MEMBER.equals(contextId)) {
-                continue;
+    public Map<String, String> extractDeiInfoFromHiddenNodeList(NodeList hiddenNodeList) {
+        var deiMap = new HashMap<String, String>();
+        // TODO 二重ループはなるべく使いたくないが...
+        for (int i = 0; i < hiddenNodeList.getLength(); i++) {
+            var hiddenNode = (Element) hiddenNodeList.item(i);
+            var nonNumericNodeList = hiddenNode.getElementsByTagName(XbrlConstants.IX_NON_NUMERIC);
+            for (int j = 0; j < nonNumericNodeList.getLength(); j++) {
+                var node = (Element) nonNumericNodeList.item(j);
+                var key = node.getAttribute(XbrlConstants.ATTRIBUTE_NAME);
+                var value = node.getTextContent();
+                deiMap.put(key, value);
             }
-
-            var periodNodeList = element.getElementsByTagName(XbrlConstants.XBRLI_PERIOD);
-            if (periodNodeList.getLength() != 1) {
-                throw new RuntimeException("Failed to parse XBRL content: period tag not found");
+            // edinetCodeが取得できていれば、DEI情報を含むhiddenタグは取得済と判定
+            if (deiMap.containsKey("jpdei_cor:EDINETCodeDEI")) {
+                break;
             }
-            var periodNode = (Element) periodNodeList.item(0);
-            // periodの子要素でどちらかは含まれるはず
-            var instantNodeList = periodNode.getElementsByTagName(XbrlConstants.XBRLI_INSTANT);
-            var endDateNodeList = periodNode.getElementsByTagName(XbrlConstants.XBRLI_END_DATE);
-            String period = null;
-            if (instantNodeList.getLength() == 1) {
-                period = instantNodeList.item(0).getTextContent();
-            }
-            if (endDateNodeList.getLength() == 1) {
-                period = endDateNodeList.item(0).getTextContent();
-            }
-            if (period == null) {
-                throw new RuntimeException("Failed to parse XBRL content: period not found");
-            }
-            // YYYY-MM-DD形式
-            return period;
         }
-        throw new RuntimeException("Failed to parse XBRL content: context not found");
+        if (!deiMap.containsKey("jpdei_cor:EDINETCodeDEI")) {
+            throw new RuntimeException("Failed to parse XBRL content: DEI node not found");
+        }
+        return deiMap;
     }
 
     /**
