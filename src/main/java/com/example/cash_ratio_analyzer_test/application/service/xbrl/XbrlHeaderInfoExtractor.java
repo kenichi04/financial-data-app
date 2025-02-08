@@ -27,6 +27,7 @@ public class XbrlHeaderInfoExtractor {
         }
         var headerNode = (Element) headerNodeList.item(0);
 
+        // TODO 期間はDEIから取得する
         var period = extractContextFromNodeList(
                 headerNode.getElementsByTagName(XbrlConstants.XBRLI_CONTEXT));
         var currency = extractCurrencyFromUnitNodeList(
@@ -42,7 +43,9 @@ public class XbrlHeaderInfoExtractor {
      * @return 抽出された期間情報
      * @throws RuntimeException 期間情報が見つからない場合
      */
-    // TODO 実装が良くないのでテストコード書いた後にリファクタリングする
+    // 実装が良くないので、使用する場合はテストコード書いた後にリファクタリングする
+    // 期間はDEIから取得するため、このメソッドは使用しない
+    @Deprecated
     private String extractContextFromNodeList(NodeList contextNodeList) {
         for (int i = 0; i < contextNodeList.getLength(); i++) {
             var element = (Element) contextNodeList.item(i);
@@ -74,7 +77,6 @@ public class XbrlHeaderInfoExtractor {
                 throw new RuntimeException("Failed to parse XBRL content: period not found");
             }
             // YYYY-MM-DD形式
-            // TODO 形式をチェックして、どこかで変換する
             return period;
         }
         throw new RuntimeException("Failed to parse XBRL content: context not found");
