@@ -2,6 +2,7 @@ package com.example.cash_ratio_analyzer_test.application.service.xbrl;
 
 import com.example.cash_ratio_analyzer_test.application.service.AccountService;
 import com.example.cash_ratio_analyzer_test.application.service.constants.XbrlConstants;
+import com.example.cash_ratio_analyzer_test.application.service.enums.DisplayScale;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import com.example.cash_ratio_analyzer_test.domain.model.Account;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
@@ -85,6 +86,7 @@ public class XbrlFinancialDataExtractor {
 
         var contextRef = element.getAttribute(XbrlConstants.ATTRIBUTE_CONTEXT_REF);
         var unitRef = element.getAttribute(XbrlConstants.ATTRIBUTE_UNIT_REF);
+        var scale = element.getAttribute(XbrlConstants.ATTRIBUTE_SCALE);
         var sign = element.getAttribute(XbrlConstants.ATTRIBUTE_SIGN);
         var value = extractValueFromElement(element, XbrlConstants.MINUS.equals(sign));
         // 金額が0の場合は登録しない
@@ -92,10 +94,11 @@ public class XbrlFinancialDataExtractor {
             return Optional.empty();
         }
 
-        // TODO scaleを考慮して0埋め
-
         var account = accountMap.get(name);
-        return Optional.of(new FinancialData(account, contextRef, value, Currency.fromCode(unitRef)));
+        return Optional.of(
+                new FinancialData(account, contextRef, value,
+                        DisplayScale.fromCode(Integer.parseInt(scale)),
+                        Currency.fromCode(unitRef)));
     }
 
     /**

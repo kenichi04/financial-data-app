@@ -1,5 +1,6 @@
 package com.example.cash_ratio_analyzer_test.domain.model;
 
+import com.example.cash_ratio_analyzer_test.application.service.enums.DisplayScale;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 
 import java.math.BigDecimal;
@@ -14,12 +15,14 @@ public class FinancialData {
     // 前期、今期の判定
     private final String periodContext;
     private final BigDecimal value;
+    private final DisplayScale displayScale;
     private final Currency currency;
 
-    public FinancialData(Account account, String periodContext, BigDecimal value, Currency currency) {
+    public FinancialData(Account account, String periodContext, BigDecimal value, DisplayScale displayScale, Currency currency) {
         this.account = account;
         this.periodContext = periodContext;
         this.value = value;
+        this.displayScale = displayScale;
         this.currency = currency;
     }
 
@@ -33,6 +36,10 @@ public class FinancialData {
 
     public BigDecimal getValue() {
         return value;
+    }
+
+    public DisplayScale getDisplayScale() {
+        return displayScale;
     }
 
     public Currency getCurrency() {
