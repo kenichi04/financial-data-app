@@ -1,9 +1,10 @@
 package com.example.cash_ratio_analyzer_test.presentation.controller;
 
 import com.example.cash_ratio_analyzer_test.application.service.FinancialDocumentMetadataService;
+import com.example.cash_ratio_analyzer_test.application.service.FinancialDocumentScenarioService;
 import com.example.cash_ratio_analyzer_test.domain.model.Company;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
-import com.example.cash_ratio_analyzer_test.application.service.EdinetScenarioService;
+import com.example.cash_ratio_analyzer_test.application.service.DocumentMetadataScenarioService;
 import com.example.cash_ratio_analyzer_test.application.service.FinancialDocumentService;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
 import com.example.cash_ratio_analyzer_test.presentation.controller.response.FinancialDocumentMetadataPostResponse;
@@ -17,21 +18,24 @@ import java.util.List;
 @RequestMapping("/api/documents")
 public class EdinetController {
 
-    private final EdinetScenarioService edinetScenarioService;
+    private final DocumentMetadataScenarioService documentMetadataScenarioService;
+
+    private final FinancialDocumentScenarioService financialDocumentScenarioService;
 
     private final FinancialDocumentService financialDocumentService;
 
     private final FinancialDocumentMetadataService financialDocumentMetadataService;
 
-    public EdinetController(EdinetScenarioService edinetScenarioService, FinancialDocumentService financialDocumentService, FinancialDocumentMetadataService financialDocumentMetadataService) {
-        this.edinetScenarioService = edinetScenarioService;
+    public EdinetController(DocumentMetadataScenarioService documentMetadataScenarioService, FinancialDocumentScenarioService financialDocumentScenarioService, FinancialDocumentService financialDocumentService, FinancialDocumentMetadataService financialDocumentMetadataService) {
+        this.documentMetadataScenarioService = documentMetadataScenarioService;
+        this.financialDocumentScenarioService = financialDocumentScenarioService;
         this.financialDocumentService = financialDocumentService;
         this.financialDocumentMetadataService = financialDocumentMetadataService;
     }
 
     @PostMapping("/metadata/fetch")
     public FinancialDocumentMetadataPostResponse fetchAndSaveDocumentMetadata(@RequestParam LocalDate fromDate) {
-        var documentIds = edinetScenarioService.fetchAndSaveDocumentMetadata(fromDate);
+        var documentIds = documentMetadataScenarioService.fetchAndSaveDocumentMetadata(fromDate);
 
         var documentIdList = documentIds.stream()
                 .map(documentId -> documentId.value())
@@ -41,7 +45,7 @@ public class EdinetController {
 
     @PostMapping("/financial-data/{documentId}/fetch")
     public FinancialDocumentPostResponse fetchAndSaveFinancialData(@PathVariable String documentId) {
-        var documentIdModel = edinetScenarioService.fetchAndSaveFinancialData(documentId);
+        var documentIdModel = financialDocumentScenarioService.fetchAndSaveFinancialData(documentId);
         return new FinancialDocumentPostResponse(documentIdModel.value());
     }
 
