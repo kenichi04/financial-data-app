@@ -57,7 +57,7 @@ public class XbrlHeaderInfoExtractor {
      * @return DEI情報のマップ
      * @throws RuntimeException DEI情報が見つからない場合
      */
-    public Map<String, String> extractDeiInfoFromHiddenNodeList(NodeList hiddenNodeList) {
+    private Map<String, String> extractDeiInfoFromHiddenNodeList(NodeList hiddenNodeList) {
         final String edinetCodeAttribute = XbrlConstants.JP_DEI_NAMESPACE + "EDINETCodeDEI";
         var deiMap = new HashMap<String, String>();
         // TODO 二重ループはなるべく使いたくないが...
