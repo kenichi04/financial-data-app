@@ -55,8 +55,8 @@ public class EdinetScenarioService {
         // 一時ファイル作成して抽出する処理も検討する（将来的に）
         // TODO ターゲットファイルを可変長引数で指定できるようにする？
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
-        // TODO XBRLからヘッダ情報を抽出
-        xbrlHeaderInfoExtractor.extractHeaderInfo(extractedFiles.getHeaderOrFirstMainContent());
+        // XBRLからヘッダ情報を抽出
+        var headerInfo = xbrlHeaderInfoExtractor.extractHeaderInfo(extractedFiles.getHeaderOrFirstMainContent());
         // XBRLから必要な財務データを抽出
         var extractedData = xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
         // TODO DBに保存

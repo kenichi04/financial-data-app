@@ -1,6 +1,7 @@
 package com.example.cash_ratio_analyzer_test.application.service.xbrl;
 
 import com.example.cash_ratio_analyzer_test.application.service.constants.XbrlConstants;
+import com.example.cash_ratio_analyzer_test.application.service.dto.HeaderInfo;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
@@ -9,6 +10,9 @@ import org.w3c.dom.NodeList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * XBRLヘッダー情報を抽出するサービスクラス。
+ */
 @Service
 public class XbrlHeaderInfoExtractor {
 
@@ -18,8 +22,14 @@ public class XbrlHeaderInfoExtractor {
         this.xbrlDocumentParser = xbrlDocumentParser;
     }
 
-    // TODO メソッド実装. Javadocコメントも追加
-    public void extractHeaderInfo(byte[] headerContent) {
+    /**
+     * ヘッダー情報を抽出します。
+     *
+     * @param headerContent ヘッダーコンテンツのバイト配列
+     * @return 抽出されたヘッダー情報
+     * @throws RuntimeException ヘッダータグが見つからない場合
+     */
+    public HeaderInfo extractHeaderInfo(byte[] headerContent) {
         var document = xbrlDocumentParser.parseDocumentToDom(headerContent);
         var elements = document.getDocumentElement();
         var headerNodeList = elements.getElementsByTagName(XbrlConstants.IX_HEADER);
@@ -37,7 +47,7 @@ public class XbrlHeaderInfoExtractor {
         var currency = extractCurrencyFromUnitNodeList(
                 headerNode.getElementsByTagName(XbrlConstants.XBRLI_UNIT));
 
-        // TODO FinancialDocument生成して返す. もしくは、FinancialDocument生成に必要なメタ情報を返す. メタ情報クラス作る方が疎結合になるかも
+        return new HeaderInfo(deiMap, currency);
     }
 
     /**
@@ -48,6 +58,7 @@ public class XbrlHeaderInfoExtractor {
      * @throws RuntimeException DEI情報が見つからない場合
      */
     public Map<String, String> extractDeiInfoFromHiddenNodeList(NodeList hiddenNodeList) {
+        final String edinetCodeAttribute = XbrlConstants.JP_DEI_NAMESPACE + "EDINETCodeDEI";
         var deiMap = new HashMap<String, String>();
         // TODO 二重ループはなるべく使いたくないが...
         for (int i = 0; i < hiddenNodeList.getLength(); i++) {
@@ -60,11 +71,11 @@ public class XbrlHeaderInfoExtractor {
                 deiMap.put(key, value);
             }
             // edinetCodeが取得できていれば、DEI情報を含むhiddenタグは取得済と判定
-            if (deiMap.containsKey("jpdei_cor:EDINETCodeDEI")) {
+            if (deiMap.containsKey(edinetCodeAttribute)) {
                 break;
             }
         }
-        if (!deiMap.containsKey("jpdei_cor:EDINETCodeDEI")) {
+        if (!deiMap.containsKey(edinetCodeAttribute)) {
             throw new RuntimeException("Failed to parse XBRL content: DEI node not found");
         }
         return deiMap;
