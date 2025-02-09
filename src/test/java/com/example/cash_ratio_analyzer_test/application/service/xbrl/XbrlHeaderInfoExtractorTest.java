@@ -34,6 +34,10 @@ class XbrlHeaderInfoExtractorTest {
         this.documentBuilder = factory.newDocumentBuilder();
     }
 
+    /**
+     * ヘッダー情報を抽出するテスト。
+     * 有効なヘッダーコンテンツを使用して、抽出された情報が期待通りであることを検証します。
+     */
     @Test
     void extractHeaderInfo_validHeaderContent() throws IOException {
         var headerContent = Files.readAllBytes(Path.of("src/test/resources/xbrl/test_header_ixbrl.htm"));
