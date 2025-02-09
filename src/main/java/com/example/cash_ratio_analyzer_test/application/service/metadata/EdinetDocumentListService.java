@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.application.service;
+package com.example.cash_ratio_analyzer_test.application.service.metadata;
 
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchMode;
 import com.example.cash_ratio_analyzer_test.application.service.validation.ApiResponseValidator;

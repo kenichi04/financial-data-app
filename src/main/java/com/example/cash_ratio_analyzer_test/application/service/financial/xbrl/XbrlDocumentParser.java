@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.application.service.xbrl;
+package com.example.cash_ratio_analyzer_test.application.service.financial.xbrl;
 
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;

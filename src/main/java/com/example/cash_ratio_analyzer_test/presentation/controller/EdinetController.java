@@ -1,11 +1,11 @@
 package com.example.cash_ratio_analyzer_test.presentation.controller;
 
-import com.example.cash_ratio_analyzer_test.application.service.FinancialDocumentMetadataService;
+import com.example.cash_ratio_analyzer_test.application.service.metadata.FinancialDocumentMetadataService;
 import com.example.cash_ratio_analyzer_test.application.service.FinancialDocumentScenarioService;
 import com.example.cash_ratio_analyzer_test.domain.model.Company;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
 import com.example.cash_ratio_analyzer_test.application.service.DocumentMetadataScenarioService;
-import com.example.cash_ratio_analyzer_test.application.service.FinancialDocumentService;
+import com.example.cash_ratio_analyzer_test.application.service.financial.FinancialDocumentService;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
 import com.example.cash_ratio_analyzer_test.presentation.controller.response.FinancialDocumentMetadataPostResponse;
 import com.example.cash_ratio_analyzer_test.presentation.controller.response.FinancialDocumentPostResponse;

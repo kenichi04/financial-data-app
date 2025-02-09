@@ -1,6 +1,7 @@
-package com.example.cash_ratio_analyzer_test.application.service;
+package com.example.cash_ratio_analyzer_test.application.service.output;
 
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchDocumentType;
+import com.example.cash_ratio_analyzer_test.application.service.financial.EdinetDataFetchService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

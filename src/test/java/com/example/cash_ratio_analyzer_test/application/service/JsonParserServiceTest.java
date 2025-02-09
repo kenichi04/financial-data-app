@@ -1,6 +1,7 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
 import com.example.cash_ratio_analyzer_test.application.service.dto.ProcessedResponseData;
+import com.example.cash_ratio_analyzer_test.application.service.metadata.JsonParserService;
 import com.example.cash_ratio_analyzer_test.domain.service.DocumentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

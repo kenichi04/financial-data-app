@@ -1,6 +1,9 @@
 package com.example.cash_ratio_analyzer_test.application.service;
 
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchMode;
+import com.example.cash_ratio_analyzer_test.application.service.metadata.EdinetDocumentListService;
+import com.example.cash_ratio_analyzer_test.application.service.metadata.FinancialDocumentMetadataService;
+import com.example.cash_ratio_analyzer_test.application.service.metadata.JsonParserService;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import org.springframework.stereotype.Service;
 

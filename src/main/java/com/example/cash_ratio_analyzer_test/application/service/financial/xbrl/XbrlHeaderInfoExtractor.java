@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.application.service.xbrl;
+package com.example.cash_ratio_analyzer_test.application.service.financial.xbrl;
 
 import com.example.cash_ratio_analyzer_test.application.service.constants.XbrlConstants;
 import com.example.cash_ratio_analyzer_test.application.service.dto.HeaderInfo;

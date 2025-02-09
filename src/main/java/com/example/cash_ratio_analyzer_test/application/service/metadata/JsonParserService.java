@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.application.service;
+package com.example.cash_ratio_analyzer_test.application.service.metadata;
 
 import com.example.cash_ratio_analyzer_test.application.service.dto.DocumentListResponse;
 import com.example.cash_ratio_analyzer_test.application.service.dto.ProcessedResponseData;
