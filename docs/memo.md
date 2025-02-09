@@ -63,8 +63,8 @@
 - ~~[x] 会計年度をコンテキストの定義から取得する~~
 - [x] 会計年度はDEI情報から取得する
 - [x] DEI情報を使用して必要なヘッダ情報を生成する
+- [x] XbrlParserServiceのユニットテスト作成
 - [ ] FinancialDataとAccountの関係見直し
-- [ ] XbrlParserServiceのユニットテスト
 - [ ] メタデータ取得時のレスポンスは企業情報も入れる？（documentIDのみは分かりにくい）
 - [ ] Edinetのバリデーション変更
   - E + 数字5桁
