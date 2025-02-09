@@ -2,7 +2,7 @@ package com.example.cash_ratio_analyzer_test.application.service.xbrl;
 
 import com.example.cash_ratio_analyzer_test.application.service.AccountService;
 import com.example.cash_ratio_analyzer_test.application.service.constants.XbrlConstants;
-import com.example.cash_ratio_analyzer_test.application.service.enums.DisplayScale;
+import com.example.cash_ratio_analyzer_test.domain.enums.DisplayScale;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import com.example.cash_ratio_analyzer_test.domain.model.Account;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;

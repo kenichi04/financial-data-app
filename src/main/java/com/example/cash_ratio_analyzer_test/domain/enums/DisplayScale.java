@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.application.service.enums;
+package com.example.cash_ratio_analyzer_test.domain.enums;
 
 /**
  * 数値の表示単位を表す列挙型。

@@ -1,6 +1,7 @@
 ## 開発用メモ
 - EDINET 書類取得API用のテスト用docId: S100TGZR
 
+
 ## メモ
 - Accountに登録する科目洗い出し
   - EDINETタクソノミの科目一覧ツリー確認
@@ -21,6 +22,7 @@
 ## TODO
 - [ ] FinancialDataとAccountの関係見直し
 - [ ] メタデータ取得時のレスポンスは企業情報も入れる？（documentIDのみは分かりにくい）
+- [ ] XbrlFinancialDataExtractorのテスト追加
 - [ ] Edinetのバリデーション変更
   - E + 数字5桁
 

@@ -1,6 +1,6 @@
 package com.example.cash_ratio_analyzer_test.domain.model;
 
-import com.example.cash_ratio_analyzer_test.application.service.enums.DisplayScale;
+import com.example.cash_ratio_analyzer_test.domain.enums.DisplayScale;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 
 import java.math.BigDecimal;
