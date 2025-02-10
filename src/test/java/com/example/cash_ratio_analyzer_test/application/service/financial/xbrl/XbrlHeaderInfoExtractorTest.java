@@ -1,6 +1,8 @@
-package com.example.cash_ratio_analyzer_test.application.service.xbrl;
+package com.example.cash_ratio_analyzer_test.application.service.financial.xbrl;
 
 import com.example.cash_ratio_analyzer_test.application.service.dto.HeaderInfo;
+import com.example.cash_ratio_analyzer_test.application.service.financial.xbrl.XbrlDocumentParser;
+import com.example.cash_ratio_analyzer_test.application.service.financial.xbrl.XbrlHeaderInfoExtractor;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
