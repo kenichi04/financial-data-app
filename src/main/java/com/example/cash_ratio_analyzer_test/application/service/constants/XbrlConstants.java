@@ -30,6 +30,12 @@ public class XbrlConstants {
 
     public static final String XBRLI_MEASURE = "xbrli:measure";
 
+    public static final String DEI_ATTRIBUTE_EDINET_CODE = "jpdei_cor:EDINETCodeDEI";
+
+    public static final String DEI_ATTRIBUTE_DOCUMENT_TYPE = "jpdei_cor:DocumentTypeDEI";
+
+    public static final String DEI_ATTRIBUTE_CURRENT_PERIOD_END_DATE = "jpdei_cor:CurrentPeriodEndDateDEI";
+
     public static final String ATTRIBUTE_ID = "id";
 
     /** ix:nonFraction要素の属性.報告項目となる要素を指定する */

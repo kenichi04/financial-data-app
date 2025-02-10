@@ -23,6 +23,7 @@
 - [ ] FinancialDataとAccountの関係見直し
 - [ ] メタデータ取得時のレスポンスは企業情報も入れる？（documentIDのみは分かりにくい）
 - [ ] XbrlFinancialDataExtractorのテスト追加
+- [ ] リポジトリインテフェースをdomainとserviceパッケージのどちらに置くか
 - [ ] Edinetのバリデーション変更
   - E + 数字5桁
 
