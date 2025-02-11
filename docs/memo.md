@@ -20,6 +20,7 @@
 
 
 ## TODO
+- [ ] FinancialDocumentとCompanyの関連
 - [ ] FinancialDataとAccountの関係見直し
 - [ ] メタデータ取得時のレスポンスは企業情報も入れる？（documentIDのみは分かりにくい）
 - [ ] XbrlFinancialDataExtractorのテスト追加
