@@ -14,14 +14,14 @@ public class FinancialData {
     private final Account account;
     // 前期、今期の判定
     private final String periodContext;
-    private final BigDecimal value;
+    private final BigDecimal amount;
     private final DisplayScale displayScale;
     private final Currency currency;
 
-    public FinancialData(Account account, String periodContext, BigDecimal value, DisplayScale displayScale, Currency currency) {
+    public FinancialData(Account account, String periodContext, BigDecimal amount, DisplayScale displayScale, Currency currency) {
         this.account = account;
         this.periodContext = periodContext;
-        this.value = value;
+        this.amount = amount;
         this.displayScale = displayScale;
         this.currency = currency;
     }
@@ -34,8 +34,8 @@ public class FinancialData {
         return periodContext;
     }
 
-    public BigDecimal getValue() {
-        return value;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
     public DisplayScale getDisplayScale() {
