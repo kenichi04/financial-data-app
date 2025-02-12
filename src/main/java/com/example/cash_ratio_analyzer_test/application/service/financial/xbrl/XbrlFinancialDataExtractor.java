@@ -4,7 +4,7 @@ import com.example.cash_ratio_analyzer_test.application.service.AccountService;
 import com.example.cash_ratio_analyzer_test.application.service.constants.XbrlConstants;
 import com.example.cash_ratio_analyzer_test.domain.enums.DisplayScale;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
-import com.example.cash_ratio_analyzer_test.domain.model.Account;
+import com.example.cash_ratio_analyzer_test.domain.model.AccountMaster;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
@@ -76,7 +76,7 @@ public class XbrlFinancialDataExtractor {
      * @param accountMap 科目マップ
      * @return 抽出されたFinancialData、該当するデータが無い場合はOptional.empty()
      */
-    private Optional<FinancialData> extractFinancialDataFromElement(Element element, Map<String, Account> accountMap) {
+    private Optional<FinancialData> extractFinancialDataFromElement(Element element, Map<String, AccountMaster> accountMap) {
         // `jppfs_cor:`は名前空間プレフィックスのため不要
         var name = element.getAttribute(XbrlConstants.ATTRIBUTE_NAME)
                 .replace(XbrlConstants.JP_PFS_COR_NAMESPACE_PREFIX, "");

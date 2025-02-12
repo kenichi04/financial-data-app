@@ -1,9 +1,9 @@
 package com.example.cash_ratio_analyzer_test.domain.repository;
 
-import com.example.cash_ratio_analyzer_test.domain.model.Account;
+import com.example.cash_ratio_analyzer_test.domain.model.AccountMaster;
 
 import java.util.List;
 
 public interface IAccountRepository {
-    List<Account> findAll();
+    List<AccountMaster> findAll();
 }

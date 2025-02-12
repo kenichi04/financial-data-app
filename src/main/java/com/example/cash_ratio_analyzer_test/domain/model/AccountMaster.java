@@ -2,7 +2,7 @@ package com.example.cash_ratio_analyzer_test.domain.model;
 
 import com.example.cash_ratio_analyzer_test.domain.enums.Balance;
 
-public class Account {
+public class AccountMaster {
     private Long id;
     private String code;  // CashAndDeposits
     private String nameJp; // 現金預金
@@ -10,7 +10,7 @@ public class Account {
     // 貸借区分（借方/貸方）
     private Balance balance;
 
-    public Account(String code, String nameJp, String nameEn, Balance balance) {
+    public AccountMaster(String code, String nameJp, String nameEn, Balance balance) {
         this.code = code;
         this.nameJp = nameJp;
         this.nameEn = nameEn;

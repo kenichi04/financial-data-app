@@ -4,8 +4,8 @@ import com.example.cash_ratio_analyzer_test.domain.enums.Balance;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "account")
-public class AccountEntity {
+@Table(name = "account_master")
+public class AccountMasterEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +24,9 @@ public class AccountEntity {
     @Column(nullable = false)
     private Balance balance;
 
-    public AccountEntity() {}
+    public AccountMasterEntity() {}
 
-    public AccountEntity(String code, String nameJp, String nameEn, Balance balance) {
+    public AccountMasterEntity(String code, String nameJp, String nameEn, Balance balance) {
         this.code = code;
         this.nameJp = nameJp;
         this.nameEn = nameEn;

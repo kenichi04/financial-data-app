@@ -15,9 +15,9 @@ public class FinancialDataEntity {
     @JoinColumn(name = "financial_document_id", nullable = false)
     private FinancialDocumentEntity financialDocument;
 
-//    @Column(nullable = false)
-//    @JoinColumn(name = "account_id", nullable = false)
-//    private AccountEntity account;
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false)
+    private AccountMasterEntity account;
 
     @Column(nullable = false)
     private String periodContext;
@@ -31,14 +31,13 @@ public class FinancialDataEntity {
     @Column(nullable = false)
     private String currency;
 
-//    public FinancialDataEntity(FinancialDocumentEntity financialDocument, AccountEntity account, String periodContext,
-//                               BigDecimal amount, int displayScale, String currency) {
-//        this.financialDocument = financialDocument;
-//        this.account = account;
-//        this.periodContext = periodContext;
-//        this.amount = amount;
-//        this.displayScale = displayScale;
-//        this.currency = currency;
-//    }
-
+    public FinancialDataEntity(FinancialDocumentEntity financialDocument, AccountMasterEntity account, String periodContext,
+                               BigDecimal amount, int displayScale, String currency) {
+        this.financialDocument = financialDocument;
+        this.account = account;
+        this.periodContext = periodContext;
+        this.amount = amount;
+        this.displayScale = displayScale;
+        this.currency = currency;
+    }
 }

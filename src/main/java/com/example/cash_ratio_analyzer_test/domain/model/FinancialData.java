@@ -11,23 +11,23 @@ public class FinancialData {
     private Long id;
     // TODO 必要かどうか検討
     private DocumentId documentId;
-    private final Account account;
+    private final AccountMaster accountMaster;
     // 前期、今期の判定
     private final String periodContext;
     private final BigDecimal amount;
     private final DisplayScale displayScale;
     private final Currency currency;
 
-    public FinancialData(Account account, String periodContext, BigDecimal amount, DisplayScale displayScale, Currency currency) {
-        this.account = account;
+    public FinancialData(AccountMaster accountMaster, String periodContext, BigDecimal amount, DisplayScale displayScale, Currency currency) {
+        this.accountMaster = accountMaster;
         this.periodContext = periodContext;
         this.amount = amount;
         this.displayScale = displayScale;
         this.currency = currency;
     }
 
-    public Account getAccount() {
-        return account;
+    public AccountMaster getAccount() {
+        return accountMaster;
     }
 
     public String getPeriodContext() {

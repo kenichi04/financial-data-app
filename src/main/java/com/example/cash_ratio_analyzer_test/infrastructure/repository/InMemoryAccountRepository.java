@@ -1,7 +1,7 @@
 package com.example.cash_ratio_analyzer_test.infrastructure.repository;
 
 import com.example.cash_ratio_analyzer_test.domain.enums.Balance;
-import com.example.cash_ratio_analyzer_test.domain.model.Account;
+import com.example.cash_ratio_analyzer_test.domain.model.AccountMaster;
 import com.example.cash_ratio_analyzer_test.domain.repository.IAccountRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,15 +13,15 @@ import java.util.Map;
 @Repository
 public class InMemoryAccountRepository implements IAccountRepository {
 
-    private Map<Long, Account> accountStore = new HashMap<>(){
+    private Map<Long, AccountMaster> accountStore = new HashMap<>(){
         {
             // 現金預金
-            put(1L, new Account("CashAndDeposits", "現金預金", "Cash and deposits", Balance.DEBIT));
+            put(1L, new AccountMaster("CashAndDeposits", "現金預金", "Cash and deposits", Balance.DEBIT));
         }
     };
 
     @Override
-    public List<Account> findAll() {
+    public List<AccountMaster> findAll() {
         return new ArrayList<>(accountStore.values());
     }
 }
