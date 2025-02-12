@@ -2,7 +2,7 @@ package com.example.cash_ratio_analyzer_test.infrastructure.repository;
 
 import com.example.cash_ratio_analyzer_test.domain.enums.Balance;
 import com.example.cash_ratio_analyzer_test.domain.model.AccountMaster;
-import com.example.cash_ratio_analyzer_test.domain.repository.IAccountRepository;
+import com.example.cash_ratio_analyzer_test.domain.repository.IAccountMasterRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class InMemoryAccountRepository implements IAccountRepository {
+public class InMemoryAccountMasterRepository implements IAccountMasterRepository {
 
     private Map<Long, AccountMaster> accountStore = new HashMap<>(){
         {

@@ -4,6 +4,6 @@ import com.example.cash_ratio_analyzer_test.domain.model.AccountMaster;
 
 import java.util.List;
 
-public interface IAccountRepository {
+public interface IAccountMasterRepository {
     List<AccountMaster> findAll();
 }
