@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.infrastructure.repository;
+package com.example.cash_ratio_analyzer_test.infrastructure.repository.inmemory;
 
 import com.example.cash_ratio_analyzer_test.domain.enums.Balance;
 import com.example.cash_ratio_analyzer_test.domain.model.AccountMaster;
