@@ -43,7 +43,7 @@ public class EdinetController {
         return new FinancialDocumentMetadataPostResponse(documentIdList);
     }
 
-    @PostMapping("/financial-data/{documentId}/fetch")
+    @PostMapping("/{documentId}/fetch")
     public FinancialDocumentPostResponse fetchAndSaveFinancialData(@PathVariable String documentId) {
         var documentIdModel = financialDocumentScenarioService.fetchAndSaveFinancialData(documentId);
         return new FinancialDocumentPostResponse(documentIdModel.value());
