@@ -2,9 +2,11 @@ package com.example.cash_ratio_analyzer_test.infrastructure.entity;
 
 import com.example.cash_ratio_analyzer_test.domain.enums.Balance;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
 @Table(name = "account_master")
+@Getter
 public class AccountMasterEntity {
 
     @Id

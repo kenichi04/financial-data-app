@@ -31,6 +31,8 @@ public class FinancialDataEntity {
     @Column(nullable = false)
     private String currency;
 
+    public FinancialDataEntity() {}
+
     public FinancialDataEntity(FinancialDocumentEntity financialDocument, AccountMasterEntity account, String periodContext,
                                BigDecimal amount, int displayScale, String currency) {
         this.financialDocument = financialDocument;
