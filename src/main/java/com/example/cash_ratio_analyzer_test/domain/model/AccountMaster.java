@@ -17,7 +17,7 @@ public class AccountMaster {
         this.balance = balance;
     }
 
-    // TODO 要確認（AccountMasterのみ手動INSERTのため、モデル作成時はIDが存在する想定）
+    // TODO 要確認（AccountMasterはマスタデータとして手動INSERTのため、モデルクラス作成時はIDが存在する想定）
     public AccountMaster(Long id, String code, String nameJp, String nameEn, Balance balance) {
         this.id = id;
         this.code = code;

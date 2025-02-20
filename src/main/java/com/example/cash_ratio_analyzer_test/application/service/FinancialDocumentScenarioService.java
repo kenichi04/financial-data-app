@@ -38,7 +38,6 @@ public class FinancialDocumentScenarioService {
         var headerInfo = xbrlHeaderInfoExtractor.extractHeaderInfo(extractedFiles.getHeaderOrFirstMainContent());
         // XBRLから必要な財務データを抽出
         var extractedData = xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
-        // TODO DBに保存
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
         return financialDocumentService.saveFinancialDocument(documentId, headerInfo, extractedData);
     }
