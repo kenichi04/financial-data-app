@@ -3,10 +3,12 @@ package com.example.cash_ratio_analyzer_test.infrastructure.entity;
 import com.example.cash_ratio_analyzer_test.domain.enums.Balance;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "account_master")
 @Getter
+@Setter
 public class AccountMasterEntity {
 
     @Id

@@ -1,10 +1,13 @@
 package com.example.cash_ratio_analyzer_test.infrastructure.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "financial_data")
+@Getter
 public class FinancialDataEntity {
 
     @Id

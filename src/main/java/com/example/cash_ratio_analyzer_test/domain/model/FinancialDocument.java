@@ -53,7 +53,7 @@ public class FinancialDocument {
         return documentType;
     }
 
-    public LocalDate getFiscalYear() {
+    public LocalDate getFiscalYearEndDate() {
         return fiscalYearEndDate;
     }
 

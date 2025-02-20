@@ -6,7 +6,6 @@ import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import java.math.BigDecimal;
 
 // ドメインモデルとしての財務データ
-// TODO 別途データ永続用のエンティティクラス（FinancialDataEntity）を作成して、データとロジックを分離する
 public class FinancialData {
     private Long id;
     // TODO 必要かどうか検討
