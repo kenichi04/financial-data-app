@@ -23,6 +23,7 @@ public class FinancialDocumentMetadata {
     /** 様式コード */
     private String formCode;
 
+    // TODO 会計年度あった方が良さそう
     /** 提出日 */
     private LocalDate submissionDate;
 

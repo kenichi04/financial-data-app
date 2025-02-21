@@ -2,7 +2,6 @@ package com.example.cash_ratio_analyzer_test.infrastructure.entity;
 
 import jakarta.persistence.*;
 
-// 永続化用のEntityクラス
 @Entity
 @Table(name = "company")
 public class CompanyEntity {
