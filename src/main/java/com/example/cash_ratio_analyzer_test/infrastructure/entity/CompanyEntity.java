@@ -1,9 +1,11 @@
 package com.example.cash_ratio_analyzer_test.infrastructure.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
 @Table(name = "company")
+@Getter
 public class CompanyEntity {
 
     @Id
