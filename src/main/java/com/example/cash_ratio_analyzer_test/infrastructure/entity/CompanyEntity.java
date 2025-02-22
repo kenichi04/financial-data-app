@@ -12,16 +12,16 @@ public class CompanyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String edinetCode;
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String securityCode;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String corporateNumber;
 
     public CompanyEntity() {
