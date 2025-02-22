@@ -49,12 +49,30 @@ public class FinancialDocumentMetadataService {
 
         var metadataList = processedResponseData.get().getMetadataList();
         var companies = processedResponseData.get().getCompanies();
+
+        var newCompanies = filterNewCompanies(companies);
+
         financialDocumentMetadataRepository.save(metadataList);
         // TODO companyの処理が多くなったらCompanyServiceを作成する
-        companyRepository.save(companies);
+        companyRepository.save(newCompanies);
 
         return metadataList.stream()
                 .map(FinancialDocumentMetadata::getDocumentId)
+                .toList();
+    }
+
+    /**
+     * 未登録の会社をフィルタリングします。
+     *
+     * @param companies フィルタリングする会社のリスト
+     * @return 未登録の会社のリスト
+     */
+    private List<Company> filterNewCompanies(List<Company> companies) {
+        var storedCompanyEdinetCodes = companyRepository.findAll().stream()
+                .map(Company::getEdinetCode)
+                .toList();
+        return companies.stream()
+                .filter(company -> !storedCompanyEdinetCodes.contains(company.getEdinetCode()))
                 .toList();
     }
 
