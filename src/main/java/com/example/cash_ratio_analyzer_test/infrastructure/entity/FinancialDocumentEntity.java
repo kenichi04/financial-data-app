@@ -22,7 +22,7 @@ public class FinancialDocumentEntity {
     @Column(nullable = false, unique = true)
     private String documentId;
 
-    // TODO ここは外部キーにした方が良いかも
+    // TODO metadataテーブルで紐づけているので、ここには不要かも
     @Column(nullable = false)
     private String edinetCode;
 
