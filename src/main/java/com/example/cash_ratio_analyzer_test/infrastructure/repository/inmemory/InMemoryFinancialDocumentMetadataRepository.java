@@ -19,6 +19,14 @@ public class InMemoryFinancialDocumentMetadataRepository implements IFinancialDo
     }
 
     @Override
+    public List<FinancialDocumentMetadata> findByDocumentIds(List<DocumentId> documentIdList) {
+        return documentIdList.stream()
+                .map(metadataStore::get)
+                .filter(metadata -> metadata != null)
+                .toList();
+    }
+
+    @Override
     public List<FinancialDocumentMetadata> findByProcessedFalse() {
         return metadataStore.values().stream()
                 .filter(metadata -> !metadata.isProcessed())

@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface IFinancialDocumentMetadataRepository {
     FinancialDocumentMetadata findByDocumentId(DocumentId documentId);
+    List<FinancialDocumentMetadata> findByDocumentIds(List<DocumentId> documentIdList);
     List<FinancialDocumentMetadata> findByProcessedFalse();
     void save(FinancialDocumentMetadata financialDocumentMetadata);
     void save(List<FinancialDocumentMetadata> metadataList);

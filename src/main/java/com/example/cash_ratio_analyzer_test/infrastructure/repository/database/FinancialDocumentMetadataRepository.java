@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface FinancialDocumentMetadataRepository extends JpaRepository<FinancialDocumentMetadataEntity, Long> {
     FinancialDocumentMetadataEntity findByDocumentId(String string);
-
+    List<FinancialDocumentMetadataEntity> findByDocumentIdIn(List<String> documentIds);
     List<FinancialDocumentMetadataEntity> findByProcessedFalse();
 }

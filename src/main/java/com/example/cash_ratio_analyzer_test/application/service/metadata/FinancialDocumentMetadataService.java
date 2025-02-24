@@ -45,19 +45,37 @@ public class FinancialDocumentMetadataService {
             return List.of();
         }
 
-        // TODO metadataおよびcompanyの重複チェック（エラーではなく、スキップする）
-
         var metadataList = processedResponseData.get().getMetadataList();
         var companies = processedResponseData.get().getCompanies();
 
+        // 登録済のデータはスキップして新規のみ登録
+        var newMetadataList = filterNewMetadata(metadataList);
         var newCompanies = filterNewCompanies(companies);
 
-        financialDocumentMetadataRepository.save(metadataList);
+        financialDocumentMetadataRepository.save(newMetadataList);
         // TODO companyの処理が多くなったらCompanyServiceを作成する
         companyRepository.save(newCompanies);
 
-        return metadataList.stream()
+        return newMetadataList.stream()
                 .map(FinancialDocumentMetadata::getDocumentId)
+                .toList();
+    }
+
+    /**
+     * 未登録のメタデータをフィルタリングします。
+     *
+     * @param metadataList フィルタリングするメタデータのリスト
+     * @return 未登録のメタデータのリスト
+     */
+    private List<FinancialDocumentMetadata> filterNewMetadata(List<FinancialDocumentMetadata> metadataList) {
+        var documentIds = metadataList.stream().map(FinancialDocumentMetadata::getDocumentId).toList();
+
+        var storedDocumentIds = financialDocumentMetadataRepository
+                .findByDocumentIds(documentIds).stream()
+                .map(FinancialDocumentMetadata::getDocumentId)
+                .toList();
+        return metadataList.stream()
+                .filter(metadata -> !storedDocumentIds.contains(metadata.getDocumentId()))
                 .toList();
     }
 

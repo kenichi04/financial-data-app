@@ -28,6 +28,13 @@ public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumen
     }
 
     @Override
+    public List<FinancialDocumentMetadata> findByDocumentIds(List<DocumentId> documentIdList) {
+        var documentIds = documentIdList.stream().map(DocumentId::toString).toList();
+        var entities = financialDocumentMetadataRepository.findByDocumentIdIn(documentIds);
+        return entities.stream().map(this::toModel).toList();
+    }
+
+    @Override
     public List<FinancialDocumentMetadata> findByProcessedFalse() {
         var entities = financialDocumentMetadataRepository.findByProcessedFalse();
         return entities.stream().map(this::toModel).toList();

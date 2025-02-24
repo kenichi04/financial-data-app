@@ -31,7 +31,6 @@ public class DocumentMetadataScenarioService {
         // metadataおよびcompanyを作成
         var processedResponseData = jsonParserService.parseDocumentList(data);
 
-        // TODO DBに保存
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
         return financialDocumentMetadataService.createMetadata(processedResponseData);
     }
