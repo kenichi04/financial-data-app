@@ -54,6 +54,18 @@ public class FinancialDocumentMetadata {
         return edinetCode;
     }
 
+    public String getFilerName() {
+        return filerName;
+    }
+
+    public EdinetDocumentType getDocumentType() {
+        return documentType;
+    }
+
+    public LocalDate getSubmissionDate() {
+        return submissionDate;
+    }
+
     public boolean isProcessed() {
         return processed;
     }

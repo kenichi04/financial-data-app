@@ -24,8 +24,7 @@ public class CompanyEntity {
     @Column(nullable = false, unique = true)
     private String corporateNumber;
 
-    public CompanyEntity() {
-    }
+    public CompanyEntity() {}
 
     public CompanyEntity(String edinetCode, String name, String securityCode, String corporateNumber) {
         this.edinetCode = edinetCode;

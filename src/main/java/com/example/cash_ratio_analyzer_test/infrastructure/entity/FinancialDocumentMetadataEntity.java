@@ -28,7 +28,7 @@ public class FinancialDocumentMetadataEntity {
     private String filerName;
 
     @Column(nullable = false)
-    private String documentType;
+    private int documentType;
 
     @Column(nullable = false)
     private String formCode;
@@ -38,4 +38,17 @@ public class FinancialDocumentMetadataEntity {
 
     @Column(nullable = false)
     private boolean processed;
+
+    public FinancialDocumentMetadataEntity() {}
+
+    public FinancialDocumentMetadataEntity(String documentId, String description, String edinetCode, String filerName, int documentType, String formCode, LocalDate submissionDate, boolean processed) {
+        this.documentId = documentId;
+        this.description = description;
+        this.edinetCode = edinetCode;
+        this.filerName = filerName;
+        this.documentType = documentType;
+        this.formCode = formCode;
+        this.submissionDate = submissionDate;
+        this.processed = processed;
+    }
 }
