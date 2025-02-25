@@ -9,7 +9,7 @@ public enum EdinetFormCode {
 
     CODE_030001("030001", "訂正有価証券報告書", "第三号様式"),
 
-    CODE_080000("080000", "訂正有価証券報告書", "第八号様式");
+    CODE_080000("080000", "有価証券報告書", "第八号様式");
 
     private final String code;
 

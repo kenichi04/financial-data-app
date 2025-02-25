@@ -138,14 +138,14 @@ public class JsonParserService {
                     documentId,
                     result.getDocDescription(),
                     edinetCode,
-                    result.getFilerName(),
                     documentType,
                     formCode,
                     submissionDate);
             metadataList.add(metadata);
 
             if (!companyMap.containsKey(edinetCode)) {
-                companyMap.put(edinetCode, new Company(edinetCode, result.getFilerName(), result.getSecCode(), result.getJCN()));
+                companyMap.put(edinetCode,
+                        new Company(edinetCode, result.getFilerName(), result.getSecCode(), result.getJCN()));
             }
         }
 

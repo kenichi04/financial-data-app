@@ -14,9 +14,6 @@ public class FinancialDocumentMetadata {
     /** 提出者EDINETコード */
     private EdinetCode edinetCode;
 
-    /** 提出者名 */
-    private String filerName;
-
     /** 書類種別 */
     private EdinetDocumentType documentType;
 
@@ -32,12 +29,10 @@ public class FinancialDocumentMetadata {
     private boolean processed = false;
 
     // TODO 書類取得で失敗したかのステータスも追加する？もしくはリトライ回数を追加する？
-
-    public FinancialDocumentMetadata(DocumentId documentId, String description, EdinetCode edinetCode, String filerName, EdinetDocumentType documentType, EdinetFormCode formCode, LocalDate submissionDate) {
+    public FinancialDocumentMetadata(DocumentId documentId, String description, EdinetCode edinetCode, EdinetDocumentType documentType, EdinetFormCode formCode, LocalDate submissionDate) {
         this.documentId = documentId;
         this.description = description;
         this.edinetCode = edinetCode;
-        this.filerName = filerName;
         this.documentType = documentType;
         this.formCode = formCode;
         this.submissionDate = submissionDate;
@@ -54,10 +49,6 @@ public class FinancialDocumentMetadata {
 
     public EdinetCode getEdinetCode() {
         return edinetCode;
-    }
-
-    public String getFilerName() {
-        return filerName;
     }
 
     public EdinetDocumentType getDocumentType() {

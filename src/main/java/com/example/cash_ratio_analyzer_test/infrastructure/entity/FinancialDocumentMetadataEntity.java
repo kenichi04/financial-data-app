@@ -23,10 +23,6 @@ public class FinancialDocumentMetadataEntity {
     @Column(nullable = false)
     private String edinetCode;
 
-    // TODO 不要（EdinetCodeを使う）
-    @Column(nullable = false)
-    private String filerName;
-
     @Column(nullable = false)
     private int documentType;
 
@@ -41,11 +37,10 @@ public class FinancialDocumentMetadataEntity {
 
     public FinancialDocumentMetadataEntity() {}
 
-    public FinancialDocumentMetadataEntity(String documentId, String description, String edinetCode, String filerName, int documentType, String formCode, LocalDate submissionDate, boolean processed) {
+    public FinancialDocumentMetadataEntity(String documentId, String description, String edinetCode, int documentType, String formCode, LocalDate submissionDate, boolean processed) {
         this.documentId = documentId;
         this.description = description;
         this.edinetCode = edinetCode;
-        this.filerName = filerName;
         this.documentType = documentType;
         this.formCode = formCode;
         this.submissionDate = submissionDate;

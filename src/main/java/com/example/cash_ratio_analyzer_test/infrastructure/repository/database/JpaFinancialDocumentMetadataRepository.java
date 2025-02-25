@@ -60,7 +60,6 @@ public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumen
                 new DocumentId(from.getDocumentId()),
                 from.getDescription(),
                 new EdinetCode(from.getEdinetCode()),
-                from.getFilerName(),
                 EdinetDocumentType.fromCode(from.getDocumentType()),
                 EdinetFormCode.fromCode(from.getFormCode()),
                 from.getSubmissionDate());
@@ -74,7 +73,6 @@ public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumen
                 from.getDocumentId().toString(),
                 from.getDescription(),
                 from.getEdinetCode().toString(),
-                from.getFilerName(),
                 from.getDocumentType().code(),
                 from.getFormCode().code(),
                 from.getSubmissionDate(),
