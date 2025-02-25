@@ -4,6 +4,7 @@ package com.example.cash_ratio_analyzer_test.domain.enums;
  * EDINET書類種別を表す列挙型です。
  */
 public enum EdinetDocumentType {
+    // TODO codeはStringの方がよい？
     /** 有価証券報告書 */
     YUKASHOKEN_HOKOKUSHO(120),
     /** 訂正有価証券報告書 */
@@ -40,6 +41,6 @@ public enum EdinetDocumentType {
                 return type;
             }
         }
-        throw new IllegalArgumentException("Unknown code: " + code);
+        throw new IllegalArgumentException("Unknown document type code: " + code);
     }
 }

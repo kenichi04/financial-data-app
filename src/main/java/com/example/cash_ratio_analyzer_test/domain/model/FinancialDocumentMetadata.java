@@ -1,6 +1,7 @@
 package com.example.cash_ratio_analyzer_test.domain.model;
 
 import com.example.cash_ratio_analyzer_test.domain.enums.EdinetDocumentType;
+import com.example.cash_ratio_analyzer_test.domain.enums.EdinetFormCode;
 
 import java.time.LocalDate;
 
@@ -20,9 +21,8 @@ public class FinancialDocumentMetadata {
     private EdinetDocumentType documentType;
 
     // TODO これでフィルタ掛けるか検討
-    // TODO EdinetFormCodeに変更する
     /** 様式コード */
-    private String formCode;
+    private EdinetFormCode formCode;
 
     // TODO 会計年度あった方が良さそう
     /** 提出日 */
@@ -33,7 +33,7 @@ public class FinancialDocumentMetadata {
 
     // TODO 書類取得で失敗したかのステータスも追加する？もしくはリトライ回数を追加する？
 
-    public FinancialDocumentMetadata(DocumentId documentId, String description, EdinetCode edinetCode, String filerName, EdinetDocumentType documentType, String formCode, LocalDate submissionDate) {
+    public FinancialDocumentMetadata(DocumentId documentId, String description, EdinetCode edinetCode, String filerName, EdinetDocumentType documentType, EdinetFormCode formCode, LocalDate submissionDate) {
         this.documentId = documentId;
         this.description = description;
         this.edinetCode = edinetCode;
@@ -64,7 +64,7 @@ public class FinancialDocumentMetadata {
         return documentType;
     }
 
-    public String getFormCode() {
+    public EdinetFormCode getFormCode() {
         return formCode;
     }
 

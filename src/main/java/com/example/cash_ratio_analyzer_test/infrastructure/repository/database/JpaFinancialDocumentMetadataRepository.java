@@ -1,6 +1,7 @@
 package com.example.cash_ratio_analyzer_test.infrastructure.repository.database;
 
 import com.example.cash_ratio_analyzer_test.domain.enums.EdinetDocumentType;
+import com.example.cash_ratio_analyzer_test.domain.enums.EdinetFormCode;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
@@ -61,7 +62,7 @@ public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumen
                 new EdinetCode(from.getEdinetCode()),
                 from.getFilerName(),
                 EdinetDocumentType.fromCode(from.getDocumentType()),
-                from.getFormCode(),
+                EdinetFormCode.fromCode(from.getFormCode()),
                 from.getSubmissionDate());
         if (from.isProcessed()) model.updateProcessedStatus();
 
@@ -75,7 +76,7 @@ public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumen
                 from.getEdinetCode().toString(),
                 from.getFilerName(),
                 from.getDocumentType().code(),
-                from.getFormCode(),
+                from.getFormCode().code(),
                 from.getSubmissionDate(),
                 from.isProcessed());
     }

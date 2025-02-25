@@ -4,6 +4,7 @@ import com.example.cash_ratio_analyzer_test.application.service.dto.DocumentList
 import com.example.cash_ratio_analyzer_test.application.service.dto.ProcessedResponseData;
 import com.example.cash_ratio_analyzer_test.application.service.dto.Result;
 import com.example.cash_ratio_analyzer_test.domain.enums.EdinetDocumentType;
+import com.example.cash_ratio_analyzer_test.domain.enums.EdinetFormCode;
 import com.example.cash_ratio_analyzer_test.domain.model.Company;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
@@ -130,7 +131,7 @@ public class JsonParserService {
             var documentId = new DocumentId(result.getDocID());
             var edinetCode = new EdinetCode(result.getEdinetCode());
             var documentType = EdinetDocumentType.fromCode(Integer.parseInt(result.getDocTypeCode()));
-            var formCode = result.getFormCode();
+            var formCode = EdinetFormCode.fromCode(result.getFormCode());
             var submissionDate = LocalDate.parse(result.getSubmitDateTime(), DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm"));
 
             var metadata = new FinancialDocumentMetadata(
