@@ -130,6 +130,7 @@ public class JsonParserService {
             var documentId = new DocumentId(result.getDocID());
             var edinetCode = new EdinetCode(result.getEdinetCode());
             var documentType = EdinetDocumentType.fromCode(Integer.parseInt(result.getDocTypeCode()));
+            var formCode = result.getFormCode();
             var submissionDate = LocalDate.parse(result.getSubmitDateTime(), DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm"));
 
             var metadata = new FinancialDocumentMetadata(
@@ -138,6 +139,7 @@ public class JsonParserService {
                     edinetCode,
                     result.getFilerName(),
                     documentType,
+                    formCode,
                     submissionDate);
             metadataList.add(metadata);
 

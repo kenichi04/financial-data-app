@@ -61,6 +61,7 @@ public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumen
                 new EdinetCode(from.getEdinetCode()),
                 from.getFilerName(),
                 EdinetDocumentType.fromCode(from.getDocumentType()),
+                from.getFormCode(),
                 from.getSubmissionDate());
         if (from.isProcessed()) model.updateProcessedStatus();
 
@@ -74,8 +75,7 @@ public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumen
                 from.getEdinetCode().toString(),
                 from.getFilerName(),
                 from.getDocumentType().code(),
-                // TODO 要修正
-                "test-form-code",
+                from.getFormCode(),
                 from.getSubmissionDate(),
                 from.isProcessed());
     }

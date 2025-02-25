@@ -53,7 +53,6 @@ public class FinancialDocumentMetadataService {
         var newCompanies = filterNewCompanies(companies);
 
         financialDocumentMetadataRepository.save(newMetadataList);
-        // TODO companyの処理が多くなったらCompanyServiceを作成する
         companyRepository.save(newCompanies);
 
         return newMetadataList.stream()

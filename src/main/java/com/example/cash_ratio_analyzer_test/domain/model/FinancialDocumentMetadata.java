@@ -20,6 +20,7 @@ public class FinancialDocumentMetadata {
     private EdinetDocumentType documentType;
 
     // TODO これでフィルタ掛けるか検討
+    // TODO EdinetFormCodeに変更する
     /** 様式コード */
     private String formCode;
 
@@ -32,12 +33,13 @@ public class FinancialDocumentMetadata {
 
     // TODO 書類取得で失敗したかのステータスも追加する？もしくはリトライ回数を追加する？
 
-    public FinancialDocumentMetadata(DocumentId documentId, String description, EdinetCode edinetCode, String filerName, EdinetDocumentType documentType, LocalDate submissionDate) {
+    public FinancialDocumentMetadata(DocumentId documentId, String description, EdinetCode edinetCode, String filerName, EdinetDocumentType documentType, String formCode, LocalDate submissionDate) {
         this.documentId = documentId;
         this.description = description;
         this.edinetCode = edinetCode;
         this.filerName = filerName;
         this.documentType = documentType;
+        this.formCode = formCode;
         this.submissionDate = submissionDate;
         this.processed = false;
     }
@@ -60,6 +62,10 @@ public class FinancialDocumentMetadata {
 
     public EdinetDocumentType getDocumentType() {
         return documentType;
+    }
+
+    public String getFormCode() {
+        return formCode;
     }
 
     public LocalDate getSubmissionDate() {
