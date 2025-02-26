@@ -7,6 +7,7 @@ import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetada
 import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
 import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentMetadataRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +40,7 @@ public class FinancialDocumentMetadataService {
      * @param processedResponseData 処理されたレスポンスデータのオプショナル
      * @return 作成されたメタデータのドキュメントIDのリスト
      */
-    // TODO transactionalアノテーションを付与する
+    @Transactional
     public List<DocumentId> createMetadata(Optional<ProcessedResponseData> processedResponseData) {
         if (processedResponseData.isEmpty()) {
             return List.of();
@@ -100,6 +101,11 @@ public class FinancialDocumentMetadataService {
      */
     public void updateMetadataProcessedStatus(DocumentId documentId) {
         var metadata = financialDocumentMetadataRepository.findByDocumentId(documentId);
+        // メタデータ取得せずに直接書類取得するケースも許可したいため、メタデータ取得できなくてもエラーにしない
+        if (metadata == null) {
+            return;
+        }
+
         metadata.updateProcessedStatus();
         financialDocumentMetadataRepository.save(metadata);
     }

@@ -23,7 +23,6 @@ public class DocumentMetadataScenarioService {
         this.jsonParserService = jsonParserService;
     }
 
-    // TODO transactionalアノテーションを付与する
     // 書類一覧APIから書類メタデータ取得、登録する処理を管理する
     public List<DocumentId> fetchAndSaveDocumentMetadata(LocalDate fromDate) {
 

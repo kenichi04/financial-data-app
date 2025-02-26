@@ -26,7 +26,6 @@ public class FinancialDocumentScenarioService {
         this.financialDocumentService = financialDocumentService;
     }
 
-    // TODO transactionalアノテーションを付与する
     // 書類取得APIから財務データ取得、分析して登録する処理を管理する
     public DocumentId fetchAndSaveFinancialData(String documentId) {
 
@@ -34,11 +33,11 @@ public class FinancialDocumentScenarioService {
         // 一時ファイル作成して抽出する処理も検討する（将来的に）
         // TODO ターゲットファイルを可変長引数で指定できるようにする？
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
-        // XBRLからヘッダ情報を抽出
+
         var headerInfo = xbrlHeaderInfoExtractor.extractHeaderInfo(extractedFiles.getHeaderOrFirstMainContent());
-        // XBRLから必要な財務データを抽出
-        var extractedData = xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
+        var financialDataList = xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
+
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
-        return financialDocumentService.saveFinancialDocument(documentId, headerInfo, extractedData);
+        return financialDocumentService.saveFinancialDocument(documentId, headerInfo, financialDataList);
     }
 }

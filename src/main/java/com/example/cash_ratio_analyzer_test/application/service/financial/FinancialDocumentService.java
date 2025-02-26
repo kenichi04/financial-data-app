@@ -2,6 +2,7 @@ package com.example.cash_ratio_analyzer_test.application.service.financial;
 
 import com.example.cash_ratio_analyzer_test.application.service.constants.XbrlConstants;
 import com.example.cash_ratio_analyzer_test.application.service.dto.HeaderInfo;
+import com.example.cash_ratio_analyzer_test.application.service.metadata.FinancialDocumentMetadataService;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
@@ -9,6 +10,7 @@ import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
 import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
 import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -18,11 +20,14 @@ import java.util.Optional;
 @Service
 public class FinancialDocumentService {
 
+    private final FinancialDocumentMetadataService financialDocumentMetadataService;
+
     private final IFinancialDocumentRepository financialDocumentRepository;
 
     private final ICompanyRepository companyRepository;
 
-    public FinancialDocumentService(IFinancialDocumentRepository financialDocumentRepository1, ICompanyRepository companyRepository) {
+    public FinancialDocumentService(FinancialDocumentMetadataService financialDocumentMetadataService, IFinancialDocumentRepository financialDocumentRepository1, ICompanyRepository companyRepository) {
+        this.financialDocumentMetadataService = financialDocumentMetadataService;
         this.financialDocumentRepository = financialDocumentRepository1;
         this.companyRepository = companyRepository;
     }
@@ -39,8 +44,8 @@ public class FinancialDocumentService {
      * @param financialDataList 保存する財務データのリスト
      * @return 保存されたドキュメントのID
      */
-    // TODO transactionalアノテーションを付与する
     // 書類取得APIレスポンスからの処理を想定。documentは上で作成済にするか、新規作成するかは要検討（dataなしのdocument作成してもよいのか）
+    @Transactional
     public DocumentId saveFinancialDocument(String documentId, HeaderInfo headerInfo, List<FinancialData> financialDataList) {
         // TODO financialDocumentの重複チェック（重複は例外をスローする）
         // financialDocumentは新規作成のみ、更新は不要の想定
@@ -49,7 +54,7 @@ public class FinancialDocumentService {
 
         financialDocumentRepository.save(financialDocument);
 
-        // メタデータを処理済に更新
+        // メタデータに該当の書類がある場合は処理済に更新
         updateMetadataProcessedStatus(documentIdModel);
 
         return documentIdModel;
@@ -92,8 +97,6 @@ public class FinancialDocumentService {
      * @param documentId 更新するドキュメントのID
      */
     private void updateMetadataProcessedStatus(DocumentId documentId) {
-        // TODO 一旦コメントアウト（nullが返るため）
-        // 実運用ではmetadataテーブルから取得後にここを通るため、nullはない
-//        financialDocumentMetadataService.updateMetadataProcessedStatus(documentId);
+        financialDocumentMetadataService.updateMetadataProcessedStatus(documentId);
     }
 }
