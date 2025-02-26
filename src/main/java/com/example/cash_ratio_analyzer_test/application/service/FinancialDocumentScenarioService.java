@@ -26,7 +26,12 @@ public class FinancialDocumentScenarioService {
         this.financialDocumentService = financialDocumentService;
     }
 
-    // 書類取得APIから財務データ取得、分析して登録する処理を管理する
+    /**
+     * 指定された書類IDに基づいて財務データを取得し、分析して保存します。
+     *
+     * @param documentId 書類ID
+     * @return 保存された財務書類のID
+     */
     public DocumentId fetchAndSaveFinancialData(String documentId) {
 
         var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentId);

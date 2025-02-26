@@ -23,11 +23,16 @@ public class DocumentMetadataScenarioService {
         this.jsonParserService = jsonParserService;
     }
 
-    // 書類一覧APIから書類メタデータ取得、登録する処理を管理する
+    /**
+     * 指定された日付から書類一覧（メタデータ）を取得し、保存します。
+     *
+     * @param fromDate メタデータを取得する開始日
+     * @return 保存された書類のIDリスト
+     */
     public List<DocumentId> fetchAndSaveDocumentMetadata(LocalDate fromDate) {
 
         var data = edinetDocumentListService.fetchDocumentList(FetchMode.METADATA_AND_LIST, fromDate);
-        // metadataおよびcompanyを作成
+        // metadataおよびcompany情報を取得
         var processedResponseData = jsonParserService.parseDocumentList(data);
 
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
