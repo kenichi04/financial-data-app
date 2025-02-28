@@ -46,4 +46,8 @@ public class FinancialDocumentMetadataEntity {
         this.submissionDate = submissionDate;
         this.processed = processed;
     }
+
+    public void updateProcessedStatus() {
+        this.processed = true;
+    }
 }

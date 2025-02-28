@@ -100,13 +100,6 @@ public class FinancialDocumentMetadataService {
      * @param documentId 更新するメタデータのドキュメントID
      */
     public void updateMetadataProcessedStatus(DocumentId documentId) {
-        var metadata = financialDocumentMetadataRepository.findByDocumentId(documentId);
-        // メタデータ取得せずに直接書類取得するケースも許可したいため、メタデータ取得できなくてもエラーにしない
-        if (metadata == null) {
-            return;
-        }
-
-        metadata.updateProcessedStatus();
-        financialDocumentMetadataRepository.save(metadata);
+        financialDocumentMetadataRepository.updateMetadataProcessedStatus(documentId);
     }
 }

@@ -43,4 +43,13 @@ public class InMemoryFinancialDocumentMetadataRepository implements IFinancialDo
         metadataList.forEach(metadata ->
                 metadataStore.put(metadata.getDocumentId(), metadata));
     }
+
+    @Override
+    public void updateMetadataProcessedStatus(DocumentId documentId) {
+        var metadata = metadataStore.getOrDefault(documentId, null);
+        if (metadata == null) return;
+
+        metadata.updateProcessedStatus();
+        metadataStore.put(documentId, metadata);
+    }
 }

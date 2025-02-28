@@ -53,6 +53,16 @@ public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumen
         financialDocumentMetadataRepository.saveAll(entities);
     }
 
+    @Override
+    public void updateMetadataProcessedStatus(DocumentId documentId) {
+        var entity = financialDocumentMetadataRepository.findByDocumentId(documentId.toString());
+        // メタデータ取得せずに書類取得API呼ぶケースも許可したいため、エラーにせずスキップ
+        if (entity == null) return;
+
+        entity.updateProcessedStatus();
+        financialDocumentMetadataRepository.save(entity);
+    }
+
     private FinancialDocumentMetadata toModel(FinancialDocumentMetadataEntity from) {
         if (from == null) return null;
 
@@ -69,6 +79,7 @@ public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumen
     }
 
     private FinancialDocumentMetadataEntity toEntity(FinancialDocumentMetadata from) {
+
         return new FinancialDocumentMetadataEntity(
                 from.getDocumentId().toString(),
                 from.getDescription(),

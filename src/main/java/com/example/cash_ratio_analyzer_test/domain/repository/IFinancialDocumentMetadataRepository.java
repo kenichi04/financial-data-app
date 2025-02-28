@@ -11,4 +11,5 @@ public interface IFinancialDocumentMetadataRepository {
     List<FinancialDocumentMetadata> findByProcessedFalse();
     void save(FinancialDocumentMetadata financialDocumentMetadata);
     void save(List<FinancialDocumentMetadata> metadataList);
+    void updateMetadataProcessedStatus(DocumentId documentId);
 }

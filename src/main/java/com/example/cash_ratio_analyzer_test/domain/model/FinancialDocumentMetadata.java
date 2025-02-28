@@ -6,6 +6,7 @@ import com.example.cash_ratio_analyzer_test.domain.enums.EdinetFormCode;
 import java.time.LocalDate;
 
 public class FinancialDocumentMetadata {
+    private Long id;
 
     private DocumentId documentId;
 

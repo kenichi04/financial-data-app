@@ -53,9 +53,8 @@ public class FinancialDocumentService {
         var financialDocument = createFinancialDocument(documentIdModel, headerInfo, financialDataList);
 
         financialDocumentRepository.save(financialDocument);
-
-        // メタデータに該当の書類がある場合は処理済に更新
-        updateMetadataProcessedStatus(documentIdModel);
+        // メタデータに該当の書類がある場合は処理済（書類取得済）に更新
+        financialDocumentMetadataService.updateMetadataProcessedStatus(documentIdModel);
 
         return documentIdModel;
     }
@@ -89,14 +88,5 @@ public class FinancialDocumentService {
                 fiscalYearEndDate,
                 currency,
                 financialDataList);
-    }
-
-    /**
-     * 指定されたドキュメントIDのメタデータの処理ステータスを更新します。
-     *
-     * @param documentId 更新するドキュメントのID
-     */
-    private void updateMetadataProcessedStatus(DocumentId documentId) {
-        financialDocumentMetadataService.updateMetadataProcessedStatus(documentId);
     }
 }
