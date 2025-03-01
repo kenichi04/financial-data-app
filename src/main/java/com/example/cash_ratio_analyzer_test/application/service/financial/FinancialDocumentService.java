@@ -37,22 +37,20 @@ public class FinancialDocumentService {
     }
 
     /**
-     * 指定されたドキュメントIDに対応する財務データを保存します。
+     * 指定されたドキュメントIDに対応する財務データを登録します。
      *
-     * @param documentId 保存するドキュメントのID
+     * @param documentId 登録するドキュメントのID
      * @param headerInfo ドキュメントのヘッダー情報
-     * @param financialDataList 保存する財務データのリスト
-     * @return 保存されたドキュメントのID
+     * @param financialDataList 登録する財務データのリスト
+     * @return 登録されたドキュメントのID
      */
-    // 書類取得APIレスポンスからの処理を想定。documentは上で作成済にするか、新規作成するかは要検討（dataなしのdocument作成してもよいのか）
     @Transactional
-    public DocumentId saveFinancialDocument(String documentId, HeaderInfo headerInfo, List<FinancialData> financialDataList) {
-        // TODO financialDocumentの重複チェック（重複は例外をスローする）
+    public DocumentId createFinancialDocument(String documentId, HeaderInfo headerInfo, List<FinancialData> financialDataList) {
         // financialDocumentは新規作成のみ、更新は不要の想定
         var documentIdModel = new DocumentId(documentId);
-        var financialDocument = createFinancialDocument(documentIdModel, headerInfo, financialDataList);
+        var financialDocument = buildFinancialDocument(documentIdModel, headerInfo, financialDataList);
 
-        financialDocumentRepository.save(financialDocument);
+        financialDocumentRepository.create(financialDocument);
         // メタデータに該当の書類がある場合は処理済（書類取得済）に更新
         financialDocumentMetadataService.updateMetadataProcessedStatus(documentIdModel);
 
@@ -67,7 +65,7 @@ public class FinancialDocumentService {
      * @param financialDataList 財務データのリスト
      * @return 作成された財務ドキュメント
      */
-    private FinancialDocument createFinancialDocument(DocumentId documentIdModel, HeaderInfo headerInfo, List<FinancialData> financialDataList) {
+    private FinancialDocument buildFinancialDocument(DocumentId documentIdModel, HeaderInfo headerInfo, List<FinancialData> financialDataList) {
         var edinetCodeText = Optional.ofNullable(
                 headerInfo.getDeiInfo().get(XbrlConstants.DEI_ATTRIBUTE_EDINET_CODE))
                 .orElseThrow(() -> new IllegalArgumentException("Edinet Code is missing"));

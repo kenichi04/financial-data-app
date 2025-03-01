@@ -42,8 +42,8 @@ public class JpaFinancialDocumentRepository implements IFinancialDocumentReposit
     }
 
     @Override
-    public void save(FinancialDocument financialDocument) {
-        var entity = toEntity(financialDocument);
+    public void create(FinancialDocument financialDocument) {
+        var entity = toNewEntity(financialDocument);
         var savedEntity = financialDocumentRepository.save(entity);
 
         var dataEntities = toEntityData(savedEntity, financialDocument.getData());
@@ -76,7 +76,7 @@ public class JpaFinancialDocumentRepository implements IFinancialDocumentReposit
                 .toList();
     }
 
-    private FinancialDocumentEntity toEntity(FinancialDocument from) {
+    private FinancialDocumentEntity toNewEntity(FinancialDocument from) {
         var entity = new FinancialDocumentEntity();
         entity.setDocumentId(from.getDocumentId().toString());
         entity.setEdinetCode(from.getEdinetCode().toString());

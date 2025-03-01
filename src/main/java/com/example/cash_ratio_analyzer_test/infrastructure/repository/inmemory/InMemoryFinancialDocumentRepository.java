@@ -12,7 +12,7 @@ import java.util.Map;
 public class InMemoryFinancialDocumentRepository implements IFinancialDocumentRepository {
     private Map<DocumentId, FinancialDocument> financialDocumentStore = new HashMap<>();
 
-    public void save(FinancialDocument financialDocument) {
+    public void create(FinancialDocument financialDocument) {
         financialDocumentStore.put(financialDocument.getDocumentId(), financialDocument);
     }
 

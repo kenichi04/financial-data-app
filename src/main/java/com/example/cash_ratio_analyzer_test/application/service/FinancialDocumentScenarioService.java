@@ -46,6 +46,6 @@ public class FinancialDocumentScenarioService {
         var financialDataList = xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
 
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
-        return financialDocumentService.saveFinancialDocument(documentId, headerInfo, financialDataList);
+        return financialDocumentService.createFinancialDocument(documentId, headerInfo, financialDataList);
     }
 }
