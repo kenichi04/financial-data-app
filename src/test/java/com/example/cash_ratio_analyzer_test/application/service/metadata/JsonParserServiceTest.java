@@ -38,6 +38,7 @@ class JsonParserServiceTest {
             "results": [
                 {
                     "docID": "12345678",
+                    "formCode": "030000",
                     "docTypeCode": "120",
                     "secCode": "1234",
                     "edinetCode": "E12345",
@@ -72,6 +73,7 @@ class JsonParserServiceTest {
             "results": [
                 {
                     "docID": "12345678",
+                    "formCode": "030000",
                     "docTypeCode": "130",
                     "secCode": "1234",
                     "edinetCode": "E12345",
@@ -104,6 +106,7 @@ class JsonParserServiceTest {
             "results": [
                 {
                     "docID": "12345678",
+                    "formCode": "030000",
                     "docTypeCode": "120",
                     "secCode": null,
                     "edinetCode": "E12345",
