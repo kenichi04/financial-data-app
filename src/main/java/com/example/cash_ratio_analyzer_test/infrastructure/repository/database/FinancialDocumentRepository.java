@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FinancialDocumentRepository extends JpaRepository<FinancialDocumentEntity, Long> {
     FinancialDocumentEntity findByDocumentId(String documentId);
+    boolean existsByDocumentId(String string);
 }

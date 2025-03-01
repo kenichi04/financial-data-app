@@ -33,6 +33,9 @@ public class FinancialDocumentScenarioService {
      * @return 保存された財務書類のID
      */
     public DocumentId fetchAndSaveFinancialData(String documentId) {
+        if (financialDocumentService.existsByDocumentId(documentId)) {
+            throw new IllegalArgumentException("Document already exists: " + documentId);
+        }
 
         var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentId);
         // 一時ファイル作成して抽出する処理も検討した方が良いかも

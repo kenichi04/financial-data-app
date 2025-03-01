@@ -48,6 +48,7 @@ public class FinancialDocumentMetadataEntity {
     }
 
     public void updateProcessedStatus() {
+        // processedはfalseからtrueへの変更のみ想定している
         this.processed = true;
     }
 }

@@ -37,6 +37,11 @@ public class JpaFinancialDocumentRepository implements IFinancialDocumentReposit
     }
 
     @Override
+    public boolean existsByDocumentId(DocumentId documentId) {
+        return financialDocumentRepository.existsByDocumentId(documentId.toString());
+    }
+
+    @Override
     public void save(FinancialDocument financialDocument) {
         var entity = toEntity(financialDocument);
         var savedEntity = financialDocumentRepository.save(entity);

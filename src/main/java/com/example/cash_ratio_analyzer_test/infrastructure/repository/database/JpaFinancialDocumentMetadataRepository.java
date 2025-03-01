@@ -56,7 +56,7 @@ public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumen
     @Override
     public void updateMetadataProcessedStatus(DocumentId documentId) {
         var entity = financialDocumentMetadataRepository.findByDocumentId(documentId.toString());
-        // メタデータ取得せずに書類取得API呼ぶケースも許可したいため、エラーにせずスキップ
+        // 書類一覧APIでメタデータ取得せずに書類取得API呼ぶケースも許可したいため、エラーにせずスキップ
         if (entity == null) return;
 
         entity.updateProcessedStatus();

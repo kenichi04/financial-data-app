@@ -89,4 +89,8 @@ public class FinancialDocumentService {
                 currency,
                 financialDataList);
     }
+
+    public boolean existsByDocumentId(String documentId) {
+        return financialDocumentRepository.existsByDocumentId(new DocumentId(documentId));
+    }
 }
