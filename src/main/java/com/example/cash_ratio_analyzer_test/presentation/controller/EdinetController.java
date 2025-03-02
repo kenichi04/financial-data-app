@@ -1,12 +1,12 @@
 package com.example.cash_ratio_analyzer_test.presentation.controller;
 
-import com.example.cash_ratio_analyzer_test.application.service.metadata.FinancialDocumentMetadataService;
+import com.example.cash_ratio_analyzer_test.application.service.metadata.DocumentMetadataService;
 import com.example.cash_ratio_analyzer_test.application.service.FinancialDocumentScenarioService;
 import com.example.cash_ratio_analyzer_test.domain.model.Company;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
 import com.example.cash_ratio_analyzer_test.application.service.DocumentMetadataScenarioService;
 import com.example.cash_ratio_analyzer_test.application.service.financial.FinancialDocumentService;
-import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
+import com.example.cash_ratio_analyzer_test.domain.model.DocumentMetadata;
 import com.example.cash_ratio_analyzer_test.presentation.controller.response.FinancialDocumentMetadataPostResponse;
 import com.example.cash_ratio_analyzer_test.presentation.controller.response.FinancialDocumentPostResponse;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +24,13 @@ public class EdinetController {
 
     private final FinancialDocumentService financialDocumentService;
 
-    private final FinancialDocumentMetadataService financialDocumentMetadataService;
+    private final DocumentMetadataService documentMetadataService;
 
-    public EdinetController(DocumentMetadataScenarioService documentMetadataScenarioService, FinancialDocumentScenarioService financialDocumentScenarioService, FinancialDocumentService financialDocumentService, FinancialDocumentMetadataService financialDocumentMetadataService) {
+    public EdinetController(DocumentMetadataScenarioService documentMetadataScenarioService, FinancialDocumentScenarioService financialDocumentScenarioService, FinancialDocumentService financialDocumentService, DocumentMetadataService documentMetadataService) {
         this.documentMetadataScenarioService = documentMetadataScenarioService;
         this.financialDocumentScenarioService = financialDocumentScenarioService;
         this.financialDocumentService = financialDocumentService;
-        this.financialDocumentMetadataService = financialDocumentMetadataService;
+        this.documentMetadataService = documentMetadataService;
     }
 
     @PostMapping("/metadata/fetch")
@@ -57,14 +57,14 @@ public class EdinetController {
     }
 
     @GetMapping("/unprocessedMetadata")
-    public List<FinancialDocumentMetadata> getUnprocessedMetadata() {
+    public List<DocumentMetadata> getUnprocessedMetadata() {
         // TODO レスポンスモデルを作成する
-        return financialDocumentMetadataService.getUnprocessedMetadata();
+        return documentMetadataService.getUnprocessedMetadata();
     }
 
     @GetMapping("/companies")
     public List<Company> getCompanies() {
         // TODO レスポンスモデルを作成する
-        return financialDocumentMetadataService.getCompanies();
+        return documentMetadataService.getCompanies();
     }
 }

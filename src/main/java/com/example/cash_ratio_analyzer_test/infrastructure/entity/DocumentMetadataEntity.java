@@ -6,9 +6,9 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "financial_document_metadata")
+@Table(name = "document_metadata")
 @Getter
-public class FinancialDocumentMetadataEntity {
+public class DocumentMetadataEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +35,9 @@ public class FinancialDocumentMetadataEntity {
     @Column(nullable = false)
     private boolean processed;
 
-    public FinancialDocumentMetadataEntity() {}
+    public DocumentMetadataEntity() {}
 
-    public FinancialDocumentMetadataEntity(String documentId, String description, String edinetCode, int documentType, String formCode, LocalDate submissionDate, boolean processed) {
+    public DocumentMetadataEntity(String documentId, String description, String edinetCode, int documentType, String formCode, LocalDate submissionDate, boolean processed) {
         this.documentId = documentId;
         this.description = description;
         this.edinetCode = edinetCode;

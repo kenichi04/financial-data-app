@@ -4,9 +4,9 @@ import com.example.cash_ratio_analyzer_test.domain.enums.EdinetDocumentType;
 import com.example.cash_ratio_analyzer_test.domain.enums.EdinetFormCode;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
-import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
-import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentMetadataRepository;
-import com.example.cash_ratio_analyzer_test.infrastructure.entity.FinancialDocumentMetadataEntity;
+import com.example.cash_ratio_analyzer_test.domain.model.DocumentMetadata;
+import com.example.cash_ratio_analyzer_test.domain.repository.IDocumentMetadataRepository;
+import com.example.cash_ratio_analyzer_test.infrastructure.entity.DocumentMetadataEntity;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -14,59 +14,59 @@ import java.util.List;
 
 @Repository
 @Primary
-public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumentMetadataRepository {
+public class JpaDocumentMetadataRepository implements IDocumentMetadataRepository {
 
-    private final FinancialDocumentMetadataRepository financialDocumentMetadataRepository;
+    private final DocumentMetadataRepository documentMetadataRepository;
 
-    public JpaFinancialDocumentMetadataRepository(FinancialDocumentMetadataRepository financialDocumentMetadataRepository) {
-        this.financialDocumentMetadataRepository = financialDocumentMetadataRepository;
+    public JpaDocumentMetadataRepository(DocumentMetadataRepository documentMetadataRepository) {
+        this.documentMetadataRepository = documentMetadataRepository;
     }
 
     @Override
-    public FinancialDocumentMetadata findByDocumentId(DocumentId documentId) {
-        var entity = financialDocumentMetadataRepository.findByDocumentId(documentId.toString());
+    public DocumentMetadata findByDocumentId(DocumentId documentId) {
+        var entity = documentMetadataRepository.findByDocumentId(documentId.toString());
         return toModel(entity);
     }
 
     @Override
-    public List<FinancialDocumentMetadata> findByDocumentIds(List<DocumentId> documentIdList) {
+    public List<DocumentMetadata> findByDocumentIds(List<DocumentId> documentIdList) {
         var documentIds = documentIdList.stream().map(DocumentId::toString).toList();
-        var entities = financialDocumentMetadataRepository.findByDocumentIdIn(documentIds);
+        var entities = documentMetadataRepository.findByDocumentIdIn(documentIds);
         return entities.stream().map(this::toModel).toList();
     }
 
     @Override
-    public List<FinancialDocumentMetadata> findByProcessedFalse() {
-        var entities = financialDocumentMetadataRepository.findByProcessedFalse();
+    public List<DocumentMetadata> findByProcessedFalse() {
+        var entities = documentMetadataRepository.findByProcessedFalse();
         return entities.stream().map(this::toModel).toList();
     }
 
     @Override
-    public void save(FinancialDocumentMetadata financialDocumentMetadata) {
-        var entity = toEntity(financialDocumentMetadata);
-        financialDocumentMetadataRepository.save(entity);
+    public void save(DocumentMetadata documentMetadata) {
+        var entity = toEntity(documentMetadata);
+        documentMetadataRepository.save(entity);
     }
 
     @Override
-    public void save(List<FinancialDocumentMetadata> metadataList) {
+    public void save(List<DocumentMetadata> metadataList) {
         var entities = metadataList.stream().map(this::toEntity).toList();
-        financialDocumentMetadataRepository.saveAll(entities);
+        documentMetadataRepository.saveAll(entities);
     }
 
     @Override
     public void updateMetadataProcessedStatus(DocumentId documentId) {
-        var entity = financialDocumentMetadataRepository.findByDocumentId(documentId.toString());
+        var entity = documentMetadataRepository.findByDocumentId(documentId.toString());
         // 書類一覧APIでメタデータ取得せずに書類取得API呼ぶケースも許可したいため、エラーにせずスキップ
         if (entity == null) return;
 
         entity.updateProcessedStatus();
-        financialDocumentMetadataRepository.save(entity);
+        documentMetadataRepository.save(entity);
     }
 
-    private FinancialDocumentMetadata toModel(FinancialDocumentMetadataEntity from) {
+    private DocumentMetadata toModel(DocumentMetadataEntity from) {
         if (from == null) return null;
 
-        var model =  new FinancialDocumentMetadata(
+        var model =  new DocumentMetadata(
                 new DocumentId(from.getDocumentId()),
                 from.getDescription(),
                 new EdinetCode(from.getEdinetCode()),
@@ -78,9 +78,9 @@ public class JpaFinancialDocumentMetadataRepository implements IFinancialDocumen
         return model;
     }
 
-    private FinancialDocumentMetadataEntity toEntity(FinancialDocumentMetadata from) {
+    private DocumentMetadataEntity toEntity(DocumentMetadata from) {
 
-        return new FinancialDocumentMetadataEntity(
+        return new DocumentMetadataEntity(
                 from.getDocumentId().toString(),
                 from.getDescription(),
                 from.getEdinetCode().toString(),

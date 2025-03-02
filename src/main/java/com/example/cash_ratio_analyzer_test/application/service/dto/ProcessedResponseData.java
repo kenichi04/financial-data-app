@@ -1,15 +1,15 @@
 package com.example.cash_ratio_analyzer_test.application.service.dto;
 
 import com.example.cash_ratio_analyzer_test.domain.model.Company;
-import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
+import com.example.cash_ratio_analyzer_test.domain.model.DocumentMetadata;
 
 import java.util.List;
 
 public class ProcessedResponseData {
     private final List<Company> companies;
-    private final List<FinancialDocumentMetadata> metadataList;
+    private final List<DocumentMetadata> metadataList;
 
-    public ProcessedResponseData(List<Company> companies, List<FinancialDocumentMetadata> metadataList) {
+    public ProcessedResponseData(List<Company> companies, List<DocumentMetadata> metadataList) {
         this.companies = companies;
         this.metadataList = metadataList;
     }
@@ -18,7 +18,7 @@ public class ProcessedResponseData {
         return companies;
     }
 
-    public List<FinancialDocumentMetadata> getMetadataList() {
+    public List<DocumentMetadata> getMetadataList() {
         return metadataList;
     }
 }

@@ -1,4 +1,4 @@
-CREATE TABLE financial_document_metadata (
+CREATE TABLE document_metadata (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     document_id VARCHAR(255) NOT NULL UNIQUE,
     description TEXT NOT NULL,

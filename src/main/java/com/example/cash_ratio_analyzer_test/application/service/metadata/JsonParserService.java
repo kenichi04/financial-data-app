@@ -8,7 +8,7 @@ import com.example.cash_ratio_analyzer_test.domain.enums.EdinetFormCode;
 import com.example.cash_ratio_analyzer_test.domain.model.Company;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
-import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
+import com.example.cash_ratio_analyzer_test.domain.model.DocumentMetadata;
 import com.example.cash_ratio_analyzer_test.domain.service.DocumentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -125,7 +125,7 @@ public class JsonParserService {
      */
     private ProcessedResponseData processResults(List<Result> results) {
         Map<EdinetCode, Company> companyMap = new HashMap<>();
-        List<FinancialDocumentMetadata> metadataList = new ArrayList<>();
+        List<DocumentMetadata> metadataList = new ArrayList<>();
 
         for (var result : results) {
             var documentId = new DocumentId(result.getDocID());
@@ -134,7 +134,7 @@ public class JsonParserService {
             var formCode = EdinetFormCode.fromCode(result.getFormCode());
             var submissionDate = LocalDate.parse(result.getSubmitDateTime(), DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm"));
 
-            var metadata = new FinancialDocumentMetadata(
+            var metadata = new DocumentMetadata(
                     documentId,
                     result.getDocDescription(),
                     edinetCode,

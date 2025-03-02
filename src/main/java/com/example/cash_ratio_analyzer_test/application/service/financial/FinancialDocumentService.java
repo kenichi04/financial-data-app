@@ -2,7 +2,7 @@ package com.example.cash_ratio_analyzer_test.application.service.financial;
 
 import com.example.cash_ratio_analyzer_test.application.service.constants.XbrlConstants;
 import com.example.cash_ratio_analyzer_test.application.service.dto.HeaderInfo;
-import com.example.cash_ratio_analyzer_test.application.service.metadata.FinancialDocumentMetadataService;
+import com.example.cash_ratio_analyzer_test.application.service.metadata.DocumentMetadataService;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
@@ -20,14 +20,14 @@ import java.util.Optional;
 @Service
 public class FinancialDocumentService {
 
-    private final FinancialDocumentMetadataService financialDocumentMetadataService;
+    private final DocumentMetadataService documentMetadataService;
 
     private final IFinancialDocumentRepository financialDocumentRepository;
 
     private final ICompanyRepository companyRepository;
 
-    public FinancialDocumentService(FinancialDocumentMetadataService financialDocumentMetadataService, IFinancialDocumentRepository financialDocumentRepository1, ICompanyRepository companyRepository) {
-        this.financialDocumentMetadataService = financialDocumentMetadataService;
+    public FinancialDocumentService(DocumentMetadataService documentMetadataService, IFinancialDocumentRepository financialDocumentRepository1, ICompanyRepository companyRepository) {
+        this.documentMetadataService = documentMetadataService;
         this.financialDocumentRepository = financialDocumentRepository1;
         this.companyRepository = companyRepository;
     }
@@ -52,7 +52,7 @@ public class FinancialDocumentService {
 
         financialDocumentRepository.create(financialDocument);
         // メタデータに該当の書類がある場合は処理済（書類取得済）に更新
-        financialDocumentMetadataService.updateMetadataProcessedStatus(documentIdModel);
+        documentMetadataService.updateMetadataProcessedStatus(documentIdModel);
 
         return documentIdModel;
     }

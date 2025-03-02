@@ -2,7 +2,7 @@ package com.example.cash_ratio_analyzer_test.application.service;
 
 import com.example.cash_ratio_analyzer_test.application.service.enums.FetchMode;
 import com.example.cash_ratio_analyzer_test.application.service.metadata.EdinetDocumentListService;
-import com.example.cash_ratio_analyzer_test.application.service.metadata.FinancialDocumentMetadataService;
+import com.example.cash_ratio_analyzer_test.application.service.metadata.DocumentMetadataService;
 import com.example.cash_ratio_analyzer_test.application.service.metadata.JsonParserService;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,10 @@ public class DocumentMetadataScenarioService {
 
     private final EdinetDocumentListService edinetDocumentListService;
     private final JsonParserService jsonParserService;
-    private final FinancialDocumentMetadataService financialDocumentMetadataService;
+    private final DocumentMetadataService documentMetadataService;
 
-    public DocumentMetadataScenarioService(EdinetDocumentListService edinetDocumentListService, JsonParserService jsonParserService, FinancialDocumentMetadataService financialDocumentMetadataService) {
-        this.financialDocumentMetadataService = financialDocumentMetadataService;
+    public DocumentMetadataScenarioService(EdinetDocumentListService edinetDocumentListService, JsonParserService jsonParserService, DocumentMetadataService documentMetadataService) {
+        this.documentMetadataService = documentMetadataService;
         this.edinetDocumentListService = edinetDocumentListService;
         this.jsonParserService = jsonParserService;
     }
@@ -36,6 +36,6 @@ public class DocumentMetadataScenarioService {
         var processedResponseData = jsonParserService.parseDocumentList(data);
 
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
-        return financialDocumentMetadataService.createMetadata(processedResponseData);
+        return documentMetadataService.createMetadata(processedResponseData);
     }
 }

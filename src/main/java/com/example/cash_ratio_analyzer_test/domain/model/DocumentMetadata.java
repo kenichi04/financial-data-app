@@ -5,7 +5,7 @@ import com.example.cash_ratio_analyzer_test.domain.enums.EdinetFormCode;
 
 import java.time.LocalDate;
 
-public class FinancialDocumentMetadata {
+public class DocumentMetadata {
     private Long id;
 
     private DocumentId documentId;
@@ -30,7 +30,7 @@ public class FinancialDocumentMetadata {
     private boolean processed = false;
 
     // TODO 書類取得で失敗したかのステータスも追加する？もしくはリトライ回数を追加する？
-    public FinancialDocumentMetadata(DocumentId documentId, String description, EdinetCode edinetCode, EdinetDocumentType documentType, EdinetFormCode formCode, LocalDate submissionDate) {
+    public DocumentMetadata(DocumentId documentId, String description, EdinetCode edinetCode, EdinetDocumentType documentType, EdinetFormCode formCode, LocalDate submissionDate) {
         this.documentId = documentId;
         this.description = description;
         this.edinetCode = edinetCode;

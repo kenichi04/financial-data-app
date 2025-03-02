@@ -3,9 +3,9 @@ package com.example.cash_ratio_analyzer_test.application.service.metadata;
 import com.example.cash_ratio_analyzer_test.application.service.dto.ProcessedResponseData;
 import com.example.cash_ratio_analyzer_test.domain.model.Company;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
-import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocumentMetadata;
+import com.example.cash_ratio_analyzer_test.domain.model.DocumentMetadata;
 import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
-import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentMetadataRepository;
+import com.example.cash_ratio_analyzer_test.domain.repository.IDocumentMetadataRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,18 +13,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class FinancialDocumentMetadataService {
+public class DocumentMetadataService {
 
-    private final IFinancialDocumentMetadataRepository financialDocumentMetadataRepository;
+    private final IDocumentMetadataRepository financialDocumentMetadataRepository;
 
     private final ICompanyRepository companyRepository;
 
-    public FinancialDocumentMetadataService(IFinancialDocumentMetadataRepository financialDocumentMetadataRepository, ICompanyRepository companyRepository) {
+    public DocumentMetadataService(IDocumentMetadataRepository financialDocumentMetadataRepository, ICompanyRepository companyRepository) {
         this.financialDocumentMetadataRepository = financialDocumentMetadataRepository;
         this.companyRepository = companyRepository;
     }
 
-    public List<FinancialDocumentMetadata> getUnprocessedMetadata() {
+    public List<DocumentMetadata> getUnprocessedMetadata() {
         // TODO 件数制限を設ける（ここで取得した書類管理番号を元に書類取得APIを呼び出す）
         return financialDocumentMetadataRepository.findByProcessedFalse();
     }
@@ -57,7 +57,7 @@ public class FinancialDocumentMetadataService {
         companyRepository.save(newCompanies);
 
         return newMetadataList.stream()
-                .map(FinancialDocumentMetadata::getDocumentId)
+                .map(DocumentMetadata::getDocumentId)
                 .toList();
     }
 
@@ -67,12 +67,12 @@ public class FinancialDocumentMetadataService {
      * @param metadataList フィルタリングするメタデータのリスト
      * @return 未登録のメタデータのリスト
      */
-    private List<FinancialDocumentMetadata> filterNewMetadata(List<FinancialDocumentMetadata> metadataList) {
-        var documentIds = metadataList.stream().map(FinancialDocumentMetadata::getDocumentId).toList();
+    private List<DocumentMetadata> filterNewMetadata(List<DocumentMetadata> metadataList) {
+        var documentIds = metadataList.stream().map(DocumentMetadata::getDocumentId).toList();
 
         var storedDocumentIds = financialDocumentMetadataRepository
                 .findByDocumentIds(documentIds).stream()
-                .map(FinancialDocumentMetadata::getDocumentId)
+                .map(DocumentMetadata::getDocumentId)
                 .toList();
         return metadataList.stream()
                 .filter(metadata -> !storedDocumentIds.contains(metadata.getDocumentId()))
