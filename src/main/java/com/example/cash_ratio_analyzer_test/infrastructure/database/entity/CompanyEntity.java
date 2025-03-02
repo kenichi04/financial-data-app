@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.infrastructure.entity;
+package com.example.cash_ratio_analyzer_test.infrastructure.database.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

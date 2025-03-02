@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.infrastructure.repository.database;
+package com.example.cash_ratio_analyzer_test.infrastructure.database.repository;
 
 import com.example.cash_ratio_analyzer_test.domain.enums.EdinetDocumentType;
 import com.example.cash_ratio_analyzer_test.domain.enums.EdinetFormCode;
@@ -6,7 +6,7 @@ import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentMetadata;
 import com.example.cash_ratio_analyzer_test.domain.repository.IDocumentMetadataRepository;
-import com.example.cash_ratio_analyzer_test.infrastructure.entity.DocumentMetadataEntity;
+import com.example.cash_ratio_analyzer_test.infrastructure.database.entity.DocumentMetadataEntity;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 

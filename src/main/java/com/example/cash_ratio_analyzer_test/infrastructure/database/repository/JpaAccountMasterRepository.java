@@ -1,8 +1,8 @@
-package com.example.cash_ratio_analyzer_test.infrastructure.repository.database;
+package com.example.cash_ratio_analyzer_test.infrastructure.database.repository;
 
 import com.example.cash_ratio_analyzer_test.domain.model.AccountMaster;
 import com.example.cash_ratio_analyzer_test.domain.repository.IAccountMasterRepository;
-import com.example.cash_ratio_analyzer_test.infrastructure.entity.AccountMasterEntity;
+import com.example.cash_ratio_analyzer_test.infrastructure.database.entity.AccountMasterEntity;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 

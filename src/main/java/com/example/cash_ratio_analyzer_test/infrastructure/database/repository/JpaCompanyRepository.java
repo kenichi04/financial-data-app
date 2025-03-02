@@ -1,9 +1,9 @@
-package com.example.cash_ratio_analyzer_test.infrastructure.repository.database;
+package com.example.cash_ratio_analyzer_test.infrastructure.database.repository;
 
 import com.example.cash_ratio_analyzer_test.domain.model.Company;
 import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
 import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
-import com.example.cash_ratio_analyzer_test.infrastructure.entity.CompanyEntity;
+import com.example.cash_ratio_analyzer_test.infrastructure.database.entity.CompanyEntity;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 

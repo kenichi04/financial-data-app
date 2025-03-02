@@ -1,4 +1,4 @@
-package com.example.cash_ratio_analyzer_test.infrastructure.entity;
+package com.example.cash_ratio_analyzer_test.infrastructure.database.entity;
 
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import jakarta.persistence.*;
