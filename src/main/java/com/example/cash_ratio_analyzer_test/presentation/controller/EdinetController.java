@@ -33,7 +33,7 @@ public class EdinetController {
         this.documentMetadataService = documentMetadataService;
     }
 
-    @PostMapping("/metadata/fetch")
+    @PostMapping("/metadata/fetch-and-save")
     public FinancialDocumentMetadataPostResponse fetchAndSaveDocumentMetadata(@RequestParam LocalDate fromDate) {
         var documentIds = documentMetadataScenarioService.fetchAndSaveDocumentMetadata(fromDate);
 
@@ -43,7 +43,7 @@ public class EdinetController {
         return new FinancialDocumentMetadataPostResponse(documentIdList);
     }
 
-    @PostMapping("/{documentId}/fetch")
+    @PostMapping("/{documentId}/fetch-and-save")
     public FinancialDocumentPostResponse fetchAndSaveFinancialData(@PathVariable String documentId) {
         var documentIdModel = financialDocumentScenarioService.fetchAndSaveFinancialData(documentId);
         return new FinancialDocumentPostResponse(documentIdModel.value());
