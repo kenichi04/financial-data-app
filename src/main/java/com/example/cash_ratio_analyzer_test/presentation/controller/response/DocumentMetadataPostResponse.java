@@ -2,10 +2,10 @@ package com.example.cash_ratio_analyzer_test.presentation.controller.response;
 
 import java.util.List;
 
-public class FinancialDocumentMetadataPostResponse {
+public class DocumentMetadataPostResponse {
     private List<String> documentIds;
 
-    public FinancialDocumentMetadataPostResponse(List<String> documentIds) {
+    public DocumentMetadataPostResponse(List<String> documentIds) {
         this.documentIds = documentIds;
     }
 

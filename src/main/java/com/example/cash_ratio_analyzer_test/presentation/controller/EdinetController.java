@@ -7,7 +7,7 @@ import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
 import com.example.cash_ratio_analyzer_test.application.service.DocumentMetadataScenarioService;
 import com.example.cash_ratio_analyzer_test.application.service.financial.FinancialDocumentService;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentMetadata;
-import com.example.cash_ratio_analyzer_test.presentation.controller.response.FinancialDocumentMetadataPostResponse;
+import com.example.cash_ratio_analyzer_test.presentation.controller.response.DocumentMetadataPostResponse;
 import com.example.cash_ratio_analyzer_test.presentation.controller.response.FinancialDocumentPostResponse;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,13 +34,13 @@ public class EdinetController {
     }
 
     @PostMapping("/metadata/fetch-and-save")
-    public FinancialDocumentMetadataPostResponse fetchAndSaveDocumentMetadata(@RequestParam LocalDate fromDate) {
+    public DocumentMetadataPostResponse fetchAndSaveDocumentMetadata(@RequestParam LocalDate fromDate) {
         var documentIds = documentMetadataScenarioService.fetchAndSaveDocumentMetadata(fromDate);
 
         var documentIdList = documentIds.stream()
                 .map(documentId -> documentId.value())
                 .toList();
-        return new FinancialDocumentMetadataPostResponse(documentIdList);
+        return new DocumentMetadataPostResponse(documentIdList);
     }
 
     @PostMapping("/{documentId}/fetch-and-save")
