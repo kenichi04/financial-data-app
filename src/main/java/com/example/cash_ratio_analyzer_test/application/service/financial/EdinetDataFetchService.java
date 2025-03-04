@@ -23,8 +23,11 @@ public class EdinetDataFetchService {
 
     private final ApiResponseValidator apiResponseValidator;
 
-    public EdinetDataFetchService(ApiResponseValidator apiResponseValidator) {
+    private final RestTemplate restTemplate;
+
+    public EdinetDataFetchService(ApiResponseValidator apiResponseValidator, RestTemplate restTemplate) {
         this.apiResponseValidator = apiResponseValidator;
+        this.restTemplate = restTemplate;
     }
 
     /**
@@ -35,7 +38,6 @@ public class EdinetDataFetchService {
      * @return 取得したデータ
      */
     public byte[] fetchFinancialData(FetchDocumentType type, String documentId) {
-        var restTemplate = new RestTemplate();
         var response = restTemplate.exchange(
                 edinetDocumentRetrievalApiUrl, HttpMethod.GET, null,
                 byte[].class, documentId, type.code(), subscriptionKey);
