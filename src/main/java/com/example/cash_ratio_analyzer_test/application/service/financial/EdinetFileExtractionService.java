@@ -60,8 +60,8 @@ public class EdinetFileExtractionService {
                     firstMainFileName = entry.getName();
                     firstMainContent = extractFileContent(zipIn);
                 }
-                // 調査：第５【経理の状況】を取得できる想定
                 // TODO 対象ファイルの選定
+                // 一旦、「調査：第５【経理の状況】」のページを取得できる想定
                 if (entry.getName().startsWith(targetFilePrefix)) {
                     targetFileName = entry.getName();
                     targetFileContent = extractFileContent(zipIn);

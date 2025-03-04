@@ -26,8 +26,11 @@ public class EdinetDocumentListService {
 
     private final ApiResponseValidator apiResponseValidator;
 
-    public EdinetDocumentListService(ApiResponseValidator apiResponseValidator) {
+    private final RestTemplate restTemplate;
+
+    public EdinetDocumentListService(ApiResponseValidator apiResponseValidator, RestTemplate restTemplate) {
         this.apiResponseValidator = apiResponseValidator;
+        this.restTemplate = restTemplate;
     }
 
     /**
@@ -38,7 +41,7 @@ public class EdinetDocumentListService {
      * @return 書類一覧を含むレスポンスボディのJSON形式の文字列
      */
     public String fetchDocumentList(FetchMode mode, LocalDate fromDate) {
-        var restTemplate = new RestTemplate();
+//        var restTemplate = new RestTemplate();
         // TODO fromDateは当日以前、直近の財務局営業日の24時において10年を経過していない日付
         var formattedDate = fromDate.format(DateTimeFormatter.ofPattern("uuuu-MM-dd"));
 
