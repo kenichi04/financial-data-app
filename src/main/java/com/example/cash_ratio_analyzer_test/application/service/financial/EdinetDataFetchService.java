@@ -14,20 +14,24 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class EdinetDataFetchService {
 
-    /** 書類取得API */
-    @Value("${edinet.api.document.retrieval.url:}")
-    private String edinetDocumentRetrievalApiUrl;
-
-    @Value("${edinet.api.subscriptionKey:}")
-    private String subscriptionKey;
-
     private final ApiResponseValidator apiResponseValidator;
 
     private final RestTemplate restTemplate;
 
-    public EdinetDataFetchService(ApiResponseValidator apiResponseValidator, RestTemplate restTemplate) {
+    /** 書類取得API */
+    private final String edinetDocumentRetrievalApiUrl;
+
+    private final String subscriptionKey;
+
+    public EdinetDataFetchService(
+            ApiResponseValidator apiResponseValidator,
+            RestTemplate restTemplate,
+            @Value("${edinet.api.document.retrieval.url:}") String edinetDocumentRetrievalApiUrl,
+            @Value("${edinet.api.subscriptionKey:}") String subscriptionKey) {
         this.apiResponseValidator = apiResponseValidator;
         this.restTemplate = restTemplate;
+        this.edinetDocumentRetrievalApiUrl = edinetDocumentRetrievalApiUrl;
+        this.subscriptionKey = subscriptionKey;
     }
 
     /**

@@ -5,13 +5,11 @@ import com.example.cash_ratio_analyzer_test.application.service.validation.ApiRe
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
@@ -29,13 +27,12 @@ class EdinetDocumentListServiceTest {
     @Mock
     private RestTemplate restTemplate;
 
-    @InjectMocks
     private EdinetDocumentListService edinetDocumentListService;
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(edinetDocumentListService, "edinetDocumentListUrl", "https://example.com/api");
-        ReflectionTestUtils.setField(edinetDocumentListService, "subscriptionKey", "testKey");
+        edinetDocumentListService = new EdinetDocumentListService(
+                apiResponseValidator, restTemplate, "https://example.com/api", "testKey");
     }
 
     @Test

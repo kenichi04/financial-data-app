@@ -17,20 +17,24 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class EdinetDocumentListService {
 
-    /** 書類一覧API */
-    @Value("${edinet.api.document.list.url:}")
-    private String edinetDocumentListUrl;
-
-    @Value("${edinet.api.subscriptionKey:}")
-    private String subscriptionKey;
-
     private final ApiResponseValidator apiResponseValidator;
 
     private final RestTemplate restTemplate;
 
-    public EdinetDocumentListService(ApiResponseValidator apiResponseValidator, RestTemplate restTemplate) {
+    /** 書類一覧API */
+    private final String edinetDocumentListUrl;
+
+    private final String subscriptionKey;
+
+    public EdinetDocumentListService(
+            ApiResponseValidator apiResponseValidator,
+            RestTemplate restTemplate,
+            @Value("${edinet.api.document.list.url:}") String edinetDocumentListUrl,
+            @Value("${edinet.api.subscriptionKey:}") String subscriptionKey) {
         this.apiResponseValidator = apiResponseValidator;
         this.restTemplate = restTemplate;
+        this.edinetDocumentListUrl = edinetDocumentListUrl;
+        this.subscriptionKey = subscriptionKey;
     }
 
     /**
