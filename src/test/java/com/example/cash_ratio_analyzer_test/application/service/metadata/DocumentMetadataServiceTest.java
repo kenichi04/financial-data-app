@@ -10,6 +10,7 @@ import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
 import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
 import com.example.cash_ratio_analyzer_test.domain.repository.IDocumentMetadataRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,20 +41,26 @@ class DocumentMetadataServiceTest {
     void setUp() {}
 
     @Test
-    void createMetadata() {
+    @DisplayName("ProcessedResponseData が空の場合、データを保存しない")
+    void createMetadata_doesNotSaveWhenEmpty() {
+        List<DocumentId> result = documentMetadataService.createMetadata(Optional.empty());
+
+        assert(result).isEmpty();
+        verify(documentMetadataRepository, never()).save((List<DocumentMetadata>) any());
+        verify(companyRepository, never()).save((List<Company>) any());
+    }
+
+    @Test
+    @DisplayName("新規のメタデータ・企業情報のみ保存する")
+    void createMetadata_savesOnlyNewData() {
         // given
         var metadata = new DocumentMetadata(
-                new DocumentId("TEST0001"),
-                "test_description",
-                new EdinetCode("Test01"),
-                EdinetDocumentType.YUKASHOKEN_HOKOKUSHO,
-                EdinetFormCode.CODE_030000,
-                LocalDate.of(2025, 1, 30));
+                new DocumentId("TEST0001"), "test_description",
+                new EdinetCode("TEST01"), EdinetDocumentType.YUKASHOKEN_HOKOKUSHO,
+                EdinetFormCode.CODE_030000, LocalDate.of(2025, 1, 30));
         var company = new Company(
-                new EdinetCode("Test01"),
-                "testCompany",
-                "testSecurityCode",
-                "testCorporateNumber");
+                new EdinetCode("TEST01"), "testCompany",
+                "testSecurityCode", "testCorporateNumber");
         var processedResponseData = Optional.of(
                 new ProcessedResponseData(List.of(company), List.of(metadata)));
 
@@ -69,7 +76,4 @@ class DocumentMetadataServiceTest {
         verify(companyRepository, times(1)).save(List.of(company));
     }
 
-    @Test
-    void updateMetadataProcessedStatus() {
-    }
 }
