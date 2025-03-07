@@ -15,18 +15,18 @@ import java.util.Optional;
 @Service
 public class DocumentMetadataService {
 
-    private final IDocumentMetadataRepository financialDocumentMetadataRepository;
+    private final IDocumentMetadataRepository documentMetadataRepository;
 
     private final ICompanyRepository companyRepository;
 
-    public DocumentMetadataService(IDocumentMetadataRepository financialDocumentMetadataRepository, ICompanyRepository companyRepository) {
-        this.financialDocumentMetadataRepository = financialDocumentMetadataRepository;
+    public DocumentMetadataService(IDocumentMetadataRepository documentMetadataRepository, ICompanyRepository companyRepository) {
+        this.documentMetadataRepository = documentMetadataRepository;
         this.companyRepository = companyRepository;
     }
 
     public List<DocumentMetadata> getUnprocessedMetadata() {
         // TODO 件数制限を設ける（ここで取得した書類管理番号を元に書類取得APIを呼び出す）
-        return financialDocumentMetadataRepository.findByProcessedFalse();
+        return documentMetadataRepository.findByProcessedFalse();
     }
 
     // TODO Companyの処理が多くなったらCompanyServiceを作成する
@@ -53,7 +53,7 @@ public class DocumentMetadataService {
         var newMetadataList = filterNewMetadata(metadataList);
         var newCompanies = filterNewCompanies(companies);
 
-        financialDocumentMetadataRepository.save(newMetadataList);
+        documentMetadataRepository.save(newMetadataList);
         companyRepository.save(newCompanies);
 
         return newMetadataList.stream()
@@ -70,7 +70,7 @@ public class DocumentMetadataService {
     private List<DocumentMetadata> filterNewMetadata(List<DocumentMetadata> metadataList) {
         var documentIds = metadataList.stream().map(DocumentMetadata::getDocumentId).toList();
 
-        var storedDocumentIds = financialDocumentMetadataRepository
+        var storedDocumentIds = documentMetadataRepository
                 .findByDocumentIds(documentIds).stream()
                 .map(DocumentMetadata::getDocumentId)
                 .toList();
@@ -100,6 +100,6 @@ public class DocumentMetadataService {
      * @param documentId 更新するメタデータのドキュメントID
      */
     public void updateMetadataProcessedStatus(DocumentId documentId) {
-        financialDocumentMetadataRepository.updateMetadataProcessedStatus(documentId);
+        documentMetadataRepository.updateMetadataProcessedStatus(documentId);
     }
 }
