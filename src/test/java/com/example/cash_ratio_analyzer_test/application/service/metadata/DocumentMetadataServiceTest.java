@@ -45,22 +45,17 @@ class DocumentMetadataServiceTest {
     void createMetadata_doesNotSaveWhenEmpty() {
         List<DocumentId> result = documentMetadataService.createMetadata(Optional.empty());
 
-        assert(result).isEmpty();
-        verify(documentMetadataRepository, never()).save((List<DocumentMetadata>) any());
-        verify(companyRepository, never()).save((List<Company>) any());
+        assertEquals(List.of(), result);
+        verify(documentMetadataRepository, never()).save(List.of());
+        verify(companyRepository, never()).save(List.of());
     }
 
     @Test
     @DisplayName("新規のメタデータ・企業情報のみ保存する")
     void createMetadata_savesOnlyNewData() {
         // given
-        var metadata = new DocumentMetadata(
-                new DocumentId("TEST0001"), "test_description",
-                new EdinetCode("TEST01"), EdinetDocumentType.YUKASHOKEN_HOKOKUSHO,
-                EdinetFormCode.CODE_030000, LocalDate.of(2025, 1, 30));
-        var company = new Company(
-                new EdinetCode("TEST01"), "testCompany",
-                "testSecurityCode", "testCorporateNumber");
+        var metadata = createTestMetadata("TEST0001", "TEST01");
+        var company = createTestCompany("TEST01");
         var processedResponseData = Optional.of(
                 new ProcessedResponseData(List.of(company), List.of(metadata)));
 
@@ -76,4 +71,46 @@ class DocumentMetadataServiceTest {
         verify(companyRepository, times(1)).save(List.of(company));
     }
 
+    @Test
+    @DisplayName("登録済のメタデータ・企業情報は保存しない")
+    void createMetadata_filterExistingData() {
+        // given
+        var metadata = createTestMetadata("TEST0001", "TEST01");
+        var company = createTestCompany("TEST01");
+
+        var existingMetadata = createTestMetadata("TEST0001", "TEST01");
+        var existingCompany = createTestCompany("TEST01");
+
+        var processedResponseData = Optional.of(
+                new ProcessedResponseData(List.of(company), List.of(metadata)));
+
+        when(documentMetadataRepository.findByDocumentIds(any())).thenReturn(List.of(existingMetadata));
+        when(companyRepository.findAll()).thenReturn(List.of(existingCompany));
+
+        // when
+        var result = documentMetadataService.createMetadata(processedResponseData);
+
+        // then
+        assertEquals(List.of(), result);
+        verify(documentMetadataRepository, never()).save(List.of(metadata));
+        verify(companyRepository, never()).save(List.of(company));
+    }
+
+    private DocumentMetadata createTestMetadata(String documentId, String edinetCode) {
+        return new DocumentMetadata(
+                new DocumentId(documentId),
+                "test_description",
+                new EdinetCode(edinetCode),
+                EdinetDocumentType.YUKASHOKEN_HOKOKUSHO,
+                EdinetFormCode.CODE_030000,
+                LocalDate.of(2025, 1, 30));
+    }
+
+    private Company createTestCompany(String edinetCode) {
+        return new Company(
+                new EdinetCode(edinetCode),
+                "testCompany",
+                "testSecurityCode",
+                "testCorporateNumber");
+    }
 }

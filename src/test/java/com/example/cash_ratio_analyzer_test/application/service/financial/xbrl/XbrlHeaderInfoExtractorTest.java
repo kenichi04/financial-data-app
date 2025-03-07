@@ -5,6 +5,7 @@ import com.example.cash_ratio_analyzer_test.application.service.financial.xbrl.X
 import com.example.cash_ratio_analyzer_test.application.service.financial.xbrl.XbrlHeaderInfoExtractor;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.w3c.dom.Document;
@@ -36,11 +37,8 @@ class XbrlHeaderInfoExtractorTest {
         this.documentBuilder = factory.newDocumentBuilder();
     }
 
-    /**
-     * ヘッダー情報を抽出するテスト。
-     * 有効なヘッダーコンテンツを使用して、抽出された情報が期待通りであることを検証します。
-     */
     @Test
+    @DisplayName("有効なヘッダーコンテンツを使用してヘッダー情報を抽出する")
     void extractHeaderInfo_validHeaderContent() throws IOException {
         var headerContent = Files.readAllBytes(Path.of("src/test/resources/xbrl/test_header_ixbrl.htm"));
         when(xbrlDocumentParser.parseDocumentToDom(headerContent)).thenReturn(parseDocumentToDom(headerContent));
