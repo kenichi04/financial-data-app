@@ -34,8 +34,4 @@ public class Company {
     public String getCorporateNumber() {
         return corporateNumber;
     }
-
-    public void addDocument(FinancialDocument document) {
-        documents.add(document);
-    }
 }
