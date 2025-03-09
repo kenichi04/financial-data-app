@@ -5,7 +5,6 @@ import com.example.cash_ratio_analyzer_test.application.service.validation.ApiRe
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.*;
@@ -18,6 +17,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class EdinetDataFetchServiceTest {
 
+    // テスト対象に含めたいのでMock化しない
     private ApiResponseValidator apiResponseValidator;
 
     @Mock
@@ -27,7 +27,7 @@ class EdinetDataFetchServiceTest {
 
     @BeforeEach
     void setUp() {
-        apiResponseValidator = new ApiResponseValidator();
+        apiResponseValidator = spy(new ApiResponseValidator());
         edinetDataFetchService = new EdinetDataFetchService(
                 apiResponseValidator, restTemplate, "https://example.com/api", "testKey");
     }
@@ -43,11 +43,18 @@ class EdinetDataFetchServiceTest {
         var mockResponse = new ResponseEntity<>(body, headers, HttpStatus.OK);
 
         when(restTemplate.exchange(
-                anyString(), eq(HttpMethod.GET), isNull(),
-                eq(byte[].class), any(), any(), any()))
+                eq("https://example.com/api"), eq(HttpMethod.GET), isNull(),
+                eq(byte[].class), eq(documentId), eq(fetchDocumentType.code()), eq("testKey")))
                 .thenReturn(mockResponse);
 
         var response = edinetDataFetchService.fetchFinancialData(fetchDocumentType, documentId);
-        assertEquals(mockResponse.getBody(), response);
+
+        assertEquals(body, response);
+
+        // バリデーションメソッドが呼ばれていることを確認
+        verify(apiResponseValidator).validateStatusCode(mockResponse.getStatusCode());
+        verify(apiResponseValidator).validateContentType(mockResponse.getHeaders().getContentType(),
+                MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_PDF);
+        verify(apiResponseValidator).validateResponseBody(mockResponse.getBody());
     }
 }
