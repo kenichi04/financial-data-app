@@ -34,6 +34,7 @@ class EdinetDataFetchServiceTest {
 
     @Test
     void fetchFinancialData() {
+        // given
         var documentId = "TEST0001";
         var fetchDocumentType = FetchDocumentType.XBRL;
 
@@ -47,8 +48,10 @@ class EdinetDataFetchServiceTest {
                 eq(byte[].class), eq(documentId), eq(fetchDocumentType.code()), eq("testKey")))
                 .thenReturn(mockResponse);
 
+        // when
         var response = edinetDataFetchService.fetchFinancialData(fetchDocumentType, documentId);
 
+        // then
         assertEquals(body, response);
 
         // バリデーションメソッドが呼ばれていることを確認

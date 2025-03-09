@@ -7,12 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class EdinetDocumentListServiceTest {
 
-    @Mock
+    // テスト対象に含めたいのでMock化しない
     private ApiResponseValidator apiResponseValidator;
 
     @Mock
@@ -31,23 +30,38 @@ class EdinetDocumentListServiceTest {
 
     @BeforeEach
     void setUp() {
+        apiResponseValidator = spy(new ApiResponseValidator());
         edinetDocumentListService = new EdinetDocumentListService(
                 apiResponseValidator, restTemplate, "https://example.com/api", "testKey");
     }
 
     @Test
     void fetchDocumentList_validContent() {
+        // given
         var fromDate = LocalDate.of(2025, 1, 30);
+        var formattedDate = fromDate.format(DateTimeFormatter.ofPattern("uuuu-MM-dd"));
         var fetchMode = FetchMode.METADATA_AND_LIST;
 
-        var mockResponseBody = "{\"documents\": []}";
+        var mockHeaders = new HttpHeaders();
+        mockHeaders.setContentType(MediaType.APPLICATION_JSON);
+        var mockBody = "{\"documents\": []}";
+        var mockResponse = new ResponseEntity<>(mockBody, mockHeaders, HttpStatus.OK);
 
         when(restTemplate.exchange(
-                anyString(), eq(HttpMethod.GET), isNull(),
-                eq(String.class), any(), any(), any()))
-                .thenReturn(new ResponseEntity<>(mockResponseBody, HttpStatus.OK));
+                eq("https://example.com/api"), eq(HttpMethod.GET), isNull(),
+                eq(String.class), eq(formattedDate), eq(fetchMode.code()), eq("testKey")))
+                .thenReturn(mockResponse);
 
+        // when
         var response = edinetDocumentListService.fetchDocumentList(fetchMode, fromDate);
-        assertEquals(mockResponseBody, response);
+
+        // then
+        assertEquals(mockBody, response);
+
+        // バリデーションメソッドが呼ばれていることを確認
+        verify(apiResponseValidator).validateStatusCode(mockResponse.getStatusCode());
+        verify(apiResponseValidator).validateContentType(mockResponse.getHeaders().getContentType(),
+                MediaType.APPLICATION_JSON);
+        verify(apiResponseValidator).validateResponseBody(mockResponse.getBody());
     }
 }
