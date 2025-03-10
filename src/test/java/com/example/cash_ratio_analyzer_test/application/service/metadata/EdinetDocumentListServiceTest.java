@@ -64,4 +64,65 @@ class EdinetDocumentListServiceTest {
                 MediaType.APPLICATION_JSON);
         verify(apiResponseValidator).validateResponseBody(mockResponse.getBody());
     }
+
+    @Test
+    void fetchDocumentList_StatusCodeIsBadRequest() {
+        // given
+        var fromDate = LocalDate.of(2025, 1, 30);
+        var formattedDate = fromDate.format(DateTimeFormatter.ofPattern("uuuu-MM-dd"));
+        var fetchMode = FetchMode.METADATA_AND_LIST;
+
+        var mockBody = "{\"documents\": []}";
+        // ステータスコードがBAD_REQUESTの場合
+        var mockResponse = new ResponseEntity<>(mockBody, HttpStatus.BAD_REQUEST);
+
+        when(restTemplate.exchange(
+                eq("https://example.com/api"), eq(HttpMethod.GET), isNull(),
+                eq(String.class), eq(formattedDate), eq(fetchMode.code()), eq("testKey")))
+                .thenReturn(mockResponse);
+
+        assertThrows(RuntimeException.class,
+                () -> edinetDocumentListService.fetchDocumentList(fetchMode, fromDate));
+    }
+
+    @Test
+    void fetchDocumentList_ContentTypeIsNotJson() {
+        var fromDate = LocalDate.of(2025, 1, 30);
+        var formattedDate = fromDate.format(DateTimeFormatter.ofPattern("uuuu-MM-dd"));
+        var fetchMode = FetchMode.METADATA_AND_LIST;
+
+        var mockHeaders = new HttpHeaders();
+        // コンテンツタイプがJSONでない場合
+        mockHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        var mockBody = "{\"documents\": []}";
+        var mockResponse = new ResponseEntity<>(mockBody, mockHeaders, HttpStatus.OK);
+
+        when(restTemplate.exchange(
+                eq("https://example.com/api"), eq(HttpMethod.GET), isNull(),
+                eq(String.class), eq(formattedDate), eq(fetchMode.code()), eq("testKey")))
+                .thenReturn(mockResponse);
+
+        assertThrows(RuntimeException.class,
+                () -> edinetDocumentListService.fetchDocumentList(fetchMode, fromDate));
+    }
+
+    @Test
+    void fetchDocumentList_ResponseBodyIsNull() {
+        var fromDate = LocalDate.of(2025, 1, 30);
+        var formattedDate = fromDate.format(DateTimeFormatter.ofPattern("uuuu-MM-dd"));
+        var fetchMode = FetchMode.METADATA_AND_LIST;
+
+        var mockHeaders = new HttpHeaders();
+        mockHeaders.setContentType(MediaType.APPLICATION_JSON);
+        // レスポンスボディがnullの場合
+        var mockResponse = new ResponseEntity<String>(null, mockHeaders, HttpStatus.OK);
+
+        when(restTemplate.exchange(
+                eq("https://example.com/api"), eq(HttpMethod.GET), isNull(),
+                eq(String.class), eq(formattedDate), eq(fetchMode.code()), eq("testKey")))
+                .thenReturn(mockResponse);
+
+        assertThrows(RuntimeException.class,
+                () -> edinetDocumentListService.fetchDocumentList(fetchMode, fromDate));
+    }
 }
