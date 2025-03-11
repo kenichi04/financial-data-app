@@ -73,7 +73,7 @@ public class EdinetFileExtractionService {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to extract target file", e);
         }
 
         return new ExtractedFiles(headerFileName, headerContent, firstMainFileName, firstMainContent, targetFileName, targetFileContent);
