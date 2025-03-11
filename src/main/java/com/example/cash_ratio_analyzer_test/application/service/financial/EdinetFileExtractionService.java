@@ -19,14 +19,18 @@ import java.util.zip.ZipInputStream;
 @Service
 public class EdinetFileExtractionService {
 
-    @Value("${download.targetFilePrefix:}")
-    private String targetFilePrefix;
-
-    // TODO 拡張子チェックも追加する
+    // TODO 拡張子チェックも追加する？
     private static final String INLINE_XBRL_HEADER_FILE_PREFIX = "XBRL/PublicDoc/0000000_header";
 
     // TODO もう少し具体的なファイル名を指定する
     private static final String INLINE_XBRL_FIRST_MAIN_FILE_PREFIX = "XBRL/PublicDoc/0101";
+
+    private final String targetFilePrefix;
+
+    public EdinetFileExtractionService(
+            @Value("${download.targetFilePrefix:}")String targetFilePrefix) {
+        this.targetFilePrefix = targetFilePrefix;
+    }
 
     /**
      * 指定されたバイト配列（ZIP形式）からターゲットファイルを抽出します。
