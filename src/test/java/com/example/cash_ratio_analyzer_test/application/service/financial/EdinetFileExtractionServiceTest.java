@@ -2,8 +2,6 @@ package com.example.cash_ratio_analyzer_test.application.service.financial;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,17 +12,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EdinetFileExtractionServiceTest {
 
-    private EdinetFileExtractionService edinetFileExtractionService;
+    private static final String TEST_XBRL_HEADER_FILE = "XBRL/PublicDoc/0000000_header.xml";
 
-    private static final String targetFilePrefix = "XBRL/PublicDoc/0105020";
+    private static final String TEST_XBRL_FIRST_MAIN_FILE = "XBRL/PublicDoc/0101_TEST.xml";
+
+    private static final String TEST_XBRL_TARGET_FILE = "XBRL/PublicDoc/TEST_TARGET.xml";
+
+    private EdinetFileExtractionService edinetFileExtractionService;
 
     @BeforeEach
     void setUp() {
+        var targetFilePrefix = TEST_XBRL_TARGET_FILE.replace(".xml", "");
         edinetFileExtractionService = new EdinetFileExtractionService(targetFilePrefix);
     }
 
     @Test
-    void extractTargetFile() throws IOException {
+    void extractTargetFile_shouldExtractCorrectFiles() throws IOException {
         // given
         byte[] fetchData = createZipData();
 
@@ -34,16 +37,84 @@ class EdinetFileExtractionServiceTest {
         // then
         assertNotNull(extractedFiles.getHeaderOrFirstMainContent());
         assertNotNull(extractedFiles.getTargetFileContent());
-        assertEquals("XBRL/PublicDoc/0000000_header.xml", extractedFiles.getHeaderOrFirstMainFileName());
-        assertEquals("XBRL/PublicDoc/0105020TEST.xml", extractedFiles.getTargetFileName());
+
+        assertEquals(TEST_XBRL_HEADER_FILE, extractedFiles.getHeaderOrFirstMainFileName());
+        assertEquals(TEST_XBRL_TARGET_FILE, extractedFiles.getTargetFileName());
+
+        assertArrayEquals("header-content".getBytes(), extractedFiles.getHeaderOrFirstMainContent());
+        assertArrayEquals("target-content".getBytes(), extractedFiles.getTargetFileContent());
+    }
+
+    @Test
+    void extractTargetFile_shouldExtractFirstMainFile_whenHeaderFileIsMissing() throws IOException {
+        // given
+        byte[] fetchData = createZipDataWithoutHeaderFile();
+
+        // when
+        var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
+
+        // then
+        assertNotNull(extractedFiles.getHeaderOrFirstMainContent());
+        assertNotNull(extractedFiles.getTargetFileContent());
+
+        assertEquals(TEST_XBRL_FIRST_MAIN_FILE, extractedFiles.getHeaderOrFirstMainFileName());
+        assertEquals(TEST_XBRL_TARGET_FILE, extractedFiles.getTargetFileName());
+
+        assertArrayEquals("first-content".getBytes(), extractedFiles.getHeaderOrFirstMainContent());
+        assertArrayEquals("target-content".getBytes(), extractedFiles.getTargetFileContent());
+    }
+
+    @Test
+    void extractTargetFile_shouldThrowException_whenTargetFileIsMissing() throws IOException {
+        byte[] fetchData = createZipDataWithoutTargetFile();
+
+        assertThrows(IllegalArgumentException.class,
+                () -> edinetFileExtractionService.extractTargetFile(fetchData));
+    }
+
+    @Test
+    void extractTargetFile_shouldThrowException_whenHeaderAndFirstMainFilesAreMissing() throws IOException {
+        byte[] fetchData = createZipDataWithoutHeaderAndFirstMainFiles();
+
+        assertThrows(IllegalArgumentException.class,
+                () -> edinetFileExtractionService.extractTargetFile(fetchData));
     }
 
     private byte[] createZipData() throws IOException {
         var out = new ByteArrayOutputStream();
         try (var zipOut = new ZipOutputStream(out)) {
-            addZipEntry(zipOut, "XBRL/PublicDoc/0000000_header.xml", "header-content");
-            addZipEntry(zipOut, "XBRL/PublicDoc/0101TEST.xml", "first-content");
-            addZipEntry(zipOut, "XBRL/PublicDoc/0105020TEST.xml", "target-content");
+            addZipEntry(zipOut, TEST_XBRL_HEADER_FILE, "header-content");
+            addZipEntry(zipOut, TEST_XBRL_FIRST_MAIN_FILE, "first-content");
+            addZipEntry(zipOut, TEST_XBRL_TARGET_FILE, "target-content");
+        }
+        return out.toByteArray();
+    }
+
+    private byte[] createZipDataWithoutHeaderFile() throws IOException {
+        var out = new ByteArrayOutputStream();
+        try (var zipOut = new ZipOutputStream(out)) {
+            // header file is missing
+            addZipEntry(zipOut, TEST_XBRL_FIRST_MAIN_FILE, "first-content");
+            addZipEntry(zipOut, TEST_XBRL_TARGET_FILE, "target-content");
+        }
+        return out.toByteArray();
+    }
+
+    private byte[] createZipDataWithoutTargetFile() throws IOException {
+        var out = new ByteArrayOutputStream();
+        try (var zipOut = new ZipOutputStream(out)) {
+            addZipEntry(zipOut, TEST_XBRL_HEADER_FILE, "header-content");
+            addZipEntry(zipOut, TEST_XBRL_FIRST_MAIN_FILE, "first-content");
+            // target file is missing
+        }
+        return out.toByteArray();
+    }
+
+    private byte[] createZipDataWithoutHeaderAndFirstMainFiles() throws IOException {
+        var out = new ByteArrayOutputStream();
+        try (var zipOut = new ZipOutputStream(out)) {
+            // header and first main files are missing
+            addZipEntry(zipOut, TEST_XBRL_TARGET_FILE, "target-content");
         }
         return out.toByteArray();
     }
