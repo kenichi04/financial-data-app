@@ -20,8 +20,6 @@
 
 
 ## TODO
-- [ ] XbrlFinancialDataExtractorのテスト追加
-- [ ] リポジトリインテフェースをdomainとserviceパッケージのどちらに置くか
 - [ ] Edinetのバリデーション変更
   - E + 数字5桁
 

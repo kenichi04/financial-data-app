@@ -1,26 +1,17 @@
 package com.example.cash_ratio_analyzer_test.application.service.financial.xbrl;
 
 import com.example.cash_ratio_analyzer_test.application.service.dto.HeaderInfo;
-import com.example.cash_ratio_analyzer_test.application.service.financial.xbrl.XbrlDocumentParser;
-import com.example.cash_ratio_analyzer_test.application.service.financial.xbrl.XbrlHeaderInfoExtractor;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.w3c.dom.Document;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 class XbrlHeaderInfoExtractorTest {
 
