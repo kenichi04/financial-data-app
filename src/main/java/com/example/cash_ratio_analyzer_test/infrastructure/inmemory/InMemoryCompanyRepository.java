@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Repository
 public class InMemoryCompanyRepository implements ICompanyRepository {
+
     private Map<EdinetCode, Company> companyStore = new HashMap<>();
 
     @Override

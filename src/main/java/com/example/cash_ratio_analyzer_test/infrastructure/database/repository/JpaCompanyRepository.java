@@ -12,15 +12,19 @@ import java.util.List;
 @Repository
 @Primary
 public class JpaCompanyRepository implements ICompanyRepository {
+
     private final CompanyRepository companyRepository;
+
     public JpaCompanyRepository(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
     }
+
     @Override
     public List<Company> findAll() {
         var entities = companyRepository.findAll();
         return entities.stream().map(this::toModel).toList();
     }
+
     @Override
     public Company findByEdinetCode(String edinetCode) {
         var entity = companyRepository.findByEdinetCode(edinetCode);
