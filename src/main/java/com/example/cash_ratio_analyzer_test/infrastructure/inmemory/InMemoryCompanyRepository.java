@@ -11,7 +11,6 @@ import java.util.Map;
 
 @Repository
 public class InMemoryCompanyRepository implements ICompanyRepository {
-
     private Map<EdinetCode, Company> companyStore = new HashMap<>();
 
     @Override
@@ -20,7 +19,7 @@ public class InMemoryCompanyRepository implements ICompanyRepository {
     }
 
     @Override
-    public Company findByCompanyEdinetCode(String edinetCode) {
+    public Company findByEdinetCode(String edinetCode) {
         return companyStore.getOrDefault(edinetCode, null);
     }
 

@@ -10,7 +10,6 @@ public class Company {
     private final String securityCode;
     /** 法人番号 */
     private final String corporateNumber;
-    private List<FinancialDocument> documents;
 
     public Company(EdinetCode edinetCode, String name, String securityCode, String corporateNumber) {
         this.edinetCode = edinetCode;
