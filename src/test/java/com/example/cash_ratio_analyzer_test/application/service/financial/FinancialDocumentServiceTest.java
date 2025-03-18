@@ -1,13 +1,14 @@
 package com.example.cash_ratio_analyzer_test.application.service.financial;
 
+import com.example.cash_ratio_analyzer_test.application.service.constants.XbrlConstants;
 import com.example.cash_ratio_analyzer_test.application.service.dto.HeaderInfo;
 import com.example.cash_ratio_analyzer_test.application.service.metadata.DocumentMetadataService;
 import com.example.cash_ratio_analyzer_test.domain.enums.Balance;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import com.example.cash_ratio_analyzer_test.domain.enums.DisplayScale;
 import com.example.cash_ratio_analyzer_test.domain.model.AccountMaster;
+import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
-import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
 import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +21,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class FinancialDocumentServiceTest {
@@ -31,9 +33,6 @@ class FinancialDocumentServiceTest {
 
     @Mock
     private IFinancialDocumentRepository financialDocumentRepository;
-
-    @Mock
-    private ICompanyRepository companyRepository;
 
     @InjectMocks
     private FinancialDocumentService financialDocumentService;
@@ -53,13 +52,19 @@ class FinancialDocumentServiceTest {
 
         // when
         var result = financialDocumentService.createFinancialDocument(documentId, headerInfo, financialDataList);
+
+        // then
+        assertEquals(new DocumentId(documentId), result);
+
+        verify(financialDocumentRepository, times(1)).create(any());
+        verify(documentMetadataService, times(1)).updateMetadataProcessedStatus(any());
     }
 
     private HeaderInfo createTestHeaderInfo() {
         var deiInfo = Map.of(
-                "jpdei_cor:EDINETCodeDEI", "E03344",
-                "jpdei_cor:DocumentTypeDEI", "第三号様式",
-                "jpdei_cor:CurrentPeriodEndDateDEI", "2024-02-29");
+                XbrlConstants.DEI_ATTRIBUTE_EDINET_CODE, "TEST01",
+                XbrlConstants.DEI_ATTRIBUTE_DOCUMENT_TYPE, "テスト様式",
+                XbrlConstants.DEI_ATTRIBUTE_CURRENT_PERIOD_END_DATE, "2024-02-29");
         return new HeaderInfo(
                 deiInfo, Currency.JPY);
     }

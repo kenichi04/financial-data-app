@@ -7,7 +7,6 @@ import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.EdinetCode;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
-import com.example.cash_ratio_analyzer_test.domain.repository.ICompanyRepository;
 import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +23,9 @@ public class FinancialDocumentService {
 
     private final IFinancialDocumentRepository financialDocumentRepository;
 
-    private final ICompanyRepository companyRepository;
-
-    public FinancialDocumentService(DocumentMetadataService documentMetadataService, IFinancialDocumentRepository financialDocumentRepository1, ICompanyRepository companyRepository) {
+    public FinancialDocumentService(DocumentMetadataService documentMetadataService, IFinancialDocumentRepository financialDocumentRepository1) {
         this.documentMetadataService = documentMetadataService;
         this.financialDocumentRepository = financialDocumentRepository1;
-        this.companyRepository = companyRepository;
     }
 
     public FinancialDocument getFinancialDocument(String documentId) {
