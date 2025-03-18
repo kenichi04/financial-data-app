@@ -9,10 +9,12 @@ import com.example.cash_ratio_analyzer_test.domain.enums.DisplayScale;
 import com.example.cash_ratio_analyzer_test.domain.model.AccountMaster;
 import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
+import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
 import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -56,8 +58,13 @@ class FinancialDocumentServiceTest {
         // then
         assertEquals(new DocumentId(documentId), result);
 
-        verify(financialDocumentRepository, times(1)).create(any());
+        // create()の引数として期待値を持つFinancialDocumentオブジェクトが渡されたことを検証
+        ArgumentCaptor<FinancialDocument> docCaptor = ArgumentCaptor.forClass(FinancialDocument.class);
+        verify(financialDocumentRepository, times(1)).create(docCaptor.capture());
         verify(documentMetadataService, times(1)).updateMetadataProcessedStatus(any());
+
+        FinancialDocument createdDoc = docCaptor.getValue();
+        assertEquals(new DocumentId(documentId), createdDoc.getDocumentId());
     }
 
     private HeaderInfo createTestHeaderInfo() {
