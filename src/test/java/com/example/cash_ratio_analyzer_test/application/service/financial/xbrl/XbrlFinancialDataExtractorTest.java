@@ -40,6 +40,7 @@ class XbrlFinancialDataExtractorTest {
         xbrlFinancialDataExtractor = new XbrlFinancialDataExtractor(accountService, xbrlDocumentParser);
     }
 
+    // TODO マイナスの値が取れることもテストする
     @Test
     void extractFinancialDataFromXbrl() throws IOException {
         // given
