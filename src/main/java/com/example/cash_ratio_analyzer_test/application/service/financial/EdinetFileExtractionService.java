@@ -66,6 +66,9 @@ public class EdinetFileExtractionService {
                 }
                 // TODO 対象ファイルの選定
                 // 一旦、「調査：第５【経理の状況】」のページを取得できる想定
+                // TODO 以下確認
+                // 貸借対照表はこのタグ？：<ix:nonNumeric name="jpcrp_cor:BalanceSheetTextBlock" contextRef="CurrentYearDuration" escape="true">
+                // 損益計算書はこのタグ？：<ix:nonNumeric name="jpcrp_cor:StatementOfIncomeTextBlock" contextRef="CurrentYearDuration" escape="true">
                 if (entry.getName().startsWith(targetFilePrefix)) {
                     targetFileName = entry.getName();
                     targetFileContent = extractFileContent(zipIn);
