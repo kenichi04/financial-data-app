@@ -6,12 +6,8 @@ import com.example.cash_ratio_analyzer_test.application.service.metadata.Documen
 import com.example.cash_ratio_analyzer_test.domain.enums.Balance;
 import com.example.cash_ratio_analyzer_test.domain.enums.Currency;
 import com.example.cash_ratio_analyzer_test.domain.enums.DisplayScale;
-import com.example.cash_ratio_analyzer_test.domain.model.AccountMaster;
-import com.example.cash_ratio_analyzer_test.domain.model.DocumentId;
-import com.example.cash_ratio_analyzer_test.domain.model.FinancialData;
-import com.example.cash_ratio_analyzer_test.domain.model.FinancialDocument;
+import com.example.cash_ratio_analyzer_test.domain.model.*;
 import com.example.cash_ratio_analyzer_test.domain.repository.IFinancialDocumentRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -24,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -39,11 +36,8 @@ class FinancialDocumentServiceTest {
     @InjectMocks
     private FinancialDocumentService financialDocumentService;
 
-    @BeforeEach
-    void setUp() {}
-
     @Test
-    void createFinancialDocument() {
+    void createFinancialDocument_Success() {
         // given
         var documentId = "TEST0001";
         var headerInfo = createTestHeaderInfo();
@@ -65,7 +59,22 @@ class FinancialDocumentServiceTest {
 
         FinancialDocument createdDoc = docCaptor.getValue();
         assertEquals(new DocumentId(documentId), createdDoc.getDocumentId());
+        assertEquals(new EdinetCode("TEST01"), createdDoc.getEdinetCode());
     }
+
+    @Test
+    void createFinancialDocument_ShouldThrowException_WhenEdinetCodeIsMissing() {
+        var documentId = "TEST0001";
+        var invalidHeaderInfo = new HeaderInfo(
+                Map.of(XbrlConstants.DEI_ATTRIBUTE_DOCUMENT_TYPE, "テスト様式",
+                        XbrlConstants.DEI_ATTRIBUTE_CURRENT_PERIOD_END_DATE, "2024-02-29"),
+                Currency.JPY);
+        var financialDataList = List.of(createTestFinancialData());
+
+        assertThrows(IllegalArgumentException.class,
+                () -> financialDocumentService.createFinancialDocument(documentId, invalidHeaderInfo, financialDataList));
+    }
+
 
     private HeaderInfo createTestHeaderInfo() {
         var deiInfo = Map.of(
