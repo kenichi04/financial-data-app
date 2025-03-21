@@ -75,6 +75,31 @@ class FinancialDocumentServiceTest {
                 () -> financialDocumentService.createFinancialDocument(documentId, invalidHeaderInfo, financialDataList));
     }
 
+    @Test
+    void createFinancialDocument_ShouldThrowException_WhenDocumentTypeIsMissing() {
+        var documentId = "TEST0001";
+        var invalidHeaderInfo = new HeaderInfo(
+                Map.of(XbrlConstants.DEI_ATTRIBUTE_EDINET_CODE, "TEST01",
+                        XbrlConstants.DEI_ATTRIBUTE_CURRENT_PERIOD_END_DATE, "2024-02-29"),
+                Currency.JPY);
+        var financialDataList = List.of(createTestFinancialData());
+
+        assertThrows(IllegalArgumentException.class,
+                () -> financialDocumentService.createFinancialDocument(documentId, invalidHeaderInfo, financialDataList));
+    }
+
+    @Test
+    void createFinancialDocument_ShouldThrowException_WhenPeriodIsMissing() {
+        var documentId = "TEST0001";
+        var invalidHeaderInfo = new HeaderInfo(
+                Map.of(XbrlConstants.DEI_ATTRIBUTE_EDINET_CODE, "TEST01",
+                        XbrlConstants.DEI_ATTRIBUTE_DOCUMENT_TYPE, "テスト様式"),
+                Currency.JPY);
+        var financialDataList = List.of(createTestFinancialData());
+
+        assertThrows(IllegalArgumentException.class,
+                () -> financialDocumentService.createFinancialDocument(documentId, invalidHeaderInfo, financialDataList));
+    }
 
     private HeaderInfo createTestHeaderInfo() {
         var deiInfo = Map.of(
