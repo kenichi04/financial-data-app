@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>cash-ratio-analyzer-test</artifactId>
+	<artifactId>cash-ratio-analyzer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>cash-ratio-analyzer-test</name>
-	<description>Test project for Cash ratio analyze</description>
+	<name>cash-ratio-analyzer</name>
+	<description>Project for Cash ratio analyze</description>
 	<url/>
 	<licenses>
 		<license/>
