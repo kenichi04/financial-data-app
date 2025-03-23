@@ -25,12 +25,8 @@ public class EdinetFileExtractionService {
     // TODO もう少し具体的なファイル名を指定する
     private static final String INLINE_XBRL_FIRST_MAIN_FILE_PREFIX = "XBRL/PublicDoc/0101";
 
-    private final String targetFilePrefix;
-
-    public EdinetFileExtractionService(
-            @Value("${download.targetFilePrefix:}")String targetFilePrefix) {
-        this.targetFilePrefix = targetFilePrefix;
-    }
+    // TODO このファイル名では決算データ取得できないドキュメントもあるため要修正
+    private static final String INLINE_XBRL_TARGET_FILE_PREFIX = "XBRL/PublicDoc/0105020";
 
     /**
      * 指定されたバイト配列（ZIP形式）からターゲットファイルを抽出します。
@@ -45,6 +41,7 @@ public class EdinetFileExtractionService {
         byte[] headerContent = null;
         String firstMainFileName = null;
         byte[] firstMainContent = null;
+        // TODO ターゲットは複数持ちたいため、Mapで保持する
         String targetFileName = null;
         byte[] targetFileContent = null;
         try (
@@ -69,7 +66,7 @@ public class EdinetFileExtractionService {
                 // TODO 以下確認
                 // 貸借対照表はこのタグ？：<ix:nonNumeric name="jpcrp_cor:BalanceSheetTextBlock" contextRef="CurrentYearDuration" escape="true">
                 // 損益計算書はこのタグ？：<ix:nonNumeric name="jpcrp_cor:StatementOfIncomeTextBlock" contextRef="CurrentYearDuration" escape="true">
-                if (entry.getName().startsWith(targetFilePrefix)) {
+                if (entry.getName().startsWith(INLINE_XBRL_TARGET_FILE_PREFIX)) {
                     targetFileName = entry.getName();
                     targetFileContent = extractFileContent(zipIn);
                 }

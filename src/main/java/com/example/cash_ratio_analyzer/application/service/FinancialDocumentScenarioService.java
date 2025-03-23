@@ -38,8 +38,7 @@ public class FinancialDocumentScenarioService {
         }
 
         var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentId);
-        // 一時ファイル作成して抽出する処理も検討した方が良いかも
-        // TODO ターゲットファイルを可変長引数で指定できるようにする？
+        // TODO 一時ファイル作成して抽出する処理も検討する
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
 
         var headerInfo = xbrlHeaderInfoExtractor.extractHeaderInfo(extractedFiles.getHeaderOrFirstMainContent());

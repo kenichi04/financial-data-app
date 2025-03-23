@@ -16,14 +16,13 @@ class EdinetFileExtractionServiceTest {
 
     private static final String TEST_XBRL_FIRST_MAIN_FILE = "XBRL/PublicDoc/0101_TEST.xml";
 
-    private static final String TEST_XBRL_TARGET_FILE = "XBRL/PublicDoc/TEST_TARGET.xml";
+    private static final String TEST_XBRL_TARGET_FILE = "XBRL/PublicDoc/0105020_TEST-TARGET.xml";
 
     private EdinetFileExtractionService edinetFileExtractionService;
 
     @BeforeEach
     void setUp() {
-        var targetFilePrefix = TEST_XBRL_TARGET_FILE.replace(".xml", "");
-        edinetFileExtractionService = new EdinetFileExtractionService(targetFilePrefix);
+        edinetFileExtractionService = new EdinetFileExtractionService();
     }
 
     @Test
