@@ -57,7 +57,9 @@ public class EdinetFileExtractionService {
                     headerContent = extractFileContent(zipIn);
                 }
                 // 表紙ファイル無しの場合、本表の一つ目のファイルにタグ情報あり
+                // ただし有価証券報告書の場合は表紙ファイルあるはずなので、一旦考慮不要かも
                 if (entry.getName().startsWith(INLINE_XBRL_FIRST_MAIN_FILE_PREFIX)) {
+                    // TODO firstMainFileName != nullの場合だけでよさそう
                     firstMainFileName = entry.getName();
                     firstMainContent = extractFileContent(zipIn);
                 }
