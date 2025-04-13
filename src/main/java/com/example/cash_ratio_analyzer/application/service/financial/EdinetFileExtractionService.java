@@ -1,13 +1,14 @@
 package com.example.cash_ratio_analyzer.application.service.financial;
 
 import com.example.cash_ratio_analyzer.application.service.dto.ExtractedFiles;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -41,9 +42,7 @@ public class EdinetFileExtractionService {
         byte[] headerContent = null;
         String firstMainFileName = null;
         byte[] firstMainContent = null;
-        // TODO ターゲットは複数持ちたいため、Mapで保持する
-        String targetFileName = null;
-        byte[] targetFileContent = null;
+        List<ExtractedFiles.TargetFile> targetFiles = new ArrayList<>();
         try (
                 var in = new ByteArrayInputStream(fetchData);
                 var zipIn = new ZipInputStream(in)) {
@@ -69,8 +68,9 @@ public class EdinetFileExtractionService {
                 // 貸借対照表はこのタグ？：<ix:nonNumeric name="jpcrp_cor:BalanceSheetTextBlock" contextRef="CurrentYearDuration" escape="true">
                 // 損益計算書はこのタグ？：<ix:nonNumeric name="jpcrp_cor:StatementOfIncomeTextBlock" contextRef="CurrentYearDuration" escape="true">
                 if (entry.getName().startsWith(INLINE_XBRL_TARGET_FILE_PREFIX)) {
-                    targetFileName = entry.getName();
-                    targetFileContent = extractFileContent(zipIn);
+                    var targetFileName = entry.getName();
+                    var targetFileContent = extractFileContent(zipIn);
+                    targetFiles.add(new ExtractedFiles.TargetFile(targetFileName, targetFileContent));
                 }
             }
 
@@ -78,7 +78,7 @@ public class EdinetFileExtractionService {
             throw new RuntimeException("Failed to extract target file", e);
         }
 
-        return new ExtractedFiles(headerFileName, headerContent, firstMainFileName, firstMainContent, targetFileName, targetFileContent);
+        return new ExtractedFiles(headerFileName, headerContent, firstMainFileName, firstMainContent, targetFiles);
     }
 
     /**

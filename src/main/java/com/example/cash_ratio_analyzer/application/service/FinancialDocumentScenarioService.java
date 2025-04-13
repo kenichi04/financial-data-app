@@ -42,7 +42,9 @@ public class FinancialDocumentScenarioService {
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
 
         var headerInfo = xbrlHeaderInfoExtractor.extractHeaderInfo(extractedFiles.getHeaderOrFirstMainContent());
-        var financialDataList = xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(extractedFiles.getTargetFileContent());
+        // TODO 修正中. 一旦最初のターゲットファイルのみ取得
+        var firstTargetContent = extractedFiles.getTargetFiles().get(0).content();
+        var financialDataList = xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(firstTargetContent);
 
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
         return financialDocumentService.createFinancialDocument(documentId, headerInfo, financialDataList);
