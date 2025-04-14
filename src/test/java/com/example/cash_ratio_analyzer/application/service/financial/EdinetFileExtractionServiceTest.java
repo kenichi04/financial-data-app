@@ -34,14 +34,15 @@ class EdinetFileExtractionServiceTest {
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
 
         // then
+        var firstTargetFile = extractedFiles.getTargetFiles().get(0);
         assertNotNull(extractedFiles.getHeaderOrFirstMainContent());
-        assertNotNull(extractedFiles.getTargetFileContent());
+        assertNotNull(firstTargetFile);
 
         assertEquals(TEST_XBRL_HEADER_FILE, extractedFiles.getHeaderOrFirstMainFileName());
-        assertEquals(TEST_XBRL_TARGET_FILE, extractedFiles.getTargetFileName());
+        assertEquals(TEST_XBRL_TARGET_FILE, firstTargetFile.fileName());
 
         assertArrayEquals("header-content".getBytes(), extractedFiles.getHeaderOrFirstMainContent());
-        assertArrayEquals("target-content".getBytes(), extractedFiles.getTargetFileContent());
+        assertArrayEquals("target-content".getBytes(), firstTargetFile.content());
     }
 
     @Test
@@ -53,14 +54,15 @@ class EdinetFileExtractionServiceTest {
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
 
         // then
+        var firstTargetFile = extractedFiles.getTargetFiles().get(0);
         assertNotNull(extractedFiles.getHeaderOrFirstMainContent());
-        assertNotNull(extractedFiles.getTargetFileContent());
+        assertNotNull(firstTargetFile.content());
 
         assertEquals(TEST_XBRL_FIRST_MAIN_FILE, extractedFiles.getHeaderOrFirstMainFileName());
-        assertEquals(TEST_XBRL_TARGET_FILE, extractedFiles.getTargetFileName());
+        assertEquals(TEST_XBRL_TARGET_FILE, firstTargetFile.fileName());
 
         assertArrayEquals("first-content".getBytes(), extractedFiles.getHeaderOrFirstMainContent());
-        assertArrayEquals("target-content".getBytes(), extractedFiles.getTargetFileContent());
+        assertArrayEquals("target-content".getBytes(), firstTargetFile.content());
     }
 
     @Test
