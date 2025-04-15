@@ -70,6 +70,9 @@ public class EdinetFileExtractionService {
                 if (entry.getName().startsWith(INLINE_XBRL_TARGET_FILE_PREFIX)) {
                     var targetFileName = entry.getName();
                     var targetFileContent = extractFileContent(zipIn);
+
+                    // TODO ここで、ターゲットファイルに含めて良いか判定しておく？
+
                     targetFiles.add(new ExtractedFiles.TargetFile(targetFileName, targetFileContent));
                 }
             }

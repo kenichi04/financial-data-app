@@ -9,6 +9,8 @@ import com.example.cash_ratio_analyzer.application.service.financial.xbrl.XbrlHe
 import com.example.cash_ratio_analyzer.domain.model.DocumentId;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
+
 @Service
 public class FinancialDocumentScenarioService {
 
@@ -40,13 +42,16 @@ public class FinancialDocumentScenarioService {
         var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentId);
         // TODO 一時ファイル作成して抽出する処理も検討する
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
+        // TODO 検討. 先にbyte→文字列などに変換して、必要な要素があるか確認（ファイルのフィルタリング）
 
         var headerInfo = xbrlHeaderInfoExtractor.extractHeaderInfo(extractedFiles.getHeaderOrFirstMainContent());
-        // TODO 修正中. 一旦最初のターゲットファイルのみ取得
-        var firstTargetContent = extractedFiles.getTargetFiles().get(0).content();
-        var financialDataList = xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(firstTargetContent);
+
+        var targetContents = extractedFiles.getTargetFiles().stream().map(x -> x.content());
+        var allFinancialData = targetContents
+                .flatMap(content -> xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(content).stream())
+                .collect(Collectors.toList());
 
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
-        return financialDocumentService.createFinancialDocument(documentId, headerInfo, financialDataList);
+        return financialDocumentService.createFinancialDocument(documentId, headerInfo, allFinancialData);
     }
 }
