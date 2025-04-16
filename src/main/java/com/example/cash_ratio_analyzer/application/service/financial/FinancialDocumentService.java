@@ -42,6 +42,10 @@ public class FinancialDocumentService {
      */
     @Transactional
     public DocumentId createFinancialDocument(String documentId, HeaderInfo headerInfo, List<FinancialData> financialDataList) {
+        if (financialDataList == null || financialDataList.isEmpty()) {
+            throw new IllegalArgumentException("FinancialData list cannot be null or empty");
+        }
+
         // financialDocumentは新規作成のみ、更新は不要の想定
         var documentIdModel = new DocumentId(documentId);
         var financialDocument = buildFinancialDocument(documentIdModel, headerInfo, financialDataList);

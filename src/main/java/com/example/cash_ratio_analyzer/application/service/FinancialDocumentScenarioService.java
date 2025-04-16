@@ -1,5 +1,6 @@
 package com.example.cash_ratio_analyzer.application.service;
 
+import com.example.cash_ratio_analyzer.application.service.dto.ExtractedFiles;
 import com.example.cash_ratio_analyzer.application.service.enums.FetchDocumentType;
 import com.example.cash_ratio_analyzer.application.service.financial.EdinetDataFetchService;
 import com.example.cash_ratio_analyzer.application.service.financial.EdinetFileExtractionService;
@@ -42,12 +43,12 @@ public class FinancialDocumentScenarioService {
         var fetchData = edinetDataFetchService.fetchFinancialData(FetchDocumentType.XBRL, documentId);
         // TODO 一時ファイル作成して抽出する処理も検討する
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
-        // TODO 検討. 先にbyte→文字列などに変換して、必要な要素があるか確認（ファイルのフィルタリング）
 
         var headerInfo = xbrlHeaderInfoExtractor.extractHeaderInfo(extractedFiles.getHeaderOrFirstMainContent());
 
-        var targetContents = extractedFiles.getTargetFiles().stream().map(x -> x.content());
-        var allFinancialData = targetContents
+        var targetContents = extractedFiles.getTargetFiles().stream()
+                .map(ExtractedFiles.TargetFile::content).toList();
+        var allFinancialData = targetContents.stream()
                 .flatMap(content -> xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(content).stream())
                 .collect(Collectors.toList());
 

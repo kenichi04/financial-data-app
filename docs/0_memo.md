@@ -1,6 +1,6 @@
 ## 開発用メモ
 - EDINET 書類取得API用のテスト用docId: S100TGZR
-
+- 現在、エラーになるdocId: S100VAU4
 
 ## メモ
 - Accountに登録する科目洗い出し
