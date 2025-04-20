@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,21 +63,19 @@ public class EdinetFileExtractionService {
                     firstMainFileName = entry.getName();
                     firstMainContent = extractFileContent(zipIn);
                 }
-                // TODO 対象ファイルの選定
-                // 一旦、「調査：第５【経理の状況】」のページを取得できる想定
-                // TODO 以下確認
-                // 貸借対照表はこのタグ？：<ix:nonNumeric name="jpcrp_cor:BalanceSheetTextBlock" contextRef="CurrentYearDuration" escape="true">
-                // 損益計算書はこのタグ？：<ix:nonNumeric name="jpcrp_cor:StatementOfIncomeTextBlock" contextRef="CurrentYearDuration" escape="true">
+                // 「調査：第５【経理の状況】」のファイルを取得
                 if (entry.getName().startsWith(INLINE_XBRL_TARGET_FILE_PREFIX)) {
                     var targetFileName = entry.getName();
                     var targetFileContent = extractFileContent(zipIn);
 
-                    // TODO ここで、ターゲットファイルに含めて良いか判定しておく？
-
+                    // 簡易フィルタ. 必要なタグが含まれるファイルか判定
+                    if (!isRelevantTargetFile(targetFileContent)) {
+                        continue;
+                    }
+                    // TODO 単体の決算内容と連結の決算内容の両方を含むケースの検討
                     targetFiles.add(new ExtractedFiles.TargetFile(targetFileName, targetFileContent));
                 }
             }
-
         } catch (IOException e) {
             throw new RuntimeException("Failed to extract target file", e);
         }
@@ -99,5 +98,14 @@ public class EdinetFileExtractionService {
             out.write(buffer, 0, len);
         }
         return out.toByteArray();
+    }
+
+    private boolean isRelevantTargetFile(byte[] content) {
+        // 貸借対照表はこのタグ？：<ix:nonNumeric name="jpcrp_cor:BalanceSheetTextBlock" contextRef="CurrentYearDuration" escape="true">
+        // 損益計算書はこのタグ？：<ix:nonNumeric name="jpcrp_cor:StatementOfIncomeTextBlock" contextRef="CurrentYearDuration" escape="true">
+        var xmlData = new String(content, StandardCharsets.UTF_8);
+        // TODO チェック方法は要確認
+        return xmlData.contains("BalanceSheetTextBlock") ||
+                xmlData.contains("StatementOfIncomeTextBlock");
     }
 }
