@@ -27,8 +27,8 @@ public class EdinetFileExtractionService {
     // TODO もう少し具体的なファイル名を指定する
     private static final String INLINE_XBRL_FIRST_MAIN_FILE_PREFIX = "XBRL/PublicDoc/0101";
 
-    // TODO このファイル名では決算データ取得できないドキュメントもあるため要修正
-    private static final String INLINE_XBRL_TARGET_FILE_PREFIX = "XBRL/PublicDoc/0105020";
+    // 有価証券報告書（3号様式）> 第一部【企業情報】第５【経理の状況】のファイル（複数）
+    private static final String INLINE_XBRL_TARGET_FILES_PREFIX = "XBRL/PublicDoc/0105";
 
     /**
      * 指定されたバイト配列（ZIP形式）からターゲットファイルを抽出します。
@@ -63,8 +63,7 @@ public class EdinetFileExtractionService {
                     firstMainFileName = entry.getName();
                     firstMainContent = extractFileContent(zipIn);
                 }
-                // 「調査：第５【経理の状況】」のファイルを取得
-                if (entry.getName().startsWith(INLINE_XBRL_TARGET_FILE_PREFIX)) {
+                if (entry.getName().startsWith(INLINE_XBRL_TARGET_FILES_PREFIX)) {
                     var targetFileName = entry.getName();
                     var targetFileContent = extractFileContent(zipIn);
 
