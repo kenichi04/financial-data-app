@@ -12,6 +12,9 @@ public class XbrlConstants {
     /** DEI 語彙スキーマの名前空間宣言 */
     public static final String JP_DEI_NAMESPACE = "jpdei_cor:";
 
+    /** 開示府令の語彙スキーマの名前空間宣言（crp: 企業内容等の開示に関する内閣府令） */
+    public static final String JP_CPR_COR_NAMESPACE = "jpcrp_cor:";
+
     /** 金額又は数値を表現するインラインXBRLの要素（タグ） */
     public static final String IX_NON_FRACTION = "ix:nonFraction";
 
@@ -24,6 +27,18 @@ public class XbrlConstants {
 
     /** ヘッダ要素の子要素であるhidden要素. DEI及び表示しない値を定義する */
     public static final String IX_HIDDEN = "ix:hidden";
+
+    /** 連結貸借対照表 [テキストブロック] */
+    public static final String CONSOLIDATED_BS_TEXT_BLOCK = "ConsolidatedBalanceSheetTextBlock";
+
+    /** 貸借対照表 [テキストブロック] */
+    public static final String BS_TEXT_BLOCK = "BalanceSheetTextBlock";
+
+    /** 連結損益計算書 [テキストブロック] */
+    public static final String CONSOLIDATED_PL_TEXT_BLOCK = "ConsolidatedStatementOfIncomeTextBlock";
+
+    /** 損益計算書 [テキストブロック] */
+    public static final String PL_TEXT_BLOCK = "StatementOfIncomeTextBlock";
 
     /** ユニット定義のタグ */
     public static final String XBRLI_UNIT = "xbrli:unit";

@@ -1,5 +1,6 @@
 package com.example.cash_ratio_analyzer.application.service.financial;
 
+import com.example.cash_ratio_analyzer.application.service.constants.XbrlConstants;
 import com.example.cash_ratio_analyzer.application.service.dto.ExtractedFiles;
 import org.springframework.stereotype.Service;
 
@@ -100,11 +101,9 @@ public class EdinetFileExtractionService {
     }
 
     private boolean isRelevantTargetFile(byte[] content) {
-        // 貸借対照表はこのタグ？：<ix:nonNumeric name="jpcrp_cor:BalanceSheetTextBlock" contextRef="CurrentYearDuration" escape="true">
-        // 損益計算書はこのタグ？：<ix:nonNumeric name="jpcrp_cor:StatementOfIncomeTextBlock" contextRef="CurrentYearDuration" escape="true">
         var xmlData = new String(content, StandardCharsets.UTF_8);
         // TODO チェック方法は要確認
-        return xmlData.contains("BalanceSheetTextBlock") ||
-                xmlData.contains("StatementOfIncomeTextBlock");
+        return xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + XbrlConstants.BS_TEXT_BLOCK) ||
+                xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + XbrlConstants.PL_TEXT_BLOCK);
     }
 }
