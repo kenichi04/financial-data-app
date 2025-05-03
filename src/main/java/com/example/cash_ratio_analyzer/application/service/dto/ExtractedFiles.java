@@ -5,10 +5,11 @@ import java.util.List;
 public class ExtractedFiles {
     private final String headerOrFirstMainFileName;
     private final byte[] headerOrFirstMainContent;
-
+    private final boolean isConsolidated;
     private final List<TargetFile> targetFiles;
 
-    public ExtractedFiles(String headerFileName, byte[] headerContent, String firstMainFileName, byte[] firstMainContent, List<TargetFile> targetFiles) {
+    public ExtractedFiles(String headerFileName, byte[] headerContent, String firstMainFileName, byte[] firstMainContent, 
+                         List<TargetFile> targetFiles, boolean isConsolidated) {
         if ((headerContent == null || headerContent.length == 0) && (firstMainContent == null || firstMainContent.length == 0)) {
             throw new IllegalArgumentException("Either headerContent or firstMainContent must be provided");
         }
@@ -19,6 +20,7 @@ public class ExtractedFiles {
         this.headerOrFirstMainFileName = (headerContent != null && headerContent.length > 0) ? headerFileName : firstMainFileName;
         this.headerOrFirstMainContent = (headerContent != null && headerContent.length > 0) ? headerContent : firstMainContent;
         this.targetFiles = targetFiles;
+        this.isConsolidated = isConsolidated;
     }
 
     public String getHeaderOrFirstMainFileName() {
@@ -32,8 +34,12 @@ public class ExtractedFiles {
     public List<TargetFile> getTargetFiles() {
         return targetFiles;
     }
+    
+    public boolean isConsolidated() {
+        return isConsolidated;
+    }
 
-    public record TargetFile(String fileName, byte[] content, boolean isConsolidated) {
+    public record TargetFile(String fileName, byte[] content) {
         public TargetFile {
             if (fileName == null || fileName.isEmpty()) {
                 throw new IllegalArgumentException("Target file name must not be null or empty");
@@ -41,10 +47,6 @@ public class ExtractedFiles {
             if (content == null || content.length == 0) {
                 throw new IllegalArgumentException("Target file content must not be null or empty");
             }
-        }
-        
-        public TargetFile(String fileName, byte[] content) {
-            this(fileName, content, false); // デフォルトは連結でない
         }
     }
 }

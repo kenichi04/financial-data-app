@@ -77,7 +77,7 @@ public class EdinetFileExtractionService {
                     }
                     
                     boolean isConsolidated = isConsolidatedFile(targetFileContent);
-                    var targetFile = new ExtractedFiles.TargetFile(targetFileName, targetFileContent, isConsolidated);
+                    var targetFile = new ExtractedFiles.TargetFile(targetFileName, targetFileContent);
                     
                     if (isConsolidated) {
                         consolidatedFiles.add(targetFile);
@@ -90,11 +90,12 @@ public class EdinetFileExtractionService {
             throw new RuntimeException("Failed to extract target file", e);
         }
         
-        List<ExtractedFiles.TargetFile> targetFiles = !consolidatedFiles.isEmpty() 
+        boolean isDocumentConsolidated = !consolidatedFiles.isEmpty();
+        List<ExtractedFiles.TargetFile> targetFiles = isDocumentConsolidated 
                 ? consolidatedFiles 
                 : nonConsolidatedFiles;
 
-        return new ExtractedFiles(headerFileName, headerContent, firstMainFileName, firstMainContent, targetFiles);
+        return new ExtractedFiles(headerFileName, headerContent, firstMainFileName, firstMainContent, targetFiles, isDocumentConsolidated);
     }
 
     /**

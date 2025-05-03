@@ -174,9 +174,8 @@ class EdinetFileExtractionServiceTest {
 
         // then
         assertEquals(1, extractedFiles.getTargetFiles().size());
-        var firstTargetFile = extractedFiles.getTargetFiles().get(0);
-        assertTrue(firstTargetFile.isConsolidated());
-        assertEquals("XBRL/PublicDoc/0105020_CONSOLIDATED.xml", firstTargetFile.fileName());
+        assertTrue(extractedFiles.isConsolidated());
+        assertEquals("XBRL/PublicDoc/0105020_CONSOLIDATED.xml", extractedFiles.getTargetFiles().get(0).fileName());
     }
 
     @Test
@@ -189,9 +188,8 @@ class EdinetFileExtractionServiceTest {
 
         // then
         assertEquals(1, extractedFiles.getTargetFiles().size());
-        var firstTargetFile = extractedFiles.getTargetFiles().get(0);
-        assertFalse(firstTargetFile.isConsolidated());
-        assertEquals("XBRL/PublicDoc/0105020_NONCONSOLIDATED.xml", firstTargetFile.fileName());
+        assertFalse(extractedFiles.isConsolidated());
+        assertEquals("XBRL/PublicDoc/0105020_NONCONSOLIDATED.xml", extractedFiles.getTargetFiles().get(0).fileName());
     }
 
     @Test
@@ -203,7 +201,6 @@ class EdinetFileExtractionServiceTest {
         var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
 
         // then
-        var firstTargetFile = extractedFiles.getTargetFiles().get(0);
-        assertTrue(firstTargetFile.isConsolidated());
+        assertTrue(extractedFiles.isConsolidated());
     }
 }
