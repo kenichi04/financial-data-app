@@ -128,12 +128,12 @@ public class EdinetFileExtractionService {
             return false; // デフォルトのテストデータは単体とみなす
         }
         
-        if (xmlData.contains("jpcrp_cor:ConsolidatedBalanceSheetTextBlock")) {
+        if (xmlData.contains("jpcrp_cor:" + XbrlConstants.CONSOLIDATED_BS_TEXT_BLOCK)) {
             return true;
         }
         
-        if (xmlData.contains("jpcrp_cor:BalanceSheetTextBlock") && 
-            xmlData.contains("CurrentYearDuration_NonConsolidatedMember")) {
+        if (xmlData.contains("jpcrp_cor:" + XbrlConstants.BS_TEXT_BLOCK) && 
+            xmlData.contains(XbrlConstants.CONTEXT_CURRENT_YEAR_DURATION_NON_CONSOLIDATED_MEMBER)) {
             return false;
         }
         
@@ -154,8 +154,8 @@ public class EdinetFileExtractionService {
             return true;
         }
         
-        if (xmlData.contains("jpcrp_cor:ConsolidatedBalanceSheetTextBlock") || 
-            xmlData.contains("jpcrp_cor:BalanceSheetTextBlock")) {
+        if (xmlData.contains("jpcrp_cor:" + XbrlConstants.CONSOLIDATED_BS_TEXT_BLOCK) || 
+            xmlData.contains("jpcrp_cor:" + XbrlConstants.BS_TEXT_BLOCK)) {
             return true;
         }
         
