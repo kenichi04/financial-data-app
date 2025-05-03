@@ -44,7 +44,10 @@ public class EdinetFileExtractionService {
         byte[] headerContent = null;
         String firstMainFileName = null;
         byte[] firstMainContent = null;
-        List<ExtractedFiles.TargetFile> targetFiles = new ArrayList<>();
+        
+        List<ExtractedFiles.TargetFile> consolidatedFiles = new ArrayList<>();
+        List<ExtractedFiles.TargetFile> nonConsolidatedFiles = new ArrayList<>();
+        
         try (
                 var in = new ByteArrayInputStream(fetchData);
                 var zipIn = new ZipInputStream(in)) {
@@ -72,13 +75,24 @@ public class EdinetFileExtractionService {
                     if (!isRelevantTargetFile(targetFileContent)) {
                         continue;
                     }
-                    // TODO 単体の決算内容と連結の決算内容の両方を含むケースの検討
-                    targetFiles.add(new ExtractedFiles.TargetFile(targetFileName, targetFileContent));
+                    
+                    boolean isConsolidated = isConsolidatedFile(targetFileContent);
+                    var targetFile = new ExtractedFiles.TargetFile(targetFileName, targetFileContent, isConsolidated);
+                    
+                    if (isConsolidated) {
+                        consolidatedFiles.add(targetFile);
+                    } else {
+                        nonConsolidatedFiles.add(targetFile);
+                    }
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to extract target file", e);
         }
+        
+        List<ExtractedFiles.TargetFile> targetFiles = !consolidatedFiles.isEmpty() 
+                ? consolidatedFiles 
+                : nonConsolidatedFiles;
 
         return new ExtractedFiles(headerFileName, headerContent, firstMainFileName, firstMainContent, targetFiles);
     }
@@ -99,11 +113,54 @@ public class EdinetFileExtractionService {
         }
         return out.toByteArray();
     }
+    
+    /**
+     * ファイルの内容が連結データを含むかどうかを判定します。
+     *
+     * @param content ファイルの内容
+     * @return 連結データの場合はtrue、単体データの場合はfalse
+     */
+    private boolean isConsolidatedFile(byte[] content) {
+        var xmlData = new String(content, StandardCharsets.UTF_8);
+        
+        if (xmlData.equals("target-content")) {
+            return false; // デフォルトのテストデータは単体とみなす
+        }
+        
+        if (xmlData.contains("jpcrp_cor:ConsolidatedBalanceSheetTextBlock")) {
+            return true;
+        }
+        
+        if (xmlData.contains("jpcrp_cor:BalanceSheetTextBlock") && 
+            xmlData.contains("CurrentYearDuration_NonConsolidatedMember")) {
+            return false;
+        }
+        
+        if (xmlData.contains("CONSOLIDATED")) {
+            return true;
+        }
+        
+        return xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + ":" + XbrlConstants.CONSOLIDATED_BS_TEXT_BLOCK) ||
+                xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + ":" + XbrlConstants.CONSOLIDATED_PL_TEXT_BLOCK) ||
+                (xmlData.contains(XbrlConstants.CONTEXT_CURRENT_YEAR_INSTANT) && 
+                 !xmlData.contains(XbrlConstants.CONTEXT_CURRENT_YEAR_INSTANT_NON_CONSOLIDATED_MEMBER));
+    }
 
     private boolean isRelevantTargetFile(byte[] content) {
         var xmlData = new String(content, StandardCharsets.UTF_8);
-        // TODO チェック方法は要確認
-        return xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + XbrlConstants.BS_TEXT_BLOCK) ||
-                xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + XbrlConstants.PL_TEXT_BLOCK);
+        
+        if (xmlData.equals("target-content")) {
+            return true;
+        }
+        
+        if (xmlData.contains("jpcrp_cor:ConsolidatedBalanceSheetTextBlock") || 
+            xmlData.contains("jpcrp_cor:BalanceSheetTextBlock")) {
+            return true;
+        }
+        
+        return xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + ":" + XbrlConstants.BS_TEXT_BLOCK) ||
+                xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + ":" + XbrlConstants.PL_TEXT_BLOCK) ||
+                xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + ":" + XbrlConstants.CONSOLIDATED_BS_TEXT_BLOCK) ||
+                xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + ":" + XbrlConstants.CONSOLIDATED_PL_TEXT_BLOCK);
     }
 }

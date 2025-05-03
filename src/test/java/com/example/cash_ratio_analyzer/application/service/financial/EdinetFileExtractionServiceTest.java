@@ -125,4 +125,85 @@ class EdinetFileExtractionServiceTest {
         zipOut.write(content.getBytes());
         zipOut.closeEntry();
     }
+    
+    /**
+     * 連結データと単体データの特定に使用するサンプルコンテンツを作成
+     */
+    private String createConsolidatedContent() {
+        return "<ix:nonNumeric name=\"jpcrp_cor:ConsolidatedBalanceSheetTextBlock\" contextRef=\"CurrentYearDuration\" escape=\"true\">";
+    }
+
+    private String createNonConsolidatedContent() {
+        return "<ix:nonNumeric name=\"jpcrp_cor:BalanceSheetTextBlock\" contextRef=\"CurrentYearDuration_NonConsolidatedMember\" escape=\"true\">";
+    }
+    
+    /**
+     * 連結と単体の両方を含むZIPデータを作成
+     */
+    private byte[] createZipDataWithBothConsolidatedAndNonConsolidated() throws IOException {
+        var out = new ByteArrayOutputStream();
+        try (var zipOut = new ZipOutputStream(out)) {
+            addZipEntry(zipOut, TEST_XBRL_HEADER_FILE, "header-content");
+            addZipEntry(zipOut, TEST_XBRL_FIRST_MAIN_FILE, "first-content");
+            addZipEntry(zipOut, "XBRL/PublicDoc/0105020_CONSOLIDATED.xml", createConsolidatedContent());
+            addZipEntry(zipOut, "XBRL/PublicDoc/0105020_NONCONSOLIDATED.xml", createNonConsolidatedContent());
+        }
+        return out.toByteArray();
+    }
+    
+    /**
+     * 単体データのみを含むZIPデータを作成
+     */
+    private byte[] createZipDataWithOnlyNonConsolidated() throws IOException {
+        var out = new ByteArrayOutputStream();
+        try (var zipOut = new ZipOutputStream(out)) {
+            addZipEntry(zipOut, TEST_XBRL_HEADER_FILE, "header-content");
+            addZipEntry(zipOut, TEST_XBRL_FIRST_MAIN_FILE, "first-content");
+            addZipEntry(zipOut, "XBRL/PublicDoc/0105020_NONCONSOLIDATED.xml", createNonConsolidatedContent());
+        }
+        return out.toByteArray();
+    }
+    
+    @Test
+    void extractTargetFile_shouldExtractOnlyConsolidated_whenBothAreAvailable() throws IOException {
+        // given
+        byte[] fetchData = createZipDataWithBothConsolidatedAndNonConsolidated();
+
+        // when
+        var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
+
+        // then
+        assertEquals(1, extractedFiles.getTargetFiles().size());
+        var firstTargetFile = extractedFiles.getTargetFiles().get(0);
+        assertTrue(firstTargetFile.isConsolidated());
+        assertEquals("XBRL/PublicDoc/0105020_CONSOLIDATED.xml", firstTargetFile.fileName());
+    }
+
+    @Test
+    void extractTargetFile_shouldExtractNonConsolidated_whenOnlyNonConsolidatedIsAvailable() throws IOException {
+        // given
+        byte[] fetchData = createZipDataWithOnlyNonConsolidated();
+
+        // when
+        var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
+
+        // then
+        assertEquals(1, extractedFiles.getTargetFiles().size());
+        var firstTargetFile = extractedFiles.getTargetFiles().get(0);
+        assertFalse(firstTargetFile.isConsolidated());
+        assertEquals("XBRL/PublicDoc/0105020_NONCONSOLIDATED.xml", firstTargetFile.fileName());
+    }
+
+    @Test
+    void extractTargetFile_shouldCorrectlyIdentifyConsolidatedData() throws IOException {
+        // given
+        byte[] fetchData = createZipDataWithBothConsolidatedAndNonConsolidated();
+
+        // when
+        var extractedFiles = edinetFileExtractionService.extractTargetFile(fetchData);
+
+        // then
+        var firstTargetFile = extractedFiles.getTargetFiles().get(0);
+        assertTrue(firstTargetFile.isConsolidated());
+    }
 }

@@ -33,7 +33,7 @@ public class ExtractedFiles {
         return targetFiles;
     }
 
-    public record TargetFile(String fileName, byte[] content) {
+    public record TargetFile(String fileName, byte[] content, boolean isConsolidated) {
         public TargetFile {
             if (fileName == null || fileName.isEmpty()) {
                 throw new IllegalArgumentException("Target file name must not be null or empty");
@@ -41,6 +41,10 @@ public class ExtractedFiles {
             if (content == null || content.length == 0) {
                 throw new IllegalArgumentException("Target file content must not be null or empty");
             }
+        }
+        
+        public TargetFile(String fileName, byte[] content) {
+            this(fileName, content, false); // デフォルトは連結でない
         }
     }
 }
