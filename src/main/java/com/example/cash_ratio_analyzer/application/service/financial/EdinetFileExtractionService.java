@@ -103,7 +103,10 @@ public class EdinetFileExtractionService {
     private boolean isRelevantTargetFile(byte[] content) {
         var xmlData = new String(content, StandardCharsets.UTF_8);
         // TODO チェック方法は要確認
-        return xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + XbrlConstants.BS_TEXT_BLOCK) ||
+        // 1つのファイルに隅付き括弧【】が必ず含まれるらしいので、それで判定しても良いか？
+        return xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + XbrlConstants.CONSOLIDATED_BS_TEXT_BLOCK) ||
+                xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + XbrlConstants.CONSOLIDATED_PL_TEXT_BLOCK) ||
+                xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + XbrlConstants.BS_TEXT_BLOCK) ||
                 xmlData.contains(XbrlConstants.JP_CPR_COR_NAMESPACE + XbrlConstants.PL_TEXT_BLOCK);
     }
 }

@@ -68,7 +68,7 @@ public class JpaFinancialDocumentRepository implements IFinancialDocumentReposit
         return from.stream()
                 .map(entity -> new FinancialData(
                         jpaAccountMasterRepository.toModel(entity.getAccount()),
-                        entity.getPeriodContext(),
+                        entity.getContextId(),
                         entity.getAmount(),
                         DisplayScale.fromCode(entity.getDisplayScale()),
                         Currency.fromCode(entity.getCurrency())
@@ -92,7 +92,7 @@ public class JpaFinancialDocumentRepository implements IFinancialDocumentReposit
                 .map(data -> new FinancialDataEntity(
                         documentEntity,
                         jpaAccountMasterRepository.toEntity(data.getAccount()),
-                        data.getPeriodContext(),
+                        data.getContextId(),
                         data.getAmount(),
                         data.getDisplayScale().getCode(),
                         data.getCurrency().getCode()

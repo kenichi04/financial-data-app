@@ -9,16 +9,16 @@ public class FinancialData {
     private Long id;
     // TODO 必要かどうか検討
     private DocumentId documentId;
+    // TODO 集約外のため、インスタンスではなくaccount_idを持つ
     private final AccountMaster accountMaster;
-    // 前期、今期の判定
-    private final String periodContext;
+    private final String contextId;
     private final BigDecimal amount;
     private final DisplayScale displayScale;
     private final Currency currency;
 
-    public FinancialData(AccountMaster accountMaster, String periodContext, BigDecimal amount, DisplayScale displayScale, Currency currency) {
+    public FinancialData(AccountMaster accountMaster, String contextId, BigDecimal amount, DisplayScale displayScale, Currency currency) {
         this.accountMaster = accountMaster;
-        this.periodContext = periodContext;
+        this.contextId = contextId;
         this.amount = amount;
         this.displayScale = displayScale;
         this.currency = currency;
@@ -28,8 +28,8 @@ public class FinancialData {
         return accountMaster;
     }
 
-    public String getPeriodContext() {
-        return periodContext;
+    public String getContextId() {
+        return contextId;
     }
 
     public BigDecimal getAmount() {

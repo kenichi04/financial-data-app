@@ -23,7 +23,7 @@ public class FinancialDataEntity {
     private AccountMasterEntity account;
 
     @Column(nullable = false)
-    private String periodContext;
+    private String contextId;
 
     @Column(nullable = false)
     private BigDecimal amount;
@@ -36,11 +36,11 @@ public class FinancialDataEntity {
 
     public FinancialDataEntity() {}
 
-    public FinancialDataEntity(FinancialDocumentEntity financialDocument, AccountMasterEntity account, String periodContext,
+    public FinancialDataEntity(FinancialDocumentEntity financialDocument, AccountMasterEntity account, String contextId,
                                BigDecimal amount, int displayScale, String currency) {
         this.financialDocument = financialDocument;
         this.account = account;
-        this.periodContext = periodContext;
+        this.contextId = contextId;
         this.amount = amount;
         this.displayScale = displayScale;
         this.currency = currency;
