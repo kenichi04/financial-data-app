@@ -9,9 +9,9 @@ package com.example.cash_ratio_analyzer.domain.enums.context;
  */
 public enum PeriodUnit {
     /** 時点 */
-    INSTANT("instant"),
+    INSTANT("Instant"),
     /** 期間 */
-    DURATION("duration");
+    DURATION("Duration");
 
     private final String label;
 

@@ -7,6 +7,7 @@ import com.example.cash_ratio_analyzer.domain.enums.Balance;
 import com.example.cash_ratio_analyzer.domain.enums.Currency;
 import com.example.cash_ratio_analyzer.domain.enums.DisplayScale;
 import com.example.cash_ratio_analyzer.domain.model.*;
+import com.example.cash_ratio_analyzer.domain.model.context.EdinetContext;
 import com.example.cash_ratio_analyzer.domain.repository.IFinancialDocumentRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -116,9 +117,11 @@ class FinancialDocumentServiceTest {
                 "現金預金", "Cash and deposits",
                 Balance.DEBIT);
 
+        var edinetContext = EdinetContext.fromContextRef("");
+
         return new FinancialData(
                 account,
-                "test-period",
+                edinetContext,
                 new BigDecimal("100"),
                 DisplayScale.MILLION_YEN,
                 Currency.JPY);

@@ -6,6 +6,7 @@ import com.example.cash_ratio_analyzer.domain.model.DocumentId;
 import com.example.cash_ratio_analyzer.domain.model.EdinetCode;
 import com.example.cash_ratio_analyzer.domain.model.FinancialData;
 import com.example.cash_ratio_analyzer.domain.model.FinancialDocument;
+import com.example.cash_ratio_analyzer.domain.model.context.EdinetContext;
 import com.example.cash_ratio_analyzer.domain.repository.IFinancialDocumentRepository;
 import com.example.cash_ratio_analyzer.infrastructure.database.entity.FinancialDataEntity;
 import com.example.cash_ratio_analyzer.infrastructure.database.entity.FinancialDocumentEntity;
@@ -68,7 +69,7 @@ public class JpaFinancialDocumentRepository implements IFinancialDocumentReposit
         return from.stream()
                 .map(entity -> new FinancialData(
                         jpaAccountMasterRepository.toModel(entity.getAccount()),
-                        entity.getContextId(),
+                        EdinetContext.fromContextRef(""),
                         entity.getAmount(),
                         DisplayScale.fromCode(entity.getDisplayScale()),
                         Currency.fromCode(entity.getCurrency())
@@ -92,7 +93,10 @@ public class JpaFinancialDocumentRepository implements IFinancialDocumentReposit
                 .map(data -> new FinancialDataEntity(
                         documentEntity,
                         jpaAccountMasterRepository.toEntity(data.getAccount()),
-                        data.getContextId(),
+                        data.getEdinetContext().getPeriodType(),
+                        data.getEdinetContext().getPeriodUnit(),
+                        data.getEdinetContext().getConsolidatedType(),
+                        data.getEdinetContext().getContextRef(),
                         data.getAmount(),
                         data.getDisplayScale().getCode(),
                         data.getCurrency().getCode()

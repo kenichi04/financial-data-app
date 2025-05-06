@@ -6,6 +6,7 @@ import com.example.cash_ratio_analyzer.domain.enums.DisplayScale;
 import com.example.cash_ratio_analyzer.domain.enums.Currency;
 import com.example.cash_ratio_analyzer.domain.model.AccountMaster;
 import com.example.cash_ratio_analyzer.domain.model.FinancialData;
+import com.example.cash_ratio_analyzer.domain.model.context.EdinetContext;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
 
@@ -95,8 +96,9 @@ public class XbrlFinancialDataExtractor {
         }
 
         var account = accountMap.get(name);
+        var edinetContext = EdinetContext.fromContextRef(contextRef);
         return Optional.of(
-                new FinancialData(account, contextRef, value,
+                new FinancialData(account, edinetContext, value,
                         DisplayScale.fromCode(Integer.parseInt(scale)),
                         Currency.fromCode(unitRef)));
     }
