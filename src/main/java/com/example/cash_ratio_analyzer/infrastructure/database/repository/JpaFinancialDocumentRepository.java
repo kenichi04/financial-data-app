@@ -69,7 +69,7 @@ public class JpaFinancialDocumentRepository implements IFinancialDocumentReposit
         return from.stream()
                 .map(entity -> new FinancialData(
                         jpaAccountMasterRepository.toModel(entity.getAccount()),
-                        EdinetContext.fromContextRef(""),
+                        EdinetContext.fromContextRef(entity.getContextRef()),
                         entity.getAmount(),
                         DisplayScale.fromCode(entity.getDisplayScale()),
                         Currency.fromCode(entity.getCurrency())

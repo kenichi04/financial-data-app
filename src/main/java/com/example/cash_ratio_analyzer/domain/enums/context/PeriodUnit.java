@@ -19,7 +19,7 @@ public enum PeriodUnit {
         this.label = label;
     }
 
-    public String getName() {
+    public String getLabel() {
         return this.label;
     }
 }

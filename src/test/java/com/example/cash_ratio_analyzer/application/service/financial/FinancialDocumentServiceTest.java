@@ -117,7 +117,7 @@ class FinancialDocumentServiceTest {
                 "現金預金", "Cash and deposits",
                 Balance.DEBIT);
 
-        var edinetContext = EdinetContext.fromContextRef("");
+        var edinetContext = EdinetContext.fromContextRef("CurrentYearInstant_NonConsolidatedMember");
 
         return new FinancialData(
                 account,
