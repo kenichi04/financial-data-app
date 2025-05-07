@@ -8,23 +8,22 @@ import java.math.BigDecimal;
 
 public class FinancialData {
     private Long id;
-    // TODO 集約外のため、インスタンスではなくaccount_idを持つ
-    private final AccountMaster accountMaster;
+    private final Long accountId;
     private final EdinetContext edinetContext;
     private final BigDecimal amount;
     private final DisplayScale displayScale;
     private final Currency currency;
 
-    public FinancialData(AccountMaster accountMaster, EdinetContext edinetContext, BigDecimal amount, DisplayScale displayScale, Currency currency) {
-        this.accountMaster = accountMaster;
+    public FinancialData(Long accountId, EdinetContext edinetContext, BigDecimal amount, DisplayScale displayScale, Currency currency) {
+        this.accountId = accountId;
         this.edinetContext = edinetContext;
         this.amount = amount;
         this.displayScale = displayScale;
         this.currency = currency;
     }
 
-    public AccountMaster getAccount() {
-        return accountMaster;
+    public Long getAccountId() {
+        return accountId;
     }
 
     public EdinetContext getEdinetContext() {

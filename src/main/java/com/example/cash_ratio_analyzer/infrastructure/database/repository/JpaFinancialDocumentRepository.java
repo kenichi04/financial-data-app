@@ -68,7 +68,7 @@ public class JpaFinancialDocumentRepository implements IFinancialDocumentReposit
     private List<FinancialData> toModelData(List<FinancialDataEntity> from) {
         return from.stream()
                 .map(entity -> new FinancialData(
-                        jpaAccountMasterRepository.toModel(entity.getAccount()),
+                        entity.getAccountId(),
                         EdinetContext.fromContextRef(entity.getContextRef()),
                         entity.getAmount(),
                         DisplayScale.fromCode(entity.getDisplayScale()),
@@ -92,7 +92,7 @@ public class JpaFinancialDocumentRepository implements IFinancialDocumentReposit
         return from.stream()
                 .map(data -> new FinancialDataEntity(
                         documentEntity,
-                        jpaAccountMasterRepository.toEntity(data.getAccount()),
+                        data.getAccountId(),
                         data.getEdinetContext().getPeriodType(),
                         data.getEdinetContext().getPeriodUnit(),
                         data.getEdinetContext().getConsolidatedType(),

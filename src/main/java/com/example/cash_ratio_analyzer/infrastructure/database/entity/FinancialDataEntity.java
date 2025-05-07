@@ -21,9 +21,8 @@ public class FinancialDataEntity {
     @JoinColumn(name = "financial_document_id", nullable = false)
     private FinancialDocumentEntity financialDocument;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
-    private AccountMasterEntity account;
+    @Column(name = "account_id", nullable = false)
+    private Long accountId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "period_type", nullable = false)
@@ -51,11 +50,11 @@ public class FinancialDataEntity {
 
     public FinancialDataEntity() {}
 
-    public FinancialDataEntity(FinancialDocumentEntity financialDocument, AccountMasterEntity account,
+    public FinancialDataEntity(FinancialDocumentEntity financialDocument, Long accountId,
                                PeriodType periodType, PeriodUnit periodUnit, ConsolidatedType consolidatedType,
                                String contextRef, BigDecimal amount, int displayScale, String currency) {
         this.financialDocument = financialDocument;
-        this.account = account;
+        this.accountId = accountId;
         this.periodType = periodType;
         this.periodUnit = periodUnit;
         this.consolidatedType = consolidatedType;

@@ -55,7 +55,7 @@ class XbrlFinancialDataExtractorTest {
         var data1 = financialDataList.get(0);
         var data2 = financialDataList.get(1);
 
-        assertEquals("CashAndDeposits", data1.getAccount().getCode());
+        assertEquals(1L, data1.getAccountId());
         assertNotNull(data1.getAmount());
 
         verify(accountService, times(1)).getAccounts();

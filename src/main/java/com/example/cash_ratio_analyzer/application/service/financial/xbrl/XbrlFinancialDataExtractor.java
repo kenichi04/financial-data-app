@@ -98,7 +98,7 @@ public class XbrlFinancialDataExtractor {
         var account = accountMap.get(name);
         var edinetContext = EdinetContext.fromContextRef(contextRef);
         return Optional.of(
-                new FinancialData(account, edinetContext, value,
+                new FinancialData(account.getId(), edinetContext, value,
                         DisplayScale.fromCode(Integer.parseInt(scale)),
                         Currency.fromCode(unitRef)));
     }

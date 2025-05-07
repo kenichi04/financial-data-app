@@ -120,7 +120,7 @@ class FinancialDocumentServiceTest {
         var edinetContext = EdinetContext.fromContextRef("CurrentYearInstant_NonConsolidatedMember");
 
         return new FinancialData(
-                account,
+                account.getId(),
                 edinetContext,
                 new BigDecimal("100"),
                 DisplayScale.MILLION_YEN,
