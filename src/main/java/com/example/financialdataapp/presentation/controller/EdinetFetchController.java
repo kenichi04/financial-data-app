@@ -1,7 +1,7 @@
 package com.example.financialdataapp.presentation.controller;
 
-import com.example.financialdataapp.application.service.FinancialDocumentScenarioService;
-import com.example.financialdataapp.application.service.DocumentMetadataScenarioService;
+import com.example.financialdataapp.application.service.FinancialDocumentFetchUseCase;
+import com.example.financialdataapp.application.service.DocumentMetadataFetchUseCase;
 import com.example.financialdataapp.presentation.controller.response.DocumentMetadataPostResponse;
 import com.example.financialdataapp.presentation.controller.response.FinancialDocumentPostResponse;
 import org.springframework.web.bind.annotation.*;
@@ -12,18 +12,18 @@ import java.time.LocalDate;
 @RequestMapping("/api/edinet")
 public class EdinetFetchController {
 
-    private final DocumentMetadataScenarioService documentMetadataScenarioService;
+    private final DocumentMetadataFetchUseCase documentMetadataFetchUseCase;
 
-    private final FinancialDocumentScenarioService financialDocumentScenarioService;
+    private final FinancialDocumentFetchUseCase financialDocumentFetchUseCase;
 
-    public EdinetFetchController(DocumentMetadataScenarioService documentMetadataScenarioService, FinancialDocumentScenarioService financialDocumentScenarioService) {
-        this.documentMetadataScenarioService = documentMetadataScenarioService;
-        this.financialDocumentScenarioService = financialDocumentScenarioService;
+    public EdinetFetchController(DocumentMetadataFetchUseCase documentMetadataFetchUseCase, FinancialDocumentFetchUseCase financialDocumentFetchUseCase) {
+        this.documentMetadataFetchUseCase = documentMetadataFetchUseCase;
+        this.financialDocumentFetchUseCase = financialDocumentFetchUseCase;
     }
 
     @PostMapping("/metadata/fetch-and-save")
     public DocumentMetadataPostResponse fetchAndSaveDocumentMetadata(@RequestParam LocalDate fromDate) {
-        var documentIds = documentMetadataScenarioService.fetchAndSaveDocumentMetadata(fromDate);
+        var documentIds = documentMetadataFetchUseCase.fetchAndSaveDocumentMetadata(fromDate);
 
         var documentIdList = documentIds.stream()
                 .map(documentId -> documentId.value())
@@ -33,7 +33,7 @@ public class EdinetFetchController {
 
     @PostMapping("/{documentId}/fetch-and-save")
     public FinancialDocumentPostResponse fetchAndSaveFinancialData(@PathVariable String documentId) {
-        var documentIdModel = financialDocumentScenarioService.fetchAndSaveFinancialData(documentId);
+        var documentIdModel = financialDocumentFetchUseCase.fetchAndSaveFinancialData(documentId);
         return new FinancialDocumentPostResponse(documentIdModel.value());
     }
 }

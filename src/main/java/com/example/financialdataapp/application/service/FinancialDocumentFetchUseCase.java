@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
 @Service
-public class FinancialDocumentScenarioService {
+public class FinancialDocumentFetchUseCase {
 
     private final EdinetDataFetchService edinetDataFetchService;
     private final EdinetFileExtractionService edinetFileExtractionService;
@@ -21,7 +21,7 @@ public class FinancialDocumentScenarioService {
     private final XbrlFinancialDataExtractor xbrlFinancialDataExtractor;
     private final FinancialDocumentService financialDocumentService;
 
-    public FinancialDocumentScenarioService(EdinetDataFetchService edinetDataFetchService, EdinetFileExtractionService edinetFileExtractionService, XbrlHeaderInfoExtractor xbrlHeaderInfoExtractor, XbrlFinancialDataExtractor xbrlFinancialDataExtractor, FinancialDocumentService financialDocumentService) {
+    public FinancialDocumentFetchUseCase(EdinetDataFetchService edinetDataFetchService, EdinetFileExtractionService edinetFileExtractionService, XbrlHeaderInfoExtractor xbrlHeaderInfoExtractor, XbrlFinancialDataExtractor xbrlFinancialDataExtractor, FinancialDocumentService financialDocumentService) {
         this.edinetDataFetchService = edinetDataFetchService;
         this.edinetFileExtractionService = edinetFileExtractionService;
         this.xbrlHeaderInfoExtractor = xbrlHeaderInfoExtractor;

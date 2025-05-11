@@ -11,13 +11,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class DocumentMetadataScenarioService {
+public class DocumentMetadataFetchUseCase {
 
     private final EdinetDocumentListService edinetDocumentListService;
     private final JsonParserService jsonParserService;
     private final DocumentMetadataService documentMetadataService;
 
-    public DocumentMetadataScenarioService(EdinetDocumentListService edinetDocumentListService, JsonParserService jsonParserService, DocumentMetadataService documentMetadataService) {
+    public DocumentMetadataFetchUseCase(EdinetDocumentListService edinetDocumentListService, JsonParserService jsonParserService, DocumentMetadataService documentMetadataService) {
         this.documentMetadataService = documentMetadataService;
         this.edinetDocumentListService = edinetDocumentListService;
         this.jsonParserService = jsonParserService;
