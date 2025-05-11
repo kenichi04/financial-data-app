@@ -1,8 +1,8 @@
-package com.example.financialdataapp.infrastructure.database.repository;
+package com.example.financialdataapp.infrastructure.database.jpa.repository;
 
 import com.example.financialdataapp.domain.model.AccountMaster;
 import com.example.financialdataapp.domain.repository.IAccountMasterRepository;
-import com.example.financialdataapp.infrastructure.database.entity.AccountMasterEntity;
+import com.example.financialdataapp.infrastructure.database.jpa.entity.AccountMasterEntity;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 

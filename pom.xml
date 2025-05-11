@@ -39,6 +39,11 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq</artifactId>
+			<version>3.19.23</version>
+		</dependency>
+		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
@@ -75,6 +80,41 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-codegen-maven</artifactId>
+				<version>3.19.23</version>
+				<executions>
+					<execution>
+						<id>generate-jooq</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<jdbc>
+								<driver>org.h2.Driver</driver>
+								<!-- <url>${db.url}</url> -->
+								<url>jdbc:h2:mem:testdb</url>
+								<!-- <user>${db.user}</user> -->
+								<user>sa</user>
+								<password>""</password>
+								<!-- <password>${db.password}</password> -->
+							</jdbc>
+							<generator>
+								<database>
+									<name>org.jooq.meta.h2.H2Database</name>
+									<inputSchema>public</inputSchema>
+								</database>
+								<target>
+									<packageName>org.jooq.example.flyway.db.h2</packageName>
+									<directory>target/generated-sources/jooq-h2</directory>
+								</target>
+							</generator>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

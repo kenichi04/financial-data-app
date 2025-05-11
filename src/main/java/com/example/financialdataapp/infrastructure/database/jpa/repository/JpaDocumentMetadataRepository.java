@@ -1,4 +1,4 @@
-package com.example.financialdataapp.infrastructure.database.repository;
+package com.example.financialdataapp.infrastructure.database.jpa.repository;
 
 import com.example.financialdataapp.domain.enums.EdinetDocumentType;
 import com.example.financialdataapp.domain.enums.EdinetFormCode;
@@ -6,7 +6,7 @@ import com.example.financialdataapp.domain.model.DocumentId;
 import com.example.financialdataapp.domain.model.EdinetCode;
 import com.example.financialdataapp.domain.model.DocumentMetadata;
 import com.example.financialdataapp.domain.repository.IDocumentMetadataRepository;
-import com.example.financialdataapp.infrastructure.database.entity.DocumentMetadataEntity;
+import com.example.financialdataapp.infrastructure.database.jpa.entity.DocumentMetadataEntity;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 

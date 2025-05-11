@@ -1,4 +1,4 @@
-package com.example.financialdataapp.infrastructure.database.entity;
+package com.example.financialdataapp.infrastructure.database.jpa.entity;
 
 import com.example.financialdataapp.domain.enums.Balance;
 import jakarta.persistence.*;

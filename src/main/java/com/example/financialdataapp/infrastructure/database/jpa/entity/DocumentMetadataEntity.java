@@ -1,4 +1,4 @@
-package com.example.financialdataapp.infrastructure.database.entity;
+package com.example.financialdataapp.infrastructure.database.jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

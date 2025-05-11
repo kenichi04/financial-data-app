@@ -1,4 +1,4 @@
-package com.example.financialdataapp.infrastructure.database.repository;
+package com.example.financialdataapp.infrastructure.database.jpa.repository;
 
 import com.example.financialdataapp.domain.enums.Currency;
 import com.example.financialdataapp.domain.enums.DisplayScale;
@@ -8,8 +8,8 @@ import com.example.financialdataapp.domain.model.FinancialData;
 import com.example.financialdataapp.domain.model.FinancialDocument;
 import com.example.financialdataapp.domain.model.context.EdinetContext;
 import com.example.financialdataapp.domain.repository.IFinancialDocumentRepository;
-import com.example.financialdataapp.infrastructure.database.entity.FinancialDataEntity;
-import com.example.financialdataapp.infrastructure.database.entity.FinancialDocumentEntity;
+import com.example.financialdataapp.infrastructure.database.jpa.entity.FinancialDataEntity;
+import com.example.financialdataapp.infrastructure.database.jpa.entity.FinancialDocumentEntity;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 

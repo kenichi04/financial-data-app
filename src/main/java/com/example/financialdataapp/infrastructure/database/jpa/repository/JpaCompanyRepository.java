@@ -1,9 +1,9 @@
-package com.example.financialdataapp.infrastructure.database.repository;
+package com.example.financialdataapp.infrastructure.database.jpa.repository;
 
 import com.example.financialdataapp.domain.model.Company;
 import com.example.financialdataapp.domain.model.EdinetCode;
 import com.example.financialdataapp.domain.repository.ICompanyRepository;
-import com.example.financialdataapp.infrastructure.database.entity.CompanyEntity;
+import com.example.financialdataapp.infrastructure.database.jpa.entity.CompanyEntity;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
