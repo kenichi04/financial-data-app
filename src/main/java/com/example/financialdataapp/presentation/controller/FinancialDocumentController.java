@@ -1,5 +1,7 @@
 package com.example.financialdataapp.presentation.controller;
 
+import com.example.financialdataapp.application.service.FinancialDocumentUseCase;
+import com.example.financialdataapp.application.service.dto.FinancialDocumentDto;
 import com.example.financialdataapp.application.service.financial.FinancialDocumentService;
 import com.example.financialdataapp.application.service.metadata.DocumentMetadataService;
 import com.example.financialdataapp.domain.model.Company;
@@ -16,19 +18,28 @@ import java.util.List;
 @RequestMapping("/api/financial-documents")
 public class FinancialDocumentController {
 
+    private final FinancialDocumentUseCase financialDocumentUseCase;
+
     private final FinancialDocumentService financialDocumentService;
 
     private final DocumentMetadataService documentMetadataService;
 
-    public FinancialDocumentController(FinancialDocumentService financialDocumentService, DocumentMetadataService documentMetadataService) {
+    public FinancialDocumentController(FinancialDocumentUseCase financialDocumentUseCase, FinancialDocumentService financialDocumentService, DocumentMetadataService documentMetadataService) {
+        this.financialDocumentUseCase = financialDocumentUseCase;
         this.financialDocumentService = financialDocumentService;
         this.documentMetadataService = documentMetadataService;
     }
 
-    @GetMapping("/{documentId}")
+    @Deprecated
+    @GetMapping("/v1/{documentId}")
     public FinancialDocument getFinancialDocument(@PathVariable String documentId) {
         // TODO レスポンスモデルを作成する
         return financialDocumentService.getFinancialDocument(documentId);
+    }
+
+    @GetMapping("/{documentId}")
+    public FinancialDocumentDto get(@PathVariable String documentId) {
+        return financialDocumentUseCase.getFinancialDocumentDto(documentId);
     }
 
     // 以下2つは同じ集約に属する（DocumentMetadata関連）
