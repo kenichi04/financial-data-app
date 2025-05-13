@@ -38,11 +38,27 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.jooq</groupId>
 			<artifactId>jooq</artifactId>
 			<version>3.19.23</version>
+		</dependency> -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jooq</artifactId>
 		</dependency>
+		<!-- These may not be required, unless you use the GenerationTool manually for code generation -->
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq-meta</artifactId>
+			<version>${jooq.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq-codegen</artifactId>
+			<version>${jooq.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
@@ -99,7 +115,7 @@
 								<url>jdbc:h2:mem:testdb</url>
 								<!-- <user>${db.user}</user> -->
 								<user>sa</user>
-								<password>""</password>
+								<password></password>
 								<!-- <password>${db.password}</password> -->
 							</jdbc>
 							<generator>
@@ -108,8 +124,8 @@
 									<inputSchema>public</inputSchema>
 								</database>
 								<target>
-									<packageName>org.jooq.example.flyway.db.h2</packageName>
-									<directory>target/generated-sources/jooq-h2</directory>
+									<packageName>com.example.financialdataapp</packageName>
+									<directory>${project.basedir}/src/generate/java</directory>
 								</target>
 							</generator>
 						</configuration>
