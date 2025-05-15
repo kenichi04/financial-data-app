@@ -126,7 +126,7 @@
 								</database>
 								<target>
 									<packageName>com.example.financialdataapp</packageName>
-									<directory>${project.basedir}/src/generate/java</directory>
+									<directory>${project.build.directory}/generated-sources/jooq</directory>
 								</target>
 							</generator>
 						</configuration>

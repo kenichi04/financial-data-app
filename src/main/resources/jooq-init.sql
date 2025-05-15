@@ -1,6 +1,7 @@
--- JOOQ Codegen 用のSQLスクリプト
--- 開発中でH2データベース使用しているDBを見ずに定義を書いておく（インメモリDBのため中身みてくれなかった）
+-- JOOQ Codegen 用のテストSQLスクリプト
+-- 開発中でH2データベース使用しているため、スキーマ定義を書いておく（インメモリDBのため中身みてくれなかった）
 -- 実行コマンド > ./mvnw jooq-codegen:generate@generate-jooq
+-- こちらのコマンドでもよい > ./mvnw generate-sources もしくは ./mvnw compile
 -- FlywayのV1～V5のテーブル相当
 CREATE TABLE document_metadata (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
