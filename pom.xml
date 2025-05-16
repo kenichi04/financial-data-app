@@ -115,6 +115,7 @@
 								<!-- JOOQ接続時にスクリプト実行でDDLを読み込む -->
 								<url>jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;INIT=RUNSCRIPT FROM 'file:src/main/resources/jooq-init.sql'</url>
 								<!-- <user>${db.user}</user> -->
+								<!-- H2デフォルトの接続情報なので、今はこのまま記載していてOK -->
 								<user>sa</user>
 								<password></password>
 								<!-- <password>${db.password}</password> -->
@@ -128,6 +129,9 @@
 									<packageName>com.example.financialdataapp</packageName>
 									<directory>${project.build.directory}/generated-sources/jooq</directory>
 								</target>
+								<strategy>
+									<name>com.example.financialdataapp.infrastructure.database.jooq.codegen.JooqPrefixGeneratorStrategy</name>
+								</strategy>
 							</generator>
 						</configuration>
 					</execution>
