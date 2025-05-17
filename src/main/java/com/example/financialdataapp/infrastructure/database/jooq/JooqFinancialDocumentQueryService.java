@@ -59,6 +59,11 @@ public class JooqFinancialDocumentQueryService implements IFinancialDocumentQuer
                             .fetch()
                             .map(this::toDataDto);
 
+                    // FinancialDocument取得・保存時、必ずFinancialDataも保存している想定
+                    if (data.isEmpty()) {
+                        throw new IllegalStateException("FinancialData not found for documentId: " + docRecord.get(FINANCIAL_DOCUMENT.DOCUMENT_ID));
+                    }
+
                     return toDocumentDto(docRecord, data);
                 });
     }
