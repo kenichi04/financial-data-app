@@ -9,6 +9,6 @@ public record FinancialDataDto(
         String periodUnit,
         String consolidatedType,
         BigDecimal amount,
-        String displayScale,
+        Integer displayScale,
         String currency) {
 }
