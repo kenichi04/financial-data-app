@@ -7,10 +7,12 @@ import com.example.financialdataapp.application.service.metadata.DocumentMetadat
 import com.example.financialdataapp.domain.model.Company;
 import com.example.financialdataapp.domain.model.DocumentMetadata;
 import com.example.financialdataapp.domain.model.FinancialDocument;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -38,7 +40,8 @@ public class FinancialDocumentController {
 
     @GetMapping("/{documentId}")
     public FinancialDocumentDto get(@PathVariable String documentId) {
-        return financialDocumentQueryUseCase.getFinancialDocumentDto(documentId);
+        return financialDocumentQueryUseCase.getFinancialDocumentDto(documentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found: " + documentId));
     }
 
     // 以下2つは同じ集約に属する（DocumentMetadata関連）

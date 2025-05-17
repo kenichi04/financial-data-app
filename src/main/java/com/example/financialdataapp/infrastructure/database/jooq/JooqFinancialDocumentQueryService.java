@@ -6,6 +6,8 @@ import com.example.financialdataapp.domain.model.DocumentId;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 import static com.example.financialdataapp.tables.JooqFinancialDocument.FINANCIAL_DOCUMENT;
 
 @Repository
@@ -18,8 +20,8 @@ public class JooqFinancialDocumentQueryService implements IFinancialDocumentQuer
     }
 
     @Override
-    public FinancialDocumentDto fetchByFinancialDocumentId(DocumentId documentId) {
-        var record = create
+    public Optional<FinancialDocumentDto> fetchByFinancialDocumentId(DocumentId documentId) {
+        return create
                 .select(FINANCIAL_DOCUMENT.DOCUMENT_ID,
                         FINANCIAL_DOCUMENT.EDINET_CODE,
                         FINANCIAL_DOCUMENT.DOCUMENT_TYPE,
@@ -27,17 +29,13 @@ public class JooqFinancialDocumentQueryService implements IFinancialDocumentQuer
                         FINANCIAL_DOCUMENT.CURRENCY)
                 .from(FINANCIAL_DOCUMENT)
                 .where(FINANCIAL_DOCUMENT.DOCUMENT_ID.eq(documentId.toString()))
-                .fetchOne();
-
-        if (record == null) {
-            return null;
-        }
-        return  new FinancialDocumentDto(
-                record.get(FINANCIAL_DOCUMENT.DOCUMENT_ID),
-                record.get(FINANCIAL_DOCUMENT.EDINET_CODE),
-                record.get(FINANCIAL_DOCUMENT.DOCUMENT_TYPE),
-                record.get(FINANCIAL_DOCUMENT.FISCAL_YEAR_END_DATE),
-                record.get(FINANCIAL_DOCUMENT.CURRENCY)
-        );
+                .fetchOptional()
+                .map(record -> new FinancialDocumentDto(
+                        record.get(FINANCIAL_DOCUMENT.DOCUMENT_ID),
+                        record.get(FINANCIAL_DOCUMENT.EDINET_CODE),
+                        record.get(FINANCIAL_DOCUMENT.DOCUMENT_TYPE),
+                        record.get(FINANCIAL_DOCUMENT.FISCAL_YEAR_END_DATE),
+                        record.get(FINANCIAL_DOCUMENT.CURRENCY)
+                ));
     }
 }
