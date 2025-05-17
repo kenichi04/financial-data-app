@@ -4,5 +4,4 @@ CREATE TABLE account_master (
     name_jp VARCHAR(255) NOT NULL,
     name_en VARCHAR(255) NOT NULL,
     balance VARCHAR(50) NOT NULL  -- 貸借区分（借方/貸方/NONE）
-
 );
