@@ -47,13 +47,13 @@ public class FinancialDocumentController {
     // 以下2つは同じ集約に属する（DocumentMetadata関連）
     @GetMapping("/unprocessedMetadata")
     public List<DocumentMetadata> getUnprocessedMetadata() {
-        // TODO レスポンスモデルを作成する
+        // TODO クエリサービス作成して差し替え
         return documentMetadataService.getUnprocessedMetadata();
     }
 
     @GetMapping("/companies")
     public List<Company> getCompanies() {
-        // TODO レスポンスモデルを作成する
+        // TODO クエリサービス作成して差し替え
         return documentMetadataService.getCompanies();
     }
 }
