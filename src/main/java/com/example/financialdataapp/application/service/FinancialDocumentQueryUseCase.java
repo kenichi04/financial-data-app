@@ -6,11 +6,11 @@ import com.example.financialdataapp.domain.model.DocumentId;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FinancialDocumentUseCase {
+public class FinancialDocumentQueryUseCase {
 
     private final IFinancialDocumentQueryService queryService;
 
-    public FinancialDocumentUseCase(IFinancialDocumentQueryService financialDocumentQueryService) {
+    public FinancialDocumentQueryUseCase(IFinancialDocumentQueryService financialDocumentQueryService) {
         this.queryService = financialDocumentQueryService;
     }
 

@@ -1,4 +1,8 @@
 package com.example.financialdataapp.application.service.dto;
 
-public class FinancialDocumentDto {
+import java.time.LocalDate;
+
+public record FinancialDocumentDto(String documentId, String edinetCode, String documentType,
+                                   LocalDate fiscalYearEndDate, String currency) {
+
 }
