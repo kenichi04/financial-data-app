@@ -23,12 +23,9 @@ public class JpaFinancialDocumentRepository implements IFinancialDocumentReposit
 
     private final FinancialDataRepository financialDataRepository;
 
-    private final JpaAccountMasterRepository jpaAccountMasterRepository;
-
-    public JpaFinancialDocumentRepository(FinancialDocumentRepository financialDocumentRepository, FinancialDataRepository financialDataRepository, JpaAccountMasterRepository jpaAccountMasterRepository) {
+    public JpaFinancialDocumentRepository(FinancialDocumentRepository financialDocumentRepository, FinancialDataRepository financialDataRepository) {
         this.financialDocumentRepository = financialDocumentRepository;
         this.financialDataRepository = financialDataRepository;
-        this.jpaAccountMasterRepository = jpaAccountMasterRepository;
     }
 
     @Override

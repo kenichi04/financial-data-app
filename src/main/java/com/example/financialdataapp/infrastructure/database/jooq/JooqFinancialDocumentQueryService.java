@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.financialdataapp.tables.JooqAccountMaster.ACCOUNT_MASTER;
 import static com.example.financialdataapp.tables.JooqFinancialData.FINANCIAL_DATA;
 import static com.example.financialdataapp.tables.JooqFinancialDocument.FINANCIAL_DOCUMENT;
 
@@ -43,8 +44,9 @@ public class JooqFinancialDocumentQueryService implements IFinancialDocumentQuer
                 .fetchOptional()
                 .map(docRecord -> {
                     var data = create
-                            .select(FINANCIAL_DATA.ID,
-                                    FINANCIAL_DATA.ACCOUNT_ID,
+                            .select(FINANCIAL_DATA.ACCOUNT_ID,
+                                    ACCOUNT_MASTER.CODE,
+                                    ACCOUNT_MASTER.NAME_JP,
                                     FINANCIAL_DATA.PERIOD_TYPE,
                                     FINANCIAL_DATA.PERIOD_UNIT,
                                     FINANCIAL_DATA.CONSOLIDATED_TYPE,
@@ -52,6 +54,7 @@ public class JooqFinancialDocumentQueryService implements IFinancialDocumentQuer
                                     FINANCIAL_DATA.DISPLAY_SCALE,
                                     FINANCIAL_DATA.CURRENCY)
                             .from(FINANCIAL_DATA)
+                            .join(ACCOUNT_MASTER).on(FINANCIAL_DATA.ACCOUNT_ID.eq(ACCOUNT_MASTER.ID))
                             .where(FINANCIAL_DATA.FINANCIAL_DOCUMENT_ID.eq(docRecord.get(FINANCIAL_DOCUMENT.ID)))
                             .fetch()
                             .map(this::toDataDto);
@@ -74,8 +77,9 @@ public class JooqFinancialDocumentQueryService implements IFinancialDocumentQuer
 
     private FinancialDataDto toDataDto(Record dataRecord) {
         return new FinancialDataDto(
-                dataRecord.get(FINANCIAL_DATA.ID),
                 dataRecord.get(FINANCIAL_DATA.ACCOUNT_ID),
+                dataRecord.get(ACCOUNT_MASTER.CODE),
+                dataRecord.get(ACCOUNT_MASTER.NAME_JP),
                 dataRecord.get(FINANCIAL_DATA.PERIOD_TYPE),
                 dataRecord.get(FINANCIAL_DATA.PERIOD_UNIT),
                 dataRecord.get(FINANCIAL_DATA.CONSOLIDATED_TYPE),

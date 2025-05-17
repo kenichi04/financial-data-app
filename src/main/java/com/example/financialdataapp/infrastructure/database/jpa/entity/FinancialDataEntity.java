@@ -42,7 +42,6 @@ public class FinancialDataEntity {
     @Column(nullable = false)
     private BigDecimal amount;
 
-    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private int displayScale;
 
