@@ -1,5 +1,5 @@
 CREATE TABLE financial_data (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     financial_document_id BIGINT NOT NULL,
     account_id BIGINT NOT NULL,
     period_type VARCHAR(20) NOT NULL,

@@ -1,12 +1,14 @@
 ## 開発用メモ
-  - EDINET 書類取得API用のテスト用docId: S100TGZR、S100VAU4
-  - H2接続: http://localhost:8080/h2-console
+- EDINET 書類取得API用のテスト用docId: S100TGZR、S100VAU4
+- JOOQ Codegen
+  - 実行コマンド > ./mvnw jooq-codegen:generate@generate-jooq
+  - 次のコマンドでもよい > ./mvnw generate-sources もしくは ./mvnw compile
+
   - コンテキストIDの定義で連結・単独、当期・前期が確認できる
   - インスタンスガイドラインp39のコンテキストの設定例
   - 一つのインラインXBRLファイルには一つの墨付き【】必要らしい
   - 表紙ファイルでコンテキストの定義見れる
   - 本文ファイルで参照しているコンテキストIDを表紙ファイルで定義している
-
 
 ## メモ
 - Accountに登録する科目洗い出し
