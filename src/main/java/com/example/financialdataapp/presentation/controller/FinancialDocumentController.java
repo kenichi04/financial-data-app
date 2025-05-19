@@ -24,12 +24,9 @@ public class FinancialDocumentController {
 
     private final FinancialDocumentService financialDocumentService;
 
-    private final DocumentMetadataService documentMetadataService;
-
-    public FinancialDocumentController(FinancialDocumentQueryUseCase financialDocumentQueryUseCase, FinancialDocumentService financialDocumentService, DocumentMetadataService documentMetadataService) {
+    public FinancialDocumentController(FinancialDocumentQueryUseCase financialDocumentQueryUseCase, FinancialDocumentService financialDocumentService) {
         this.financialDocumentQueryUseCase = financialDocumentQueryUseCase;
         this.financialDocumentService = financialDocumentService;
-        this.documentMetadataService = documentMetadataService;
     }
 
     @Deprecated
@@ -42,18 +39,5 @@ public class FinancialDocumentController {
     public FinancialDocumentDto get(@PathVariable String documentId) {
         return financialDocumentQueryUseCase.getFinancialDocumentDto(documentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found: " + documentId));
-    }
-
-    // 以下2つは同じ集約に属する（DocumentMetadata関連）
-    @GetMapping("/unprocessedMetadata")
-    public List<DocumentMetadata> getUnprocessedMetadata() {
-        // TODO クエリサービス作成して差し替え
-        return documentMetadataService.getUnprocessedMetadata();
-    }
-
-    @GetMapping("/companies")
-    public List<Company> getCompanies() {
-        // TODO クエリサービス作成して差し替え
-        return documentMetadataService.getCompanies();
     }
 }
