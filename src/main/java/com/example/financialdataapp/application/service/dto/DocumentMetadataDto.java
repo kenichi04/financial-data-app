@@ -6,7 +6,7 @@ public record DocumentMetadataDto(
         String documentId,
         String description,
         String edinetCode,
-        String documentType,
+        Integer documentType,
         String formCode,
         LocalDate submissionDate,
         boolean processed
