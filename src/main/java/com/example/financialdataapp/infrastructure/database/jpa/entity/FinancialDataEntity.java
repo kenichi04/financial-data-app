@@ -1,7 +1,7 @@
 package com.example.financialdataapp.infrastructure.database.jpa.entity;
 
 import com.example.financialdataapp.domain.enums.context.ConsolidatedType;
-import com.example.financialdataapp.domain.enums.context.PeriodType;
+import com.example.financialdataapp.domain.enums.context.YearType;
 import com.example.financialdataapp.domain.enums.context.PeriodUnit;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,8 +25,8 @@ public class FinancialDataEntity {
     private Long accountId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "period_type", nullable = false)
-    private PeriodType periodType;
+    @Column(name = "year_type", nullable = false)
+    private YearType yearType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "period_unit", nullable = false)
@@ -51,11 +51,11 @@ public class FinancialDataEntity {
     public FinancialDataEntity() {}
 
     public FinancialDataEntity(FinancialDocumentEntity financialDocument, Long accountId,
-                               PeriodType periodType, PeriodUnit periodUnit, ConsolidatedType consolidatedType,
+                               YearType yearType, PeriodUnit periodUnit, ConsolidatedType consolidatedType,
                                String contextRef, BigDecimal amount, int displayScale, String currency) {
         this.financialDocument = financialDocument;
         this.accountId = accountId;
-        this.periodType = periodType;
+        this.yearType = yearType;
         this.periodUnit = periodUnit;
         this.consolidatedType = consolidatedType;
         this.contextRef = contextRef;

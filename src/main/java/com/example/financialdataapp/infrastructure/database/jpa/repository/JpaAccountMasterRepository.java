@@ -30,7 +30,9 @@ public class JpaAccountMasterRepository implements IAccountMasterRepository {
                 from.getCode(),
                 from.getNameJp(),
                 from.getNameEn(),
-                from.getBalance());
+                from.getPeriodType(),
+                from.getBalance(),
+                from.getDepth());
     }
 
     protected AccountMasterEntity toEntity(AccountMaster from) {

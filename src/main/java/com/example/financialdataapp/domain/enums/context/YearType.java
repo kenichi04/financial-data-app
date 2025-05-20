@@ -3,7 +3,7 @@ package com.example.financialdataapp.domain.enums.context;
 /**
  * 会計期間の種類を表す列挙型です。
  */
-public enum PeriodType {
+public enum YearType {
     /** 当期 */
     CURRENT_YEAR("CurrentYear"),
     /** 前期 */
@@ -11,7 +11,7 @@ public enum PeriodType {
 
     private final String label;
 
-    private PeriodType(String label) {
+    private YearType(String label) {
         this.label = label;
     }
 

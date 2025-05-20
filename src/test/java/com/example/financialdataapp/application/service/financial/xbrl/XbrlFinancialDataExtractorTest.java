@@ -2,6 +2,7 @@ package com.example.financialdataapp.application.service.financial.xbrl;
 
 import com.example.financialdataapp.application.service.AccountService;
 import com.example.financialdataapp.domain.enums.Balance;
+import com.example.financialdataapp.domain.enums.PeriodType;
 import com.example.financialdataapp.domain.model.AccountMaster;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class XbrlFinancialDataExtractorTest {
         var testContent = Files.readAllBytes(Path.of("src/test/resources/xbrl/test_0105020_content_ixbrl.htm"));
 
         var account  = new AccountMaster(
-                1L, "CashAndDeposits", "現金預金", "Cash and deposits", Balance.DEBIT);
+                1L, "CashAndDeposits", "現金預金", "Cash and deposits", PeriodType.INSTANT, Balance.DEBIT, 4);
         when(accountService.getAccounts()).thenReturn(List.of(account));
 
         // when

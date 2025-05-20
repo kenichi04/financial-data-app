@@ -1,7 +1,7 @@
 package com.example.financialdataapp.domain.model.context;
 
 import com.example.financialdataapp.domain.enums.context.ConsolidatedType;
-import com.example.financialdataapp.domain.enums.context.PeriodType;
+import com.example.financialdataapp.domain.enums.context.YearType;
 import com.example.financialdataapp.domain.enums.context.PeriodUnit;
 
 /**
@@ -12,20 +12,20 @@ import com.example.financialdataapp.domain.enums.context.PeriodUnit;
  * contextRefは、EDINETのXBRLファイルにおけるコンテキストを識別するための文字列です。
  */
 public class EdinetContext {
-    private final PeriodType periodType;
+    private final YearType yearType;
     private final PeriodUnit periodUnit;
     private final ConsolidatedType consolidatedType;
     private final String contextRef;
 
-    private EdinetContext(PeriodType periodType, PeriodUnit periodUnit, ConsolidatedType consolidatedType, String contextRef) {
-        this.periodType = periodType;
+    private EdinetContext(YearType yearType, PeriodUnit periodUnit, ConsolidatedType consolidatedType, String contextRef) {
+        this.yearType = yearType;
         this.periodUnit = periodUnit;
         this.consolidatedType = consolidatedType;
         this.contextRef = contextRef;
     }
 
-    public PeriodType getPeriodType() {
-        return periodType;
+    public YearType getPeriodType() {
+        return yearType;
     }
 
     public PeriodUnit getPeriodUnit() {
@@ -52,15 +52,15 @@ public class EdinetContext {
             throw new IllegalArgumentException("contextRef must not be null or empty");
         }
 
-        PeriodType periodType = extractPeriodType(contextRef);
+        YearType yearType = extractPeriodType(contextRef);
         PeriodUnit periodUnit = extractPeriodUnit(contextRef);
         ConsolidatedType consolidatedType = extractConsolidatedType(contextRef);
 
-        return new EdinetContext(periodType, periodUnit, consolidatedType, contextRef);
+        return new EdinetContext(yearType, periodUnit, consolidatedType, contextRef);
     }
 
-    private static PeriodType extractPeriodType(String contextRef) {
-        for (PeriodType type : PeriodType.values()) {
+    private static YearType extractPeriodType(String contextRef) {
+        for (YearType type : YearType.values()) {
             if (contextRef.contains(type.getLabel())) {
                 return type;
             }

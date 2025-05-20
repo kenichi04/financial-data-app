@@ -6,6 +6,7 @@ import com.example.financialdataapp.application.service.metadata.DocumentMetadat
 import com.example.financialdataapp.domain.enums.Balance;
 import com.example.financialdataapp.domain.enums.Currency;
 import com.example.financialdataapp.domain.enums.DisplayScale;
+import com.example.financialdataapp.domain.enums.PeriodType;
 import com.example.financialdataapp.domain.model.*;
 import com.example.financialdataapp.domain.model.context.EdinetContext;
 import com.example.financialdataapp.domain.repository.IFinancialDocumentRepository;
@@ -115,7 +116,7 @@ class FinancialDocumentServiceTest {
         var account = new AccountMaster(
                 1L, "CashAndDeposits",
                 "現金預金", "Cash and deposits",
-                Balance.DEBIT);
+                PeriodType.INSTANT, Balance.DEBIT, 4);
 
         var edinetContext = EdinetContext.fromContextRef("CurrentYearInstant_NonConsolidatedMember");
 
