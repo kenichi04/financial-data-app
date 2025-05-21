@@ -20,7 +20,7 @@ public class JpaConfig {
     private static final String SYSTEM_USER = "system";
 
     @Bean
-    public AuditorAware<String> auditProvider() {
+    public AuditorAware<String> auditorProvider() {
         // システムユーザーを監査者として設定
         // 基本的にデータ登録はアプリ側で行うため、ユーザー情報は取得しない
         return () -> Optional.of(SYSTEM_USER);

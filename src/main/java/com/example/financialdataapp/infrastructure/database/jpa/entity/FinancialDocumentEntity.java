@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "financial_document")
 @Getter
 @Setter
-public class FinancialDocumentEntity {
+public class FinancialDocumentEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,6 @@ public class FinancialDocumentEntity {
     @Column(nullable = false, unique = true)
     private String documentId;
 
-    // TODO metadataテーブルで紐づけているので、ここには不要かも
     @Column(nullable = false)
     private String edinetCode;
 

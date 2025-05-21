@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "document_metadata")
 @Getter
-public class DocumentMetadataEntity {
+public class DocumentMetadataEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
