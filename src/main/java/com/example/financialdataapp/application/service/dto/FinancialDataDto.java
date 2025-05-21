@@ -6,7 +6,7 @@ public record FinancialDataDto(
         Long accountId,
         String accountCode,
         String accountNameJp,
-        String periodType,
+        String yearType,
         String periodUnit,
         String consolidatedType,
         BigDecimal amount,
