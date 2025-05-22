@@ -55,7 +55,7 @@ public class XbrlFinancialDataExtractor {
 
         // 取得するFinancialDataを選別するための科目マップ. accountsテーブルに対象となる科目をマスタデータとして登録しておく想定
         var accountMap = accountService.getAccounts().stream()
-                .collect(Collectors.toMap(account -> account.getCode(), account -> account));
+                .collect(Collectors.toMap(AccountMaster::getCode, account -> account));
 
         // ここで保存するデータは、登録済の文書メタデータに紐づく必要がある
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -92,6 +92,10 @@ public class XbrlFinancialDataExtractor {
         var value = extractValueFromElement(element, XbrlConstants.MINUS.equals(sign));
         // 金額が0の場合は登録しない
         if (value.equals(BigDecimal.ZERO)) {
+            return Optional.empty();
+        }
+        // contextRefがサポート外
+        if (!EdinetContext.isSupportedContextRef(contextRef)) {
             return Optional.empty();
         }
 

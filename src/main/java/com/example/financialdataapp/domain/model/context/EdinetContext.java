@@ -4,6 +4,10 @@ import com.example.financialdataapp.domain.enums.context.ConsolidatedType;
 import com.example.financialdataapp.domain.enums.context.YearType;
 import com.example.financialdataapp.domain.enums.context.PeriodUnit;
 
+import java.util.Set;
+
+import static com.example.financialdataapp.application.service.constants.XbrlConstants.*;
+
 /**
  * EDINETコンテキストの定義を表すクラスです。
  *
@@ -57,6 +61,25 @@ public class EdinetContext {
         ConsolidatedType consolidatedType = extractConsolidatedType(contextRef);
 
         return new EdinetContext(yearType, periodUnit, consolidatedType, contextRef);
+    }
+
+    /**
+     * 指定されたcontextRefがサポートされているコンテキスト定義に含まれているかを判定します。
+     *
+     * <p>「SUPPORTED_CONTEXT_REFS」は、EDINETのXBRLファイルで使用されるコンテキスト定義であり、
+     * BS・PL科目はこの中のいずれかの定義を持つことを想定しています。</p>
+     *
+     * @param contextRef 判定対象のコンテキスト参照文字列
+     * @return サポートされている場合はtrue、そうでない場合はfalse
+     */
+    public static boolean isSupportedContextRef(String contextRef) {
+        var SUPPORTED_CONTEXT_REFS = Set.of(
+                CONTEXT_CURRENT_YEAR_INSTANT,
+                CONTEXT_CURRENT_YEAR_DURATION,
+                CONTEXT_CURRENT_YEAR_INSTANT_NON_CONSOLIDATED_MEMBER,
+                CONTEXT_CURRENT_YEAR_DURATION_NON_CONSOLIDATED_MEMBER
+        );
+        return SUPPORTED_CONTEXT_REFS.contains(contextRef);
     }
 
     private static YearType extractPeriodType(String contextRef) {
