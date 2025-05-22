@@ -47,14 +47,18 @@ public class EdinetContext {
     /**
      * 指定されたcontextRefがサポートされているコンテキスト定義に含まれているかを判定します。
      *
-     * <p>「SUPPORTED_CONTEXT_REFS」は、EDINETのXBRLファイルで使用されるコンテキスト定義であり、
+     * <p>`SUPPORTED_CONTEXT_REFS`は、EDINETのXBRLファイルで使用されるコンテキスト定義であり、
      * BS・PL科目はこの中のいずれかの定義を持つことを想定しています。</p>
      */
     private static final Set<String> SUPPORTED_CONTEXT_REFS = Set.of(
             CONTEXT_CURRENT_YEAR_INSTANT,
             CONTEXT_CURRENT_YEAR_DURATION,
             CONTEXT_CURRENT_YEAR_INSTANT_NON_CONSOLIDATED_MEMBER,
-            CONTEXT_CURRENT_YEAR_DURATION_NON_CONSOLIDATED_MEMBER
+            CONTEXT_CURRENT_YEAR_DURATION_NON_CONSOLIDATED_MEMBER,
+            CONTEXT_PRIOR_1_YEAR_INSTANT,
+            CONTEXT_PRIOR_1_YEAR_DURATION,
+            CONTEXT_PRIOR_1_YEAR_INSTANT_NON_CONSOLIDATED_MEMBER,
+            CONTEXT_PRIOR_1_YEAR_DURATION_NON_CONSOLIDATED_MEMBER
     );
     public static boolean isSupportedContextRef(String contextRef) {
         return SUPPORTED_CONTEXT_REFS.contains(contextRef);

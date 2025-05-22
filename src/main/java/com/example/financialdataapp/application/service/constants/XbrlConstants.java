@@ -80,6 +80,18 @@ public class XbrlConstants {
     /** `当期個別期間`を意味するコンテキストID */
     public static final String CONTEXT_CURRENT_YEAR_DURATION_NON_CONSOLIDATED_MEMBER = "CurrentYearDuration_NonConsolidatedMember";
 
+    /** `前期連結時点`を意味するコンテキストID */
+    public static final String CONTEXT_PRIOR_1_YEAR_INSTANT = "Prior1YearInstant";
+
+    /** `前期連結期間`を意味するコンテキストID */
+    public static final String CONTEXT_PRIOR_1_YEAR_DURATION = "Prior1YearDuration";
+
+    /** `前期個別時点`を意味するコンテキストID */
+    public static final String CONTEXT_PRIOR_1_YEAR_INSTANT_NON_CONSOLIDATED_MEMBER = "Prior1YearInstant_NonConsolidatedMember";
+
+    /** `前期個別期間`を意味するコンテキストID */
+    public static final String CONTEXT_PRIOR_1_YEAR_DURATION_NON_CONSOLIDATED_MEMBER = "Prior1YearDuration_NonConsolidatedMember";
+
     /** ユニット（通貨）のmeasure要素の値のプレフィックス */
     public static final String UNIT_ISO4217 = "iso4217:";
 
