@@ -1,6 +1,10 @@
 -- 勘定科目マスタデータを事前登録
 -- period_type: Enum PeriodType の name() と一致
 -- balance: Enum Balance の name() と一致
+
+-- ===============================
+-- BS科目の登録
+-- ===============================
 INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('CashAndDeposits', '現金及び預金', 'Cash and deposits', 'INSTANT', 'DEBIT', 4);
 INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('NotesAndAccountsReceivableTradeAndContractAssets', '受取手形、売掛金及び契約資産', 'Notes and accounts receivable - trade, and contract assets', 'INSTANT', 'DEBIT', 4);
 INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('NotesAndAccountsReceivableTrade', '受取手形及び売掛金', 'Notes and accounts receivable - trade', 'INSTANT', 'DEBIT', 4);
@@ -40,3 +44,16 @@ INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth)
 INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('ShareholdersEquity', '株主資本', 'Shareholders'' equity', 'INSTANT', 'CREDIT', 4);
 INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('NetAssets', '純資産', 'Net assets', 'INSTANT', 'CREDIT', 3);
 INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('LiabilitiesAndNetAssets', '負債純資産', 'Liabilities and net assets', 'INSTANT', 'CREDIT', 2);
+
+-- ===============================
+-- PL科目の登録
+-- ===============================
+INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('NetSales', '売上高', 'Net sales', 'DURATION', 'CREDIT', 4);
+INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('Revenue', '売上収益', 'Revenue', 'DURATION', 'CREDIT', 4);
+INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('OperatingRevenue1', '営業収益', 'Operating revenue', 'DURATION', 'CREDIT', 4);
+INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('OperatingRevenue2', '営業収入', 'Operating revenue', 'DURATION', 'CREDIT', 4);
+INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('GrossProfit', '売上総利益又は売上総損失（△）', 'Gross profit (loss)', 'DURATION', 'CREDIT', 2);
+INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('OperatingGrossProfit', '営業総利益又は営業総損失（△）', 'Operating gross profit (loss)', 'DURATION', 'CREDIT', 2);
+INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('OperatingIncome', '営業利益又は営業損失（△）', 'Operating profit (loss)', 'DURATION', 'CREDIT', 2);
+INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('OrdinaryIncome', '経常利益又は経常損失（△）', 'Ordinary profit (loss)', 'DURATION', 'CREDIT', 2);
+INSERT INTO account_master (code, name_jp, name_en, period_type, balance, depth) VALUES ('ProfitLoss', '当期純利益又は当期純損失（△）', 'Profit (loss)', 'DURATION', 'CREDIT', 2);
