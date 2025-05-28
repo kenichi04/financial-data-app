@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.financialdataapp.tables.JooqAccountMaster.ACCOUNT_MASTER;
-import static com.example.financialdataapp.tables.JooqFinancialData.FINANCIAL_DATA;
-import static com.example.financialdataapp.tables.JooqFinancialDocument.FINANCIAL_DOCUMENT;
+import static com.example.financialdataapp.tables.AccountMaster.ACCOUNT_MASTER;
+import static com.example.financialdataapp.tables.FinancialData.FINANCIAL_DATA;
+import static com.example.financialdataapp.tables.FinancialDocument.FINANCIAL_DOCUMENT;
 
 @Repository
 public class JooqFinancialDocumentQueryService implements IFinancialDocumentQueryService {

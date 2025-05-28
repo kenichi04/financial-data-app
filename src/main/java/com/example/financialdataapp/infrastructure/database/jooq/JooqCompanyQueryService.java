@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.example.financialdataapp.tables.JooqCompany.COMPANY;
+import static com.example.financialdataapp.tables.Company.COMPANY;
 
 @Repository
 public class JooqCompanyQueryService implements ICompanyQueryService {
