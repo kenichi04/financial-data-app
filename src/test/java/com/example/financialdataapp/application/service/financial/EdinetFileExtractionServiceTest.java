@@ -18,6 +18,8 @@ class EdinetFileExtractionServiceTest {
 
     private static final String TEST_XBRL_TARGET_FILE = "XBRL/PublicDoc/0105020_TEST-TARGET.xml";
 
+    private static final String TEST_REQUIRED_CONTENT_IN_TARGET_FINE = "jpcrp_cor:ConsolidatedBalanceSheetTextBlock";
+
     private EdinetFileExtractionService edinetFileExtractionService;
 
     @BeforeEach
@@ -42,7 +44,7 @@ class EdinetFileExtractionServiceTest {
         assertEquals(TEST_XBRL_TARGET_FILE, firstTargetFile.fileName());
 
         assertArrayEquals("header-content".getBytes(), extractedFiles.getHeaderOrFirstMainContent());
-        assertArrayEquals("target-content".getBytes(), firstTargetFile.content());
+        assertArrayEquals(TEST_REQUIRED_CONTENT_IN_TARGET_FINE.getBytes(), firstTargetFile.content());
     }
 
     @Test
@@ -62,7 +64,7 @@ class EdinetFileExtractionServiceTest {
         assertEquals(TEST_XBRL_TARGET_FILE, firstTargetFile.fileName());
 
         assertArrayEquals("first-content".getBytes(), extractedFiles.getHeaderOrFirstMainContent());
-        assertArrayEquals("target-content".getBytes(), firstTargetFile.content());
+        assertArrayEquals(TEST_REQUIRED_CONTENT_IN_TARGET_FINE.getBytes(), firstTargetFile.content());
     }
 
     @Test
@@ -86,7 +88,7 @@ class EdinetFileExtractionServiceTest {
         try (var zipOut = new ZipOutputStream(out)) {
             addZipEntry(zipOut, TEST_XBRL_HEADER_FILE, "header-content");
             addZipEntry(zipOut, TEST_XBRL_FIRST_MAIN_FILE, "first-content");
-            addZipEntry(zipOut, TEST_XBRL_TARGET_FILE, "target-content");
+            addZipEntry(zipOut, TEST_XBRL_TARGET_FILE, TEST_REQUIRED_CONTENT_IN_TARGET_FINE);
         }
         return out.toByteArray();
     }
@@ -96,7 +98,7 @@ class EdinetFileExtractionServiceTest {
         try (var zipOut = new ZipOutputStream(out)) {
             // header file is missing
             addZipEntry(zipOut, TEST_XBRL_FIRST_MAIN_FILE, "first-content");
-            addZipEntry(zipOut, TEST_XBRL_TARGET_FILE, "target-content");
+            addZipEntry(zipOut, TEST_XBRL_TARGET_FILE, TEST_REQUIRED_CONTENT_IN_TARGET_FINE);
         }
         return out.toByteArray();
     }
@@ -115,7 +117,7 @@ class EdinetFileExtractionServiceTest {
         var out = new ByteArrayOutputStream();
         try (var zipOut = new ZipOutputStream(out)) {
             // header and first main files are missing
-            addZipEntry(zipOut, TEST_XBRL_TARGET_FILE, "target-content");
+            addZipEntry(zipOut, TEST_XBRL_TARGET_FILE, TEST_REQUIRED_CONTENT_IN_TARGET_FINE);
         }
         return out.toByteArray();
     }
