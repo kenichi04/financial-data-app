@@ -6,6 +6,9 @@ application-dev.properties
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Backend build artifacts
+backend/target
+
 ### STS ###
 .apt_generated
 .classpath
