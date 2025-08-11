@@ -1,5 +1,9 @@
 ## 開発用メモ
 - EDINET 書類取得API用のテスト用docId: S100TGZR、S100VAU4
+- DB: PostgreSQL
+  - Dockerで起動 > docker compose up -d
+- JOOQ用のDB接続設定
+  - 接続情報はプロジェクト外の ~/.m2/settings.xml に定義
 - JOOQ Codegen
   - 実行コマンド > ./mvnw jooq-codegen:generate@generate-jooq
   - 次のコマンドでもよい > ./mvnw generate-sources もしくは ./mvnw compile
