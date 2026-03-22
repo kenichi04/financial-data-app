@@ -1,0 +1,65 @@
+name: Unit Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: financial_data_test
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run Flyway migrations
+        working-directory: ./backend
+        run: |
+          chmod +x mvnw
+          ./mvnw flyway:migrate \
+            -Ddb.url=jdbc:postgresql://localhost:5432/financial_data_test \
+            -Ddb.user=testuser \
+            -Ddb.password=testpass
+
+      - name: Generate JOOQ code
+        working-directory: ./backend
+        run: |
+          ./mvnw generate-sources \
+            -Ddb.url=jdbc:postgresql://localhost:5432/financial_data_test \
+            -Ddb.user=testuser \
+            -Ddb.password=testpass
+
+      - name: Run tests
+        working-directory: ./backend
+        run: |
+          ./mvnw test \
+            -Ddb.url=jdbc:postgresql://localhost:5432/financial_data_test \
+            -Ddb.user=testuser \
+            -Ddb.password=testpass
