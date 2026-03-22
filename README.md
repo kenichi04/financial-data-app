@@ -78,10 +78,3 @@ cd backend
 - [要件定義](docs/requirements.md)
 - [ER図](docs/er_diagram.md)
 
----
-
-## ライセンス
-
-[AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html)
-
-本ソフトウェアを商用サービスとして利用する場合、AGPL-3.0 の条件に従いソースコードの開示義務が生じます。
