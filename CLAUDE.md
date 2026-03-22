@@ -118,3 +118,7 @@ DBスキーマから型安全なクエリクラスを生成。生成物は `targ
 ## API Documentation
 
 アプリ起動後、Swagger UIで確認可能: `http://localhost:8080/swagger-ui.html`
+
+## Design Documents
+
+新機能の実装前に `docs/requirements.md` を参照。機能ごとのフェーズ（MVP / Phase 2 / 将来）と優先度が定義されており、実装対象の判断基準になる。
