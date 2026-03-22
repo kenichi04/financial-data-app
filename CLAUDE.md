@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 EDINET API（金融庁の電子開示システム）から有価証券報告書を取得・蓄積し、財務指標を算出・可視化するWebアプリ。特に小型株の現金比率など、ニッチな切り口の分析に強みを持つ投資家向けサービス。
 
-- **Backend**: Spring Boot (Java 17) — 実装中
+- **Backend**: Spring Boot 3.4 (Java 17) — 実装中
 - **Frontend**: Next.js (TypeScript) — 実装予定
 - **DB**: PostgreSQL 15
 
@@ -19,7 +19,7 @@ All backend commands run from the `backend/` directory.
 docker-compose up -d
 
 # アプリ起動
-cd backend && ./mvnw spring-boot:run
+./mvnw spring-boot:run
 
 # ビルド
 ./mvnw package
@@ -58,7 +58,7 @@ DDD（ドメイン駆動設計）の4層構造：
 
 ```
 presentation/    ← REST Controllers（@RestController）
-application/     ← UseCase・Service・DTO・enums
+application/     ← UseCase・Service・DTO・enums・constants
 domain/          ← ドメインモデル・Repositoryインタフェース・enums
 infrastructure/  ← DB実装（JPA / jOOQ）・InMemory実装
 ```
@@ -67,20 +67,33 @@ infrastructure/  ← DB実装（JPA / jOOQ）・InMemory実装
 
 **書き込み（更新系）はJPA/Hibernate、読み取り（参照系）はjOOQ**を使い分ける。
 
-- `IDocumentMetadataRepository` などのインタフェースをドメイン層に定義
-- JPA実装（`DocumentMetadataRepository`）とInMemory実装（`InMemoryDocumentMetadataRepository`）が存在
-- クエリサービス（`IDocumentMetadataQueryService` など）はjOOQで実装（`JooqDocumentMetadataQueryService`）
+インフラ層の命名規則：
+- `JpaXxxRepository`（`JpaDocumentMetadataRepository` など）— Spring Data JPA の `JpaRepository` を継承したインタフェース。直接は使わない。
+- `XxxRepository`（`DocumentMetadataRepository` など）— ドメイン層のリポジトリインタフェース（`IDocumentMetadataRepository`）の JPA 実装。内部で `JpaXxxRepository` を使う。
+- `JooqXxxQueryService`（`JooqDocumentMetadataQueryService` など）— 読み取り専用。アプリ層のクエリサービスインタフェース（`IDocumentMetadataQueryService`）の jOOQ 実装。
+- `InMemoryXxxRepository` — テスト・開発用のインメモリ実装。
 
 **UseCaseがサービスを束ねるオーケストレーター**として機能：
-- `FinancialDocumentFetchUseCase` → EDINET APIからXBRL取得 → ファイル展開 → XBRL解析 → DB保存のフローを調整
+- `FinancialDocumentFetchUseCase` → EDINET APIからXBRL取得 → ファイル展開 → XBRL解析 → DB保存
 - `DocumentMetadataFetchUseCase` → EDINET APIから書類一覧取得 → メタデータ保存
+- `FinancialDocumentQueryUseCase` / `DocumentMetadataQueryUseCase` → 読み取り専用（jOOQ経由）
+
+### REST API エンドポイント
+
+| メソッド | パス | 説明 |
+|---|---|---|
+| POST | `/api/edinet/metadata/fetch-and-save?fromDate=YYYY-MM-DD` | 指定日以降の書類一覧を取得・保存 |
+| POST | `/api/edinet/{documentId}/fetch-and-save` | 書類IDのXBRLデータを取得・解析・保存 |
+| GET | `/api/document-metadata/unprocessedMetadata` | 未処理メタデータ一覧（jOOQ） |
+| GET | `/api/document-metadata/companies` | 企業一覧（jOOQ） |
+| GET | `/api/financial-documents/{documentId}` | 財務書類取得（jOOQ） |
+
+`/v1/` プレフィックスの付いたエンドポイントと `EdinetOutputController`（`/edinet/output/`）は `@Deprecated`。
 
 ### EDINET連携フロー
 
-1. `POST /api/edinet/metadata/fetch-and-save?fromDate=YYYY-MM-DD` → 指定日以降の書類一覧を取得してメタデータDBに保存
-2. `POST /api/edinet/{documentId}/fetch-and-save` → 書類IDのXBRLデータを取得・解析してDB保存
-
 XBRLファイルはZIP形式で取得 → `EdinetFileExtractionService` で展開 → `XbrlHeaderInfoExtractor`（ヘッダー情報）と `XbrlFinancialDataExtractor`（財務数値）でパース。
+XBRLの名前空間定数は `application/service/constants/XbrlConstants.java` に集約。
 
 ### DBマイグレーション
 
@@ -96,7 +109,11 @@ DBスキーマから型安全なクエリクラスを生成。生成物は `targ
 - **FinancialDocument**: 財務書類（documentId, edinetCode, documentType, fiscalYearEndDate, currency, 財務データリスト）
 - **FinancialData**: 個別の財務数値（勘定科目コード、金額、期間種別など）
 - **AccountMaster**: 勘定科目マスタ（初期データはV7マイグレーションで投入）
-- **EdinetContext**: XBRLのコンテキスト情報（連結/個別、期間種別など）
+- **EdinetContext**: XBRLのコンテキスト情報（連結/個別、期間種別など）。`domain/enums/context/` 配下の `ConsolidatedType`・`YearType`・`PeriodUnit` の組み合わせで表現。
+
+## Testing
+
+テストは `@ExtendWith(MockitoExtension.class)` による純粋ユニットテスト（Spring Context不使用）。インフラ層はモック化し、`InMemoryXxxRepository` をテスト用スタブとして使用する。
 
 ## API Documentation
 
