@@ -1,6 +1,7 @@
 # ER図
 
 最終更新: 2026-03-22（FlywayのSQLをベースに再作成）
+Claude Code 作成
 
 ---
 

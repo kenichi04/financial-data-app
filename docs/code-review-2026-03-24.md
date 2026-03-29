@@ -1,5 +1,6 @@
 # コードレビュー結果 — 2026-03-24
 
+Claude Code 作成
 **レビュー対象**: `backend/src/main/java/` および `backend/src/test/java/` 配下の全主要クラス
 **検出問題数**: 12件（Critical: 2, High: 4, Medium: 4, Low: 2）
 **全体評価**: DDD 4層構造の骨格は正しく設計されているが、Controllerがサービス層を直接参照している境界違反、ドメイン層からアプリ層への逆方向依存、そしてN+1クエリが目立つ修正ポイントである。
