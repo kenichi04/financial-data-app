@@ -106,9 +106,3 @@ cd backend
 ### Frontend（実装予定）
 
 ---
-
-## ドキュメント
-
-- [要件定義](docs/requirements.md)
-- [ER図](docs/er_diagram.md)
-
