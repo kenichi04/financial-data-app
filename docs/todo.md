@@ -13,13 +13,12 @@ Claude Code 作成
 - [ ] 画面設計（ワイヤーフレーム）
 
 ### バックエンド
-- [ ] Spring Bootプロジェクトのセットアップ
-- [ ] Flyway マイグレーション整備（既存DDLの整理・適用確認）
-- [ ] EDINET API クライアント実装
-  - [ ] 書類一覧API（日付指定） → `document_metadata` 保存
-  - [ ] 書類取得API（書類ID指定） → XBRLパース → `financial_document` / `financial_data` 保存
-- [ ] `account_master` の初期データ投入（EDINET 勘定科目リスト.xlsx）
-- [ ] `company` マスタの初期データ投入
+- [x] Spring Bootプロジェクトのセットアップ
+- [x] Flyway マイグレーション整備（既存DDLの整理・適用確認）
+- [x] EDINET API クライアント実装
+  - [x] 書類一覧API（日付指定） → `document_metadata` 保存
+  - [x] 書類取得API（書類ID指定） → XBRLパース → `financial_document` / `financial_data` 保存
+- [x] `account_master` の初期データ投入（EDINET 勘定科目リスト.xlsx）
 - [ ] 財務指標計算ロジック実装（`financial_data` から都度計算）
   - [ ] 同一概念に複数の勘定科目コードが存在する場合の優先順位ロジックを決める
         （例：売上高 → NetSales → Revenue → OperatingRevenue1 → OperatingRevenue2 の順に存在チェック）
