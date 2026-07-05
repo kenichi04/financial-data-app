@@ -64,43 +64,32 @@ cp .env.example .env
 # 2. DB を起動
 docker-compose up -d
 
-# 3. ~/.m2/settings.xml に DB 接続情報を設定（jOOQ コード生成で使用）
-```
-
-```xml
-<!-- ~/.m2/settings.xml -->
-<settings>
-  <profiles>
-    <profile>
-      <id>local</id>
-      <properties>
-        <db.url>jdbc:postgresql://localhost:5432/yourdb</db.url>
-        <db.user>your_db_user</db.user>
-        <db.password>your_db_password</db.password>
-      </properties>
-    </profile>
-  </profiles>
-  <activeProfiles>
-    <activeProfile>local</activeProfile>
-  </activeProfiles>
-</settings>
-```
-
-```bash
-# 4. Flyway マイグレーションを適用
+# 3. Flyway マイグレーションを適用
+#    DB 接続情報のデフォルト値（postgres/postgres/postgres）は backend/pom.xml に定義済み。
+#    .env で別の値を使っている場合は -Ddb.url= / -Ddb.user= / -Ddb.password= で上書きする
 cd backend
 ./mvnw flyway:migrate
 
-# 5. jOOQ コード生成（Flyway 適用後の DB スキーマを元に生成）
-./mvnw generate-sources
-
-# 6. アプリ本体の環境変数を設定（DB_URL / DB_USER / DB_PASSWORD / EDINET_API_SUBSCRIPTION_KEY /
+# 4. アプリ本体の環境変数を設定（DB_URL / DB_USER / DB_PASSWORD / EDINET_API_SUBSCRIPTION_KEY /
 #    DOWNLOAD_USER_DIR / EDINET_API_DOCUMENT_LIST_URL / EDINET_API_DOCUMENT_RETRIEVAL_URL）
 #    → 各変数の説明は CLAUDE.md の Environment Variables 参照
 #    IntelliJ 等の IDE で実行する場合は Run Configuration の環境変数に設定する
 
-# 7. バックエンドを起動
+# 5. バックエンドを起動
 ./mvnw spring-boot:run
+```
+
+### jOOQ コード生成（スキーマ変更時のみ）
+
+jOOQ の生成コードは `backend/src/generated/jooq/` に **Git 管理でコミット済み**のため、通常のビルド・テストでは DB もコード生成も不要。
+Flyway マイグレーションを追加・変更したときだけ、以下で再生成して**生成物を必ず同じコミットに含める**こと（背景は [docs/jooq_codegen_improvement.md](docs/jooq_codegen_improvement.md) 参照）。
+
+```bash
+docker-compose up -d          # DB 起動（マイグレーション適用済みであること）
+cd backend
+./mvnw generate-sources -Pjooq-codegen
+# 接続情報が pom.xml のデフォルトと異なる場合:
+# ./mvnw generate-sources -Pjooq-codegen -Ddb.url=jdbc:postgresql://localhost:5432/yourdb -Ddb.user=... -Ddb.password=...
 ```
 
 ### Frontend（実装予定）

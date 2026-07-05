@@ -33,8 +33,8 @@ docker-compose up -d
 # テスト（単一メソッド）
 ./mvnw test -Dtest=FinancialDocumentServiceTest#createFinancialDocument
 
-# jOOQコード生成（DB起動中かつ~/.m2/settings.xmlにDB接続情報が必要）
-./mvnw generate-sources
+# jOOQコード生成（スキーマ変更時のみ。DB起動中かつマイグレーション適用済みであること）
+./mvnw generate-sources -Pjooq-codegen
 ```
 
 ## Environment Variables
@@ -52,7 +52,7 @@ docker-compose up -d
 | `DOWNLOAD_USER_DIR` | ダウンロードファイルの作業ディレクトリ |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | Docker Compose用PostgreSQL設定 |
 
-jOOQコード生成時のDB接続情報は `~/.m2/settings.xml` に定義（`${db.url}`, `${db.user}`, `${db.password}` プロパティ）。
+jOOQコード生成時のDB接続情報は `backend/pom.xml` の `db.url` / `db.user` / `db.password` プロパティにデフォルト値（ローカルdocker-compose用）を定義済み。異なる値を使う場合は `-Ddb.url=...` または `~/.m2/settings.xml` で上書きする。
 
 ## Architecture
 
@@ -103,7 +103,7 @@ Flywayで管理。`backend/src/main/resources/db/migration/` 配下の `V{n}__*.
 
 ### jOOQコード生成
 
-DBスキーマから型安全なクエリクラスを生成。生成物は `target/generated-sources/jooq/` に出力。コード生成にはDBが起動済みであること、かつFlywayマイグレーション適用済みであることが必要。
+DBスキーマから型安全なクエリクラスを生成。生成物は `backend/src/generated/jooq/` に出力され**Git管理でコミットする**（通常ビルドでは生成は走らず、コミット済みコードを使用）。再生成は `-Pjooq-codegen` プロファイルで明示的に実行し、DBが起動済みかつFlywayマイグレーション適用済みであることが必要。**マイグレーション追加・変更時は再生成した生成物を同じコミットに含めること**（経緯は `docs/jooq_codegen_improvement.md`）。
 
 ## Key Domain Concepts
 
