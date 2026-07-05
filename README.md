@@ -64,8 +64,37 @@ cp .env.example .env
 # 2. DB を起動
 docker-compose up -d
 
-# 3. バックエンドを起動
+# 3. ~/.m2/settings.xml に DB 接続情報を設定（jOOQ コード生成で使用）
+```
+
+```xml
+<!-- ~/.m2/settings.xml -->
+<settings>
+  <profiles>
+    <profile>
+      <id>local</id>
+      <properties>
+        <db.url>jdbc:postgresql://localhost:5432/yourdb</db.url>
+        <db.user>your_db_user</db.user>
+        <db.password>your_db_password</db.password>
+      </properties>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>local</activeProfile>
+  </activeProfiles>
+</settings>
+```
+
+```bash
+# 4. Flyway マイグレーションを適用
 cd backend
+./mvnw flyway:migrate
+
+# 5. jOOQ コード生成（Flyway 適用後の DB スキーマを元に生成）
+./mvnw generate-sources
+
+# 6. バックエンドを起動
 ./mvnw spring-boot:run
 ```
 
