@@ -47,6 +47,8 @@ docker-compose up -d
 | `DB_USER` | DBユーザー名 |
 | `DB_PASSWORD` | DBパスワード |
 | `EDINET_API_SUBSCRIPTION_KEY` | EDINET API サブスクリプションキー |
+| `EDINET_API_DOCUMENT_LIST_URL` | EDINET API 書類一覧取得URL（例: `https://api.edinet-fsa.go.jp/api/v2/documents.json?date={date}&type={type}&Subscription-Key={key}`） |
+| `EDINET_API_DOCUMENT_RETRIEVAL_URL` | EDINET API 書類取得URL（例: `https://api.edinet-fsa.go.jp/api/v2/documents/{docNumber}?type={type}&Subscription-Key={key}`） |
 | `DOWNLOAD_USER_DIR` | ダウンロードファイルの作業ディレクトリ |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | Docker Compose用PostgreSQL設定 |
 

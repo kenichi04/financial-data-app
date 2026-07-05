@@ -94,7 +94,12 @@ cd backend
 # 5. jOOQ コード生成（Flyway 適用後の DB スキーマを元に生成）
 ./mvnw generate-sources
 
-# 6. バックエンドを起動
+# 6. アプリ本体の環境変数を設定（DB_URL / DB_USER / DB_PASSWORD / EDINET_API_SUBSCRIPTION_KEY /
+#    DOWNLOAD_USER_DIR / EDINET_API_DOCUMENT_LIST_URL / EDINET_API_DOCUMENT_RETRIEVAL_URL）
+#    → 各変数の説明は CLAUDE.md の Environment Variables 参照
+#    IntelliJ 等の IDE で実行する場合は Run Configuration の環境変数に設定する
+
+# 7. バックエンドを起動
 ./mvnw spring-boot:run
 ```
 
