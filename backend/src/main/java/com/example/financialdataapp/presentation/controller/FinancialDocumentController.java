@@ -1,7 +1,9 @@
 package com.example.financialdataapp.presentation.controller;
 
 import com.example.financialdataapp.application.service.FinancialDocumentQueryUseCase;
+import com.example.financialdataapp.application.service.FinancialMetricsQueryUseCase;
 import com.example.financialdataapp.application.service.dto.FinancialDocumentDto;
+import com.example.financialdataapp.application.service.dto.FinancialMetricsDto;
 import com.example.financialdataapp.application.service.financial.FinancialDocumentService;
 import com.example.financialdataapp.application.service.metadata.DocumentMetadataService;
 import com.example.financialdataapp.domain.model.Company;
@@ -24,9 +26,14 @@ public class FinancialDocumentController {
 
     private final FinancialDocumentService financialDocumentService;
 
-    public FinancialDocumentController(FinancialDocumentQueryUseCase financialDocumentQueryUseCase, FinancialDocumentService financialDocumentService) {
+    private final FinancialMetricsQueryUseCase financialMetricsQueryUseCase;
+
+    public FinancialDocumentController(FinancialDocumentQueryUseCase financialDocumentQueryUseCase,
+                                        FinancialDocumentService financialDocumentService,
+                                        FinancialMetricsQueryUseCase financialMetricsQueryUseCase) {
         this.financialDocumentQueryUseCase = financialDocumentQueryUseCase;
         this.financialDocumentService = financialDocumentService;
+        this.financialMetricsQueryUseCase = financialMetricsQueryUseCase;
     }
 
     @Deprecated
@@ -38,6 +45,12 @@ public class FinancialDocumentController {
     @GetMapping("/{documentId}")
     public FinancialDocumentDto get(@PathVariable String documentId) {
         return financialDocumentQueryUseCase.getFinancialDocumentDto(documentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found: " + documentId));
+    }
+
+    @GetMapping("/{documentId}/metrics")
+    public FinancialMetricsDto getMetrics(@PathVariable String documentId) {
+        return financialMetricsQueryUseCase.getFinancialMetricsDto(documentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Document not found: " + documentId));
     }
 }

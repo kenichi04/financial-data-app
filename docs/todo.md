@@ -20,14 +20,14 @@ Claude Code 作成
   - [ ] 書類取得API（書類ID指定） → XBRLパース → `financial_document` / `financial_data` 保存
 - [ ] `account_master` の初期データ投入（EDINET 勘定科目リスト.xlsx）
 - [ ] `company` マスタの初期データ投入
-- [ ] 財務指標計算ロジック実装（`financial_data` から都度計算）
-  - [ ] 同一概念に複数の勘定科目コードが存在する場合の優先順位ロジックを決める
-        （例：売上高 → NetSales → Revenue → OperatingRevenue1 → OperatingRevenue2 の順に存在チェック）
-  - [ ] ROE
-  - [ ] ROA
-  - [ ] 営業利益率
-  - [ ] 自己資本比率
-  - [ ] 現金比率
+- [x] 財務指標計算ロジック実装（`financial_data` から都度計算）
+  - [x] 同一概念に複数の勘定科目コードが存在する場合の優先順位ロジックを決める
+        （例：売上高 → NetSales → Revenue → OperatingRevenue1 → OperatingRevenue2 の順に存在チェック。詳細は `docs/decisions/0001-financial-metrics-account-mapping.md`）
+  - [x] ROE
+  - [x] ROA
+  - [x] 営業利益率
+  - [x] 自己資本比率
+  - [x] 現金比率
 - [ ] APIエンドポイント実装
   - [ ] 銘柄検索API
   - [ ] 企業詳細API（指標一覧・時系列）
