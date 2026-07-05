@@ -61,7 +61,12 @@ Claude Code 作成
 4. アプリの `<dependencies>` から `jooq-meta` / `jooq-codegen` を削除（プラグイン側で完結）
 5. README / CLAUDE.md の手順を更新（「スキーマ変更時は `docker-compose up -d` → `./mvnw generate-sources -Pjooq-codegen` → 生成物をコミット」）
 
-運用ルール: **Flywayマイグレーションを追加したPR/コミットには、再生成したjOOQコードを必ず含める**。ソロ開発ではこの規律で十分回る。
+運用ルール: **Flywayマイグレーションを追加したPR/コミットには、再生成したjOOQコードを必ず含める**。
+
+このルールは規律任せにせず、pre-commitフック（`.githooks/pre-commit`。有効化は `git config core.hooksPath .githooks`）で機械的にチェックする。フックは「マイグレーション変更あり・生成物変更なし」のコミットを拒否する。ただし:
+
+- 生成物に差分が出ないマイグレーション（データ投入のみ・インデックス追加のみ等）は `git commit --no-verify` で通してよい（誤検知は許容）
+- フックが検出できるのは「入れ忘れ」（clone先・CIでのコンパイルエラーの原因）のみ。**カラム型変更等で生成物が古いままでもコンパイルが通ってしまうケース**（実行時に初めてズレが発覚する）は検出できない。これはStep 3のCI再生成一致チェックで担保する
 
 ### Step 2: ビルド内生成に移行する【CI整備時に判断】
 

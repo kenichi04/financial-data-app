@@ -57,6 +57,9 @@ financial-data-app/
 ### Backend
 
 ```bash
+# 0. Gitフックを有効化（初回のみ。マイグレーションとjOOQ生成物の同期チェック）
+git config core.hooksPath .githooks
+
 # 1. 環境変数を設定
 cp .env.example .env
 # .env を編集して POSTGRES_USER / POSTGRES_PASSWORD / POSTGRES_DB を設定

@@ -16,7 +16,7 @@
     // これで docker-compose の DB 操作や jOOQ コード生成がコンテナ内から可能になる
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },
-  "postCreateCommand": "npm install -g @anthropic-ai/claude-code"
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && git config core.hooksPath .githooks"
   // 注意: docker-outside-of-docker 構成では、ホストで公開された DB ポートには
   // localhost ではなく host.docker.internal で届く場合がある（Docker Desktop / WSL2）。
   // その場合、jOOQ 生成や flyway は接続先を上書きして実行する:
