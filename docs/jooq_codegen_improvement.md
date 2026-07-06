@@ -1,9 +1,17 @@
 # jOOQコード生成の現状の問題点と段階的改善プラン
 
-最終更新: 2026-07-05（Step 1 実施済み: `feature/jooq-codegen-step1` ブランチ）
+最終更新: 2026-07-07（方式Cへ移行済み: `feature/jooq-codegen-step1` ブランチ）
 Claude Code 作成
 
-> **実施状況**: Step 1 は実施済み。「現状の構成」「問題点」の節は実施前（`~/.m2/settings.xml` + 全ビルドで生成）の記録として残している。Step 2 以降は未実施。
+> **実施状況**: 当初プランのStep 1（方式B: 生成物コミット）を実施したが、生成物を実際にコミットする前に**方式C（DDLDatabase: FlywayのSQLから直接生成）へ方針転換し、移行済み**。下記「採用した構成（方式C）」参照。「現状の構成」「問題点」の節は改善前（`~/.m2/settings.xml` + 全ビルドでDBから生成）の記録として残している。
+
+## 採用した構成（方式C・2026-07-07移行）
+
+- `jooq-codegen-maven` + `jooq-meta-extensions` の **DDLDatabase** で、`src/main/resources/db/migration/*.sql` から直接生成（`sort=flyway` でバージョン順に適用、`defaultNameCase=lower` でPostgreSQLの小文字識別子に合わせる）
+- **DB接続不要**のため通常ビルドの `generate-sources` に組み込み。生成先は `target/generated-sources/jooq/`（Git管理外）
+- マイグレーションが生成の入力そのものなので、生成物とスキーマが構造的にズレない → 方式Bで必要だった「再生成してコミットに含める」規律・pre-commitフック・CI一致チェック（Step 3）はすべて不要になり、撤去した
+- 方式Bを撤回した理由: ソロ開発でコンフリクトはほぼ起きないものの、再生成の運用規律とフック維持のコストが方式Cでは丸ごと消えるため
+- 残るリスク: DDLDatabaseはjOOQのSQLパーサーでマイグレーションを解釈するため、**PostgreSQL固有構文（トリガー・PL/pgSQL関数・特殊なインデックス等）は解釈できない**場合がある。その際はプラグマコメント（`-- [jooq ignore start]` / `-- [jooq ignore stop]`）で該当箇所をパーサーから除外するか、方式D（Testcontainers）へ移行する
 
 ---
 

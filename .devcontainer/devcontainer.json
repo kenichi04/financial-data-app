@@ -4,5 +4,5 @@
   "features": {
     "ghcr.io/devcontainers/features/node:1": {}
   },
-  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && git config core.hooksPath .githooks"
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code"
 }

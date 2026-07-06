@@ -32,10 +32,9 @@ docker-compose up -d
 
 # テスト（単一メソッド）
 ./mvnw test -Dtest=FinancialDocumentServiceTest#createFinancialDocument
-
-# jOOQコード生成（スキーマ変更時のみ。DB起動中かつマイグレーション適用済みであること）
-./mvnw generate-sources -Pjooq-codegen
 ```
+
+jOOQのクエリクラスはビルド時にマイグレーションSQLから自動生成される（DB接続不要）。手動の生成コマンドはない。
 
 ## Environment Variables
 
@@ -52,7 +51,7 @@ docker-compose up -d
 | `DOWNLOAD_USER_DIR` | ダウンロードファイルの作業ディレクトリ |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | Docker Compose用PostgreSQL設定 |
 
-jOOQコード生成時のDB接続情報は `backend/pom.xml` の `db.url` / `db.user` / `db.password` プロパティにデフォルト値（ローカルdocker-compose用）を定義済み。異なる値を使う場合は `-Ddb.url=...` または `~/.m2/settings.xml` で上書きする。
+`backend/pom.xml` の `db.url` / `db.user` / `db.password` プロパティはflyway-maven-plugin（`./mvnw flyway:migrate`）用のデフォルト接続情報（ローカルdocker-compose用）。異なる値を使う場合は `-Ddb.url=...` で上書きする。
 
 ## Architecture
 
@@ -103,7 +102,7 @@ Flywayで管理。`backend/src/main/resources/db/migration/` 配下の `V{n}__*.
 
 ### jOOQコード生成
 
-DBスキーマから型安全なクエリクラスを生成。生成物は `backend/src/generated/jooq/` に出力され**Git管理でコミットする**（通常ビルドでは生成は走らず、コミット済みコードを使用）。再生成は `-Pjooq-codegen` プロファイルで明示的に実行し、DBが起動済みかつFlywayマイグレーション適用済みであることが必要。**マイグレーション追加・変更時は再生成した生成物を同じコミットに含めること**（経緯は `docs/jooq_codegen_improvement.md`）。
+FlywayのマイグレーションSQLから型安全なクエリクラスを**ビルド時に自動生成**する（jOOQのDDLDatabase使用。DB接続不要）。生成物は `backend/target/generated-sources/jooq/` に出力され、Git管理しない。マイグレーションを追加・変更すれば次のビルドで自動反映されるため、手動の再生成手順はない。ただしDDLDatabaseはjOOQのSQLパーサーでマイグレーションを解釈するため、**PostgreSQL固有の構文（トリガー・PL/pgSQL関数等）は解釈できない**場合がある（対処法・経緯は `docs/jooq_codegen_improvement.md`）。
 
 ## Key Domain Concepts
 

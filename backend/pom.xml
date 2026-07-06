@@ -28,10 +28,8 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
-		<!-- jOOQ生成コードの出力先（Git管理対象。docs/jooq_codegen_improvement.md 参照） -->
-		<jooq.generated.directory>${project.basedir}/src/generated/jooq</jooq.generated.directory>
-		<!-- ローカル開発用DB（docker-compose）のデフォルト接続情報。
-		     秘密情報ではないためコミットする。~/.m2/settings.xml または -Ddb.url=... で上書き可能 -->
+		<!-- ローカル開発用DB（docker-compose）のデフォルト接続情報。flyway-maven-plugin用。
+		     秘密情報ではないためコミットする。-Ddb.url=... で上書き可能 -->
 		<db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
 		<db.user>postgres</db.user>
 		<db.password>postgres</db.password>
@@ -91,21 +89,56 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<!-- jOOQコード生成: FlywayのマイグレーションSQLから直接生成（DDLDatabase）。
+			     DB接続不要のため通常ビルドに組み込み、生成物はGit管理しない（docs/jooq_codegen_improvement.md 参照） -->
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.6.0</version>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-codegen-maven</artifactId>
+				<version>3.19.23</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.jooq</groupId>
+						<artifactId>jooq-meta-extensions</artifactId>
+						<version>3.19.23</version>
+					</dependency>
+				</dependencies>
 				<executions>
 					<execution>
-						<id>add-jooq-source</id>
+						<id>generate-jooq</id>
 						<phase>generate-sources</phase>
 						<goals>
-							<goal>add-source</goal>
+							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<sources>
-								<source>${jooq.generated.directory}</source>
-							</sources>
+							<generator>
+								<database>
+									<name>org.jooq.meta.extensions.ddl.DDLDatabase</name>
+									<properties>
+										<property>
+											<key>scripts</key>
+											<value>src/main/resources/db/migration/*.sql</value>
+										</property>
+										<!-- Flywayのバージョン番号順（V1, V2, ...）でSQLを適用する -->
+										<property>
+											<key>sort</key>
+											<value>flyway</value>
+										</property>
+										<property>
+											<key>unqualifiedSchema</key>
+											<value>none</value>
+										</property>
+										<!-- PostgreSQLに合わせ、引用符なし識別子を小文字として扱う -->
+										<property>
+											<key>defaultNameCase</key>
+											<value>lower</value>
+										</property>
+									</properties>
+								</database>
+								<target>
+									<packageName>com.example.financialdataapp</packageName>
+									<directory>target/generated-sources/jooq</directory>
+								</target>
+							</generator>
 						</configuration>
 					</execution>
 				</executions>
@@ -128,49 +161,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<!-- jOOQコード生成はスキーマ変更時のみ手動で実行する（通常ビルドはコミット済み生成コードを使用）:
-		     docker-compose up -d && ./mvnw generate-sources -Pjooq-codegen -->
-		<profile>
-			<id>jooq-codegen</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jooq</groupId>
-						<artifactId>jooq-codegen-maven</artifactId>
-						<version>3.19.23</version>
-						<executions>
-							<execution>
-								<id>generate-jooq</id>
-								<phase>generate-sources</phase>
-								<goals>
-									<goal>generate</goal>
-								</goals>
-								<configuration>
-									<jdbc>
-										<driver>org.postgresql.Driver</driver>
-										<url>${db.url}</url>
-										<user>${db.user}</user>
-										<password>${db.password}</password>
-									</jdbc>
-									<generator>
-										<database>
-											<name>org.jooq.meta.postgres.PostgresDatabase</name>
-											<inputSchema>public</inputSchema>
-										</database>
-										<target>
-											<packageName>com.example.financialdataapp</packageName>
-											<directory>${jooq.generated.directory}</directory>
-										</target>
-									</generator>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
 
 </project>

@@ -57,9 +57,6 @@ financial-data-app/
 ### Backend
 
 ```bash
-# 0. Gitフックを有効化（初回のみ。マイグレーションとjOOQ生成物の同期チェック）
-git config core.hooksPath .githooks
-
 # 1. 環境変数を設定
 cp .env.example .env
 # .env を編集して POSTGRES_USER / POSTGRES_PASSWORD / POSTGRES_DB を設定
@@ -82,18 +79,13 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
-### jOOQ コード生成（スキーマ変更時のみ）
+### jOOQ コード生成
 
-jOOQ の生成コードは `backend/src/generated/jooq/` に **Git 管理でコミット済み**のため、通常のビルド・テストでは DB もコード生成も不要。
-Flyway マイグレーションを追加・変更したときだけ、以下で再生成して**生成物を必ず同じコミットに含める**こと（背景は [docs/jooq_codegen_improvement.md](docs/jooq_codegen_improvement.md) 参照）。
+jOOQ のクエリクラスは Flyway のマイグレーション SQL（`backend/src/main/resources/db/migration/`）から**ビルド時に自動生成**される（jOOQ の DDLDatabase を使用。背景は [docs/jooq_codegen_improvement.md](docs/jooq_codegen_improvement.md) 参照）。
 
-```bash
-docker-compose up -d          # DB 起動（マイグレーション適用済みであること）
-cd backend
-./mvnw generate-sources -Pjooq-codegen
-# 接続情報が pom.xml のデフォルトと異なる場合:
-# ./mvnw generate-sources -Pjooq-codegen -Ddb.url=jdbc:postgresql://localhost:5432/yourdb -Ddb.user=... -Ddb.password=...
-```
+- DB 接続は不要。`./mvnw test` / `package` がどこでも自己完結で通る
+- 生成物は `backend/target/generated-sources/jooq/` に出力され、Git 管理しない
+- マイグレーションを追加・変更すれば次のビルドで自動的に反映される（手動の再生成手順なし）
 
 ### Frontend（実装予定）
 

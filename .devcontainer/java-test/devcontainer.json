@@ -13,12 +13,12 @@
       "installGradle": "false"
     },
     // ホスト側の Docker を使えるようにする（docker CLI + ソケット共有）。
-    // これで docker-compose の DB 操作や jOOQ コード生成がコンテナ内から可能になる
+    // これで docker-compose の DB 操作がコンテナ内から可能になる
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
   },
-  "postCreateCommand": "npm install -g @anthropic-ai/claude-code && git config core.hooksPath .githooks"
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code"
   // 注意: docker-outside-of-docker 構成では、ホストで公開された DB ポートには
   // localhost ではなく host.docker.internal で届く場合がある（Docker Desktop / WSL2）。
-  // その場合、jOOQ 生成や flyway は接続先を上書きして実行する:
-  //   ./mvnw generate-sources -Pjooq-codegen -Ddb.url=jdbc:postgresql://host.docker.internal:5432/yourdb
+  // その場合、flyway は接続先を上書きして実行する:
+  //   ./mvnw flyway:migrate -Ddb.url=jdbc:postgresql://host.docker.internal:5432/yourdb
 }
