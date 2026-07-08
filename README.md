@@ -40,7 +40,8 @@ financial-data-app/
 │       ├── application/            # UseCase・Service・DTO
 │       ├── domain/                 # ドメインモデル・Repository インタフェース
 │       └── infrastructure/         # DB実装（JPA / jOOQ）
-├── docs/                           # 設計ドキュメント
+│   └── docs/                       # backend関連ドキュメント（ER図・EDINET資料など）
+├── docs/                           # プロジェクト全体の設計ドキュメント
 ├── docker-compose.yml              # ローカル DB 起動用
 └── .env.example                    # 環境変数テンプレート
 ```
