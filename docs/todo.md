@@ -1,6 +1,6 @@
 # やること一覧
 
-最終更新: 2026-03-22
+最終更新: 2026-07-08
 Claude Code 作成
 
 ---
@@ -19,17 +19,22 @@ Claude Code 作成
   - [x] 書類一覧API（日付指定） → `document_metadata` 保存
   - [x] 書類取得API（書類ID指定） → XBRLパース → `financial_document` / `financial_data` 保存
 - [x] `account_master` の初期データ投入（EDINET 勘定科目リスト.xlsx）
-- [ ] 財務指標計算ロジック実装（`financial_data` から都度計算）
-  - [ ] 同一概念に複数の勘定科目コードが存在する場合の優先順位ロジックを決める
+- [x] 財務指標計算ロジック実装（事前計算して `financial_metrics` に保存する方式に変更）
+  - [x] 同一概念に複数の勘定科目コードが存在する場合の優先順位ロジックを決める
         （例：売上高 → NetSales → Revenue → OperatingRevenue1 → OperatingRevenue2 の順に存在チェック）
-  - [ ] ROE
-  - [ ] ROA
-  - [ ] 営業利益率
-  - [ ] 自己資本比率
-  - [ ] 現金比率
+  - [x] ROE
+  - [x] ROA
+  - [x] 営業利益率
+  - [x] 自己資本比率
+  - [x] 現金比率
+  - [x] 未計算書類の一括計算・保存（`POST /api/financial-metrics/calculate`）
 - [ ] APIエンドポイント実装
   - [ ] 銘柄検索API
   - [ ] 企業詳細API（指標一覧・時系列）
+- [ ] スキーマ手当（財務指標PRから分離した旧V9。定期バッチ実装の前提）
+  - [ ] `financial_data` に UNIQUE(financial_document_id, account_id, context_ref) — 同一書類の再取込による行重複を防止。既存データに重複があると適用に失敗するため、重複行の除去とセットで適用する
+  - [ ] `financial_data.account_id` にインデックス
+  - [ ] `financial_document.company_id` を削除（未参照・全行NULL。companyとは edinet_code の論理結合に一本化）し、`edinet_code` にインデックス
 - [ ] 定期バッチ実装（毎日深夜にEDINET APIからデータ取得）
 - [ ] Docker環境構築
 
