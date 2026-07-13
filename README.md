@@ -40,7 +40,8 @@ financial-data-app/
 │       ├── application/            # UseCase・Service・DTO
 │       ├── domain/                 # ドメインモデル・Repository インタフェース
 │       └── infrastructure/         # DB実装（JPA / jOOQ）
-├── docs/                           # 設計ドキュメント
+│   └── docs/                       # backend関連ドキュメント（ER図・EDINET資料など）
+├── docs/                           # プロジェクト全体の設計ドキュメント
 ├── docker-compose.yml              # ローカル DB 起動用
 └── .env.example                    # 環境変数テンプレート
 ```
@@ -64,44 +65,28 @@ cp .env.example .env
 # 2. DB を起動
 docker-compose up -d
 
-# 3. ~/.m2/settings.xml に DB 接続情報を設定（jOOQ コード生成で使用）
-```
-
-```xml
-<!-- ~/.m2/settings.xml -->
-<settings>
-  <profiles>
-    <profile>
-      <id>local</id>
-      <properties>
-        <db.url>jdbc:postgresql://localhost:5432/yourdb</db.url>
-        <db.user>your_db_user</db.user>
-        <db.password>your_db_password</db.password>
-      </properties>
-    </profile>
-  </profiles>
-  <activeProfiles>
-    <activeProfile>local</activeProfile>
-  </activeProfiles>
-</settings>
-```
-
-```bash
-# 4. Flyway マイグレーションを適用
+# 3. Flyway マイグレーションを適用
+#    DB 接続情報のデフォルト値（postgres/postgres/postgres）は backend/pom.xml に定義済み。
+#    .env で別の値を使っている場合は -Ddb.url= / -Ddb.user= / -Ddb.password= で上書きする
 cd backend
 ./mvnw flyway:migrate
 
-# 5. jOOQ コード生成（Flyway 適用後の DB スキーマを元に生成）
-./mvnw generate-sources
-
-# 6. アプリ本体の環境変数を設定（DB_URL / DB_USER / DB_PASSWORD / EDINET_API_SUBSCRIPTION_KEY /
+# 4. アプリ本体の環境変数を設定（DB_URL / DB_USER / DB_PASSWORD / EDINET_API_SUBSCRIPTION_KEY /
 #    DOWNLOAD_USER_DIR / EDINET_API_DOCUMENT_LIST_URL / EDINET_API_DOCUMENT_RETRIEVAL_URL）
 #    → 各変数の説明は CLAUDE.md の Environment Variables 参照
 #    IntelliJ 等の IDE で実行する場合は Run Configuration の環境変数に設定する
 
-# 7. バックエンドを起動
+# 5. バックエンドを起動
 ./mvnw spring-boot:run
 ```
+
+### jOOQ コード生成
+
+jOOQ のクエリクラスは Flyway のマイグレーション SQL（`backend/src/main/resources/db/migration/`）から**ビルド時に自動生成**される（jOOQ の DDLDatabase を使用。背景は [docs/jooq_codegen_improvement.md](docs/jooq_codegen_improvement.md) 参照）。
+
+- DB 接続は不要。`./mvnw test` / `package` がどこでも自己完結で通る
+- 生成物は `backend/target/generated-sources/jooq/` に出力され、Git 管理しない
+- マイグレーションを追加・変更すれば次のビルドで自動的に反映される（手動の再生成手順なし）
 
 ### Frontend（実装予定）
 

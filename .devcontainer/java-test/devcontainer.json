@@ -1,0 +1,24 @@
+// テスト用構成: 既存の devcontainer.json に Java 17 と Docker 連携を追加したもの。
+// VS Code の「Reopen in Container」で "Claude Code Project (Java test)" を選ぶとこちらで起動する。
+// 問題なければ内容を .devcontainer/devcontainer.json に取り込み、このフォルダは削除してよい。
+{
+  "name": "Claude Code Project (Java test)",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    // Java 17（Maven は同梱不要。プロジェクトの mvnw を使う）
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "installMaven": "false",
+      "installGradle": "false"
+    },
+    // ホスト側の Docker を使えるようにする（docker CLI + ソケット共有）。
+    // これで docker-compose の DB 操作がコンテナ内から可能になる
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  "postCreateCommand": "npm install -g @anthropic-ai/claude-code"
+  // 注意: docker-outside-of-docker 構成では、ホストで公開された DB ポートには
+  // localhost ではなく host.docker.internal で届く場合がある（Docker Desktop / WSL2）。
+  // その場合、flyway は接続先を上書きして実行する:
+  //   ./mvnw flyway:migrate -Ddb.url=jdbc:postgresql://host.docker.internal:5432/yourdb
+}
