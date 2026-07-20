@@ -77,6 +77,7 @@ infrastructure/  ← DB実装（JPA / jOOQ）・InMemory実装
 **UseCaseがサービスを束ねるオーケストレーター**として機能：
 - `FinancialDocumentFetchUseCase` → EDINET APIからXBRL取得 → ファイル展開 → XBRL解析 → DB保存
 - `DocumentMetadataFetchUseCase` → EDINET APIから書類一覧取得 → メタデータ保存
+- `FinancialMetricsCalculationUseCase` → 未計算書類を抽出（jOOQ） → 指標計算 → DB保存
 - `FinancialDocumentQueryUseCase` / `DocumentMetadataQueryUseCase` → 読み取り専用（jOOQ経由）
 
 ### REST API エンドポイント
@@ -88,6 +89,7 @@ infrastructure/  ← DB実装（JPA / jOOQ）・InMemory実装
 | GET | `/api/document-metadata/unprocessedMetadata` | 未処理メタデータ一覧（jOOQ） |
 | GET | `/api/document-metadata/companies` | 企業一覧（jOOQ） |
 | GET | `/api/financial-documents/{documentId}` | 財務書類取得（jOOQ） |
+| POST | `/api/financial-metrics/calculate` | 未計算書類の財務指標を一括計算・保存 |
 
 `/v1/` プレフィックスの付いたエンドポイントと `EdinetOutputController`（`/edinet/output/`）は `@Deprecated`。
 
