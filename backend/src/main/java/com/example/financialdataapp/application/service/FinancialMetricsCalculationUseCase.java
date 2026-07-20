@@ -1,35 +1,22 @@
 package com.example.financialdataapp.application.service;
 
 import com.example.financialdataapp.application.service.dto.FinancialMetricsCalculationResult;
-import com.example.financialdataapp.application.service.metrics.FinancialMetricsCalculationService;
+import com.example.financialdataapp.application.service.metrics.FinancialMetricsService;
 import com.example.financialdataapp.application.service.metrics.IFinancialMetricsQueryService;
-import com.example.financialdataapp.domain.model.AccountMaster;
-import com.example.financialdataapp.domain.model.DocumentId;
-import com.example.financialdataapp.domain.repository.IAccountMasterRepository;
-import com.example.financialdataapp.domain.repository.IFinancialDocumentRepository;
-import com.example.financialdataapp.domain.repository.IFinancialMetricsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class FinancialMetricsCalculationUseCase {
 
     private final IFinancialMetricsQueryService financialMetricsQueryService;
-    private final IFinancialDocumentRepository financialDocumentRepository;
-    private final IAccountMasterRepository accountMasterRepository;
-    private final FinancialMetricsCalculationService financialMetricsCalculationService;
-    private final IFinancialMetricsRepository financialMetricsRepository;
 
-    public FinancialMetricsCalculationUseCase(IFinancialMetricsQueryService financialMetricsQueryService, IFinancialDocumentRepository financialDocumentRepository, IAccountMasterRepository accountMasterRepository, FinancialMetricsCalculationService financialMetricsCalculationService, IFinancialMetricsRepository financialMetricsRepository) {
+    private final FinancialMetricsService financialMetricsService;
+
+    public FinancialMetricsCalculationUseCase(IFinancialMetricsQueryService financialMetricsQueryService, FinancialMetricsService financialMetricsService) {
         this.financialMetricsQueryService = financialMetricsQueryService;
-        this.financialDocumentRepository = financialDocumentRepository;
-        this.accountMasterRepository = accountMasterRepository;
-        this.financialMetricsCalculationService = financialMetricsCalculationService;
-        this.financialMetricsRepository = financialMetricsRepository;
+        this.financialMetricsService = financialMetricsService;
     }
 
     /**
@@ -42,32 +29,17 @@ public class FinancialMetricsCalculationUseCase {
      */
     public FinancialMetricsCalculationResult calculateAndSaveUncalculatedMetrics() {
         var documentIds = financialMetricsQueryService.findDocumentIdsWithoutMetrics();
-        if (documentIds.isEmpty()) {
-            return new FinancialMetricsCalculationResult(0, 0, List.of());
-        }
-
-        var accountCodeById = accountMasterRepository.findAll().stream()
-                .collect(Collectors.toMap(AccountMaster::getId, AccountMaster::getCode));
 
         var failedDocumentIds = new ArrayList<String>();
         var savedCount = 0;
         for (var documentId : documentIds) {
             try {
-                calculateAndSave(documentId, accountCodeById);
+                financialMetricsService.calculateAndSaveMetrics(documentId);
                 savedCount++;
             } catch (RuntimeException e) {
                 failedDocumentIds.add(documentId.toString());
             }
         }
         return new FinancialMetricsCalculationResult(documentIds.size(), savedCount, failedDocumentIds);
-    }
-
-    private void calculateAndSave(DocumentId documentId, Map<Long, String> accountCodeById) {
-        var document = financialDocumentRepository.findByDocumentId(documentId);
-        if (document == null) {
-            throw new IllegalStateException("FinancialDocument not found: " + documentId);
-        }
-        var metrics = financialMetricsCalculationService.calculate(document, accountCodeById);
-        financialMetricsRepository.save(metrics);
     }
 }
