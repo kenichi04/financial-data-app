@@ -1,6 +1,5 @@
 package com.example.financialdataapp.infrastructure.database.jpa.repository;
 
-import com.example.financialdataapp.domain.model.DocumentId;
 import com.example.financialdataapp.domain.model.FinancialMetrics;
 import com.example.financialdataapp.domain.repository.IFinancialMetricsRepository;
 import com.example.financialdataapp.infrastructure.database.jpa.entity.FinancialMetricsEntity;
@@ -18,13 +17,6 @@ public class JpaFinancialMetricsRepository implements IFinancialMetricsRepositor
     public JpaFinancialMetricsRepository(FinancialMetricsRepository financialMetricsRepository, FinancialDocumentRepository financialDocumentRepository) {
         this.financialMetricsRepository = financialMetricsRepository;
         this.financialDocumentRepository = financialDocumentRepository;
-    }
-
-    @Override
-    public boolean existsByDocumentId(DocumentId documentId) {
-        var documentEntity = financialDocumentRepository.findByDocumentId(documentId.toString());
-        return documentEntity != null
-                && financialMetricsRepository.existsByFinancialDocumentId(documentEntity.getId());
     }
 
     @Override
