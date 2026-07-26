@@ -21,7 +21,7 @@ Claude Code 作成
 
 | テーブル名 | 説明 |
 |---|---|
-| financial_metrics | 計算済み財務指標（スクリーニング用キャッシュ） |
+| financial_metrics | 計算済み財務指標（当初 Phase 2 想定だが V8 で実装済み・Phase 1 へ前倒し） |
 | users | ユーザー |
 | subscriptions | サブスクリプション情報 |
 | watchlists | ウォッチリスト |
@@ -76,7 +76,6 @@ erDiagram
         varchar     document_type           "EDINET様式種別（例: 第三号様式）"
         date        fiscal_year_end_date    "決算期末日"
         varchar     currency                "通貨"
-        bigint      company_id          FK  "companyテーブルへの参照"
         timestamp   created_at
         timestamp   updated_at
         varchar     created_by
@@ -96,10 +95,11 @@ erDiagram
         varchar     currency                    "通貨"
     }
 
-    company               ||--o{ financial_document : "1社 複数書類"
     financial_document    ||--o{ financial_data      : "1書類 複数勘定科目"
     account_master        ||--o{ financial_data      : "1科目 複数データ"
 ```
+
+> `financial_document` と `company` は FK 制約で結ばず、`edinet_code`（`company.edinet_code` は UNIQUE）による論理結合で 1:1 対応させる。参照系は jOOQ で結合するため関連ナビゲーションは不要で、書類先行・企業後着の登録順序も許容できる（詳細は補足「financial_document と company の関係」）。
 
 ### Phase 2
 
@@ -116,16 +116,19 @@ erDiagram
 
     financial_metrics {
         bigint      id                      PK  "GENERATED ALWAYS AS IDENTITY"
-        bigint      financial_document_id   FK
+        bigint      financial_document_id   FK,UK  "financial_documentへの参照（1書類1指標セット）"
+        varchar     edinet_code                 "EDINETコード（企業単位の時系列参照用・論理結合）"
+        date        fiscal_year_end_date        "決算期末日"
+        varchar     consolidated_type           "連結区分（連結/個別）"
         decimal     roe                         "ROE（%）"
         decimal     roa                         "ROA（%）"
         decimal     operating_margin            "営業利益率（%）"
         decimal     equity_ratio                "自己資本比率（%）"
         decimal     cash_ratio                  "現金比率（%）"
-        decimal     per                         "PER（株価API連携後に追加・nullable）"
-        decimal     pbr                         "PBR（株価API連携後に追加・nullable）"
-        timestamp   calculated_at
         timestamp   created_at
+        timestamp   updated_at
+        varchar     created_by
+        varchar     updated_by
     }
 
     users {
@@ -185,9 +188,10 @@ erDiagram
 - 有価証券報告書には連結・個別両方の数値が含まれるため、どちらのデータかを区別する
 - 財務指標の計算時は連結を優先する
 
-### financial_metrics（Phase 2）
-- Phase 1では `financial_data` から都度計算してレスポンスする
-- Phase 2のスクリーニング導入時に追加。指標をキャッシュしてWHERE条件での高速絞り込みを可能にする
+### financial_metrics（V8で実装済み・Phase 1へ前倒し）
+- 当初は Phase 2 想定だったが、バッチで事前計算して保存する方式を Phase 1 に前倒しして V8 で実装済み（`FinancialMetricsCalculationUseCase`）。参照系（ランキング・スクリーニング・時系列）はこのテーブルを読む
+- 企業とのリンクは `edinet_code` の論理結合（`company.edinet_code` は UNIQUE）。`financial_document_id` は UNIQUE で 1書類 1指標セット
+- 各指標は%値。計算に必要な科目が書類に無い場合は NULL
 - 指標追加時のオペレーション：カラム追加（Flyway） → 全レコードバッチ再計算
 
 ### インデックス方針
@@ -196,10 +200,11 @@ erDiagram
 - `company.edinet_code`（UNIQUE）
 - `company.security_code`（UNIQUE）
 - `financial_document.document_id`（UNIQUE）
-- `financial_document.company_id`
-- `financial_data.financial_document_id`
-- `financial_data.account_id`
+- `financial_document.edinet_code`（企業単位・論理結合の参照用）
+- `financial_data` の `UNIQUE (financial_document_id, account_id, context_ref)`（複合インデックス。先頭カラムで `financial_document_id` 単独検索もカバー）
+- `financial_data.account_id`（第2キーは複合インデックスで絞り込めないため単独で付与）
 
-**Phase 2（スクリーニング用）**
-- `financial_metrics.cash_ratio`
-- `financial_metrics.roe`、`roa`、`equity_ratio`
+**財務指標（V8で実装済み・スクリーニング用）**
+- `financial_metrics.edinet_code`（企業単位の時系列参照用）
+- `financial_metrics.cash_ratio`（ランキング・スクリーニング用）
+- 他指標（`roe`・`roa`・`equity_ratio` 等）のインデックスはスクリーニング実装時に追加
