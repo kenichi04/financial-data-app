@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 public interface FinancialMetricsRepository extends JpaRepository<FinancialMetricsEntity, Long> {
     Optional<FinancialMetricsEntity> findByFinancialDocumentId(Long financialDocumentId);
-    boolean existsByFinancialDocumentId(Long financialDocumentId);
 }

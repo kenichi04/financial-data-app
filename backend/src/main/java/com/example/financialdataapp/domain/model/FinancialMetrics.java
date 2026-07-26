@@ -12,7 +12,6 @@ import java.time.LocalDate;
  * 書類に含まれない場合、その指標はnullになります。</p>
  */
 public class FinancialMetrics {
-    private Long id;
 
     /** 算出元の書類管理番号 */
     private final DocumentId documentId;
