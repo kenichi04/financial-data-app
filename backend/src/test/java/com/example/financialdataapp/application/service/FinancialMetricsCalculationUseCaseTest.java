@@ -2,6 +2,9 @@ package com.example.financialdataapp.application.service;
 
 import com.example.financialdataapp.application.service.metrics.FinancialMetricsService;
 import com.example.financialdataapp.application.service.metrics.IFinancialMetricsQueryService;
+import com.example.financialdataapp.domain.enums.Balance;
+import com.example.financialdataapp.domain.enums.PeriodType;
+import com.example.financialdataapp.domain.model.AccountMaster;
 import com.example.financialdataapp.domain.model.DocumentId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,10 +15,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -48,6 +53,7 @@ class FinancialMetricsCalculationUseCaseTest {
         assertEquals(2, result.targetCount());
         assertEquals(2, result.savedCount());
         assertTrue(result.failedDocumentIds().isEmpty());
+        verify(accountService, times(1)).getAccounts();
         verify(financialMetricsService).calculateAndSaveMetrics(eq(documentId1), any());
         verify(financialMetricsService).calculateAndSaveMetrics(eq(documentId2), any());
     }
@@ -82,6 +88,21 @@ class FinancialMetricsCalculationUseCaseTest {
         assertEquals(2, result.targetCount());
         assertEquals(1, result.savedCount());
         assertEquals(List.of("TEST9999"), result.failedDocumentIds());
+        verify(accountService, times(1)).getAccounts();
         verify(financialMetricsService).calculateAndSaveMetrics(eq(succeedingId), any());
+    }
+
+    @Test
+    void calculateAndSaveUncalculatedMetrics_ShouldThrowClearException_WhenAccountMasterIdIsNull() {
+        var documentId = new DocumentId("TEST0001");
+        when(financialMetricsQueryService.findDocumentIdsWithoutMetrics()).thenReturn(List.of(documentId));
+        when(accountService.getAccounts()).thenReturn(List.of(
+                new AccountMaster("CashAndDeposits", "現金預金", "Cash and deposits", PeriodType.INSTANT, Balance.DEBIT, 4)));
+
+        var exception = assertThrows(NullPointerException.class, () -> useCase.calculateAndSaveUncalculatedMetrics());
+
+        assertEquals("AccountMaster.id must not be null when calculating financial metrics", exception.getMessage());
+        verify(accountService, times(1)).getAccounts();
+        verifyNoInteractions(financialMetricsService);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +44,11 @@ public class FinancialMetricsCalculationUseCase {
         }
 
         var accountCodeById = accountService.getAccounts().stream()
-                .collect(Collectors.toMap(AccountMaster::getId, AccountMaster::getCode));
+                .collect(Collectors.toMap(
+                        account -> Objects.requireNonNull(
+                                account.getId(),
+                                "AccountMaster.id must not be null when calculating financial metrics"),
+                        AccountMaster::getCode));
 
         var failedDocumentIds = new ArrayList<String>();
         var savedCount = 0;
