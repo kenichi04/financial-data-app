@@ -9,6 +9,9 @@ application-dev.properties
 # Backend build artifacts
 backend/target
 
+# Backend scratch (Issue下書き等・GitHubには上げない)
+backend/temp/
+
 ### STS ###
 .apt_generated
 .classpath
