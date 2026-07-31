@@ -192,6 +192,9 @@ GET /api/companies/{securityCode}
 |---|---|---|
 | `securityCode` | string | 証券コード（4桁） |
 
+EDINET の `secCode` は末尾0を含む5桁（例: `72030`）で提供され、`company.security_code` にもその形式で保存されている。
+APIは4桁で受け取り前方一致で引き当て、レスポンスでは4桁に正規化して返す。
+
 #### 成功レスポンス `200 OK`
 
 ```json
@@ -203,6 +206,8 @@ GET /api/companies/{securityCode}
   "latestFiscalYearEndDate": "2024-03-31"
 }
 ```
+
+- `latestFiscalYearEndDate` は指標が未計算の企業では `null` を返す
 
 #### エラーレスポンス
 
@@ -848,5 +853,6 @@ POST /api/webhooks/stripe
 
 - Phase 1 は認証なし。A-101〜A-104 のみ実装する。
 - Phase 2 で認証・スクリーニング・ウォッチリスト・サブスクを追加する。
-- 財務指標の計算は Phase 1 では `financial_data` テーブルから都度計算する。Phase 2 では `financial_metrics` テーブルにキャッシュしてスクリーニングを高速化する。
+- 財務指標は Phase 1 の時点で `financial_metrics` テーブルに事前計算して保存する（V8マイグレーションで追加済み）。当初は「Phase 1 は `financial_data` から都度計算」の想定だったが、現金比率ランキングを無料公開時の集客の目玉に位置づけたため前倒しした（経緯は [monetization_plan.md](monetization_plan.md) §6）。A-103 / A-104 はこの事前計算済みの値を読む。
+- 直近期の1行は「決算期末日が最大」かつ「同一年度に連結・個別があれば連結優先」で選択する（A-101〜A-104 で共通）。
 - PER・PBR は株価データ API 連携（Phase 2）後に A-103 / A-104 のレスポンスに追加する。

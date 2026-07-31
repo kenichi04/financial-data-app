@@ -27,3 +27,17 @@
 
 - `FinancialMetricsController` のコントローラテストが無い。
 - `JooqFinancialMetricsQueryService`（left-join-is-null クエリ）の結合テストが無い。
+- **jOOQクエリ全般に結合テスト基盤が無い**: `JooqCompanyQueryService.searchCompanies` / `findBySecurityCode` と
+  `LatestFinancialMetrics`（`DISTINCT ON` による直近期1行の選択）は、純ユニットテストでは検証できず
+  Swagger UI の手動確認に頼っている。取込済みデータが1社しか無いため、ページネーションと
+  「同一年度に連結・個別が混在する企業で連結が選ばれる」ケースは実データで未検証。
+  Testcontainers 等の導入を検討する。
+- `FinancialDataAppApplicationTests`（`@SpringBootTest`）は `DB_URL` / `DB_USER` / `DB_PASSWORD` /
+  `EDINET_API_SUBSCRIPTION_KEY` / `DOWNLOAD_USER_DIR` が環境変数に無いと context load に失敗する
+  （`.env` にはこれらが無く、POSTGRES_* のみ）。`src/test/resources/application-test.properties` を
+  用意しないと素の `./mvnw test` がグリーンにならない。
+
+## ロギング
+
+- `GlobalExceptionHandler` で slf4j を導入した（500系とハンドルされない例外のみ記録）。
+  コードベース全体のロギング方針（バッチの失敗理由など）は引き続き未整備。

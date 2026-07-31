@@ -84,6 +84,8 @@ infrastructure/  ← DB実装（JPA / jOOQ）・InMemory実装
 
 | メソッド | パス | 説明 |
 |---|---|---|
+| GET | `/api/companies?q=&page=&size=` | 銘柄検索（jOOQ。直近期の主要指標を同梱） |
+| GET | `/api/companies/{securityCode}` | 企業詳細（jOOQ） |
 | POST | `/api/edinet/metadata/fetch-and-save?fromDate=YYYY-MM-DD` | 指定日以降の書類一覧を取得・保存 |
 | POST | `/api/edinet/{documentId}/fetch-and-save` | 書類IDのXBRLデータを取得・解析・保存 |
 | GET | `/api/document-metadata/unprocessedMetadata` | 未処理メタデータ一覧（jOOQ） |
@@ -92,6 +94,11 @@ infrastructure/  ← DB実装（JPA / jOOQ）・InMemory実装
 | POST | `/api/financial-metrics/calculate` | 未計算書類の財務指標を一括計算・保存 |
 
 `/v1/` プレフィックスの付いたエンドポイントと `EdinetOutputController`（`/edinet/output/`）は `@Deprecated`。
+
+エラーは `GlobalExceptionHandler`（`presentation/controller/advice/`）が全エンドポイント共通で
+`{"error": {"code": "...", "message": "..."}}` に変換する（コード定義は `ErrorCode`）。
+一覧・検索系のレスポンスは `PageResponse<T>` でラップする（`page` 既定0 / `size` 既定20・上限100）。
+仕様は `docs/api_spec_draft.md`「共通仕様」。
 
 ### EDINET連携フロー
 

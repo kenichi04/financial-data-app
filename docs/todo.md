@@ -29,8 +29,9 @@ Claude Code 作成
   - [x] 現金比率
   - [x] 未計算書類の一括計算・保存（`POST /api/financial-metrics/calculate`）
 - [ ] APIエンドポイント実装
-  - [ ] 銘柄検索API
-  - [ ] 企業詳細API（指標一覧・時系列）
+  - [x] API共通基盤（統一エラーレスポンス `{"error":{"code","message"}}` / ページネーション）
+  - [x] 銘柄検索API（A-101 / A-102）
+  - [ ] 企業詳細API（指標一覧・時系列）（A-103 / A-104）
 - [x] スキーマ手当（財務指標PRから分離した旧V9。定期バッチ実装の前提）← V9で対応
   - [x] `financial_data` に UNIQUE(financial_document_id, account_id, context_ref) — 行重複を防止。既存重複を削除するDELETE（各グループ最小id残し・冪等）とセットで適用
   - [x] 重複の根本原因（iXBRLの同一事実が複数ファイルに出現するのを全件INSERTしていた）を取込側で修正 — `FinancialDataDeduplicator` で保存前に重複排除、実額/通貨が食い違う場合はfail-fast
