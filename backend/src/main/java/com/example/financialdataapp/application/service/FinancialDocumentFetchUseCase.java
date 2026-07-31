@@ -4,6 +4,7 @@ import com.example.financialdataapp.application.service.dto.ExtractedFiles;
 import com.example.financialdataapp.application.service.enums.FetchDocumentType;
 import com.example.financialdataapp.application.service.financial.EdinetDataFetchService;
 import com.example.financialdataapp.application.service.financial.EdinetFileExtractionService;
+import com.example.financialdataapp.application.service.financial.FinancialDataDeduplicator;
 import com.example.financialdataapp.application.service.financial.FinancialDocumentService;
 import com.example.financialdataapp.application.service.financial.xbrl.XbrlFinancialDataExtractor;
 import com.example.financialdataapp.application.service.financial.xbrl.XbrlHeaderInfoExtractor;
@@ -19,13 +20,15 @@ public class FinancialDocumentFetchUseCase {
     private final EdinetFileExtractionService edinetFileExtractionService;
     private final XbrlHeaderInfoExtractor xbrlHeaderInfoExtractor;
     private final XbrlFinancialDataExtractor xbrlFinancialDataExtractor;
+    private final FinancialDataDeduplicator financialDataDeduplicator;
     private final FinancialDocumentService financialDocumentService;
 
-    public FinancialDocumentFetchUseCase(EdinetDataFetchService edinetDataFetchService, EdinetFileExtractionService edinetFileExtractionService, XbrlHeaderInfoExtractor xbrlHeaderInfoExtractor, XbrlFinancialDataExtractor xbrlFinancialDataExtractor, FinancialDocumentService financialDocumentService) {
+    public FinancialDocumentFetchUseCase(EdinetDataFetchService edinetDataFetchService, EdinetFileExtractionService edinetFileExtractionService, XbrlHeaderInfoExtractor xbrlHeaderInfoExtractor, XbrlFinancialDataExtractor xbrlFinancialDataExtractor, FinancialDataDeduplicator financialDataDeduplicator, FinancialDocumentService financialDocumentService) {
         this.edinetDataFetchService = edinetDataFetchService;
         this.edinetFileExtractionService = edinetFileExtractionService;
         this.xbrlHeaderInfoExtractor = xbrlHeaderInfoExtractor;
         this.xbrlFinancialDataExtractor = xbrlFinancialDataExtractor;
+        this.financialDataDeduplicator = financialDataDeduplicator;
         this.financialDocumentService = financialDocumentService;
     }
 
@@ -51,8 +54,10 @@ public class FinancialDocumentFetchUseCase {
         var allFinancialData = targetContents.stream()
                 .flatMap(content -> xbrlFinancialDataExtractor.extractFinancialDataFromXbrl(content).stream())
                 .collect(Collectors.toList());
+        // iXBRLは同一事実を複数ファイルに繰り返し含むため、保存前に重複排除する
+        var financialData = financialDataDeduplicator.deduplicate(documentId, allFinancialData);
 
         // TODO サービス層で保存結果用の専用クラスを返すことも検討
-        return financialDocumentService.createFinancialDocument(documentId, headerInfo, allFinancialData);
+        return financialDocumentService.createFinancialDocument(documentId, headerInfo, financialData);
     }
 }

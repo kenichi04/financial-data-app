@@ -12,10 +12,6 @@ import java.util.Map;
 public class InMemoryFinancialMetricsRepository implements IFinancialMetricsRepository {
     private Map<DocumentId, FinancialMetrics> financialMetricsStore = new HashMap<>();
 
-    public boolean existsByDocumentId(DocumentId documentId) {
-        return financialMetricsStore.containsKey(documentId);
-    }
-
     public void save(FinancialMetrics financialMetrics) {
         financialMetricsStore.put(financialMetrics.getDocumentId(), financialMetrics);
     }

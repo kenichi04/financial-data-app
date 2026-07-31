@@ -13,6 +13,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -27,6 +29,9 @@ class FinancialMetricsCalculationUseCaseTest {
     @Mock
     private FinancialMetricsService financialMetricsService;
 
+    @Mock
+    private AccountService accountService;
+
     @InjectMocks
     private FinancialMetricsCalculationUseCase useCase;
 
@@ -36,14 +41,15 @@ class FinancialMetricsCalculationUseCaseTest {
         var documentId2 = new DocumentId("TEST0002");
         when(financialMetricsQueryService.findDocumentIdsWithoutMetrics())
                 .thenReturn(List.of(documentId1, documentId2));
+        when(accountService.getAccounts()).thenReturn(List.of());
 
         var result = useCase.calculateAndSaveUncalculatedMetrics();
 
         assertEquals(2, result.targetCount());
         assertEquals(2, result.savedCount());
         assertTrue(result.failedDocumentIds().isEmpty());
-        verify(financialMetricsService).calculateAndSaveMetrics(documentId1);
-        verify(financialMetricsService).calculateAndSaveMetrics(documentId2);
+        verify(financialMetricsService).calculateAndSaveMetrics(eq(documentId1), any());
+        verify(financialMetricsService).calculateAndSaveMetrics(eq(documentId2), any());
     }
 
     @Test
@@ -55,6 +61,8 @@ class FinancialMetricsCalculationUseCaseTest {
         assertEquals(0, result.targetCount());
         assertEquals(0, result.savedCount());
         assertTrue(result.failedDocumentIds().isEmpty());
+        // 未計算0件のときはマスタロードも指標計算も一切行わない（早期return）
+        verifyNoInteractions(accountService);
         verifyNoInteractions(financialMetricsService);
     }
 
@@ -64,8 +72,9 @@ class FinancialMetricsCalculationUseCaseTest {
         var succeedingId = new DocumentId("TEST0001");
         when(financialMetricsQueryService.findDocumentIdsWithoutMetrics())
                 .thenReturn(List.of(failingId, succeedingId));
+        when(accountService.getAccounts()).thenReturn(List.of());
         doThrow(new IllegalStateException("FinancialDocument not found: " + failingId))
-                .when(financialMetricsService).calculateAndSaveMetrics(failingId);
+                .when(financialMetricsService).calculateAndSaveMetrics(eq(failingId), any());
 
         var result = useCase.calculateAndSaveUncalculatedMetrics();
 
@@ -73,6 +82,6 @@ class FinancialMetricsCalculationUseCaseTest {
         assertEquals(2, result.targetCount());
         assertEquals(1, result.savedCount());
         assertEquals(List.of("TEST9999"), result.failedDocumentIds());
-        verify(financialMetricsService).calculateAndSaveMetrics(succeedingId);
+        verify(financialMetricsService).calculateAndSaveMetrics(eq(succeedingId), any());
     }
 }

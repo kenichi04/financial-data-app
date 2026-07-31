@@ -31,10 +31,11 @@ Claude Code 作成
 - [ ] APIエンドポイント実装
   - [ ] 銘柄検索API
   - [ ] 企業詳細API（指標一覧・時系列）
-- [ ] スキーマ手当（財務指標PRから分離した旧V9。定期バッチ実装の前提）
-  - [ ] `financial_data` に UNIQUE(financial_document_id, account_id, context_ref) — 同一書類の再取込による行重複を防止。既存データに重複があると適用に失敗するため、重複行の除去とセットで適用する
-  - [ ] `financial_data.account_id` にインデックス
-  - [ ] `financial_document.company_id` を削除（未参照・全行NULL。companyとは edinet_code の論理結合に一本化）し、`edinet_code` にインデックス
+- [x] スキーマ手当（財務指標PRから分離した旧V9。定期バッチ実装の前提）← V9で対応
+  - [x] `financial_data` に UNIQUE(financial_document_id, account_id, context_ref) — 行重複を防止。既存重複を削除するDELETE（各グループ最小id残し・冪等）とセットで適用
+  - [x] 重複の根本原因（iXBRLの同一事実が複数ファイルに出現するのを全件INSERTしていた）を取込側で修正 — `FinancialDataDeduplicator` で保存前に重複排除、実額/通貨が食い違う場合はfail-fast
+  - [x] `financial_data.account_id` にインデックス
+  - [x] `financial_document.company_id` を削除（未参照・全行NULL。companyとは edinet_code の論理結合に一本化）し、`edinet_code` にインデックス
 - [ ] 定期バッチ実装（毎日深夜にEDINET APIからデータ取得）
 - [ ] Docker環境構築
 
